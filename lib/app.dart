@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'screens/welcome_screen.dart';
 import 'screens/auth_screen.dart';
 import 'screens/otp_screen.dart';
+import 'screens/qr_scanner_screen.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
@@ -15,6 +16,7 @@ class App extends StatelessWidget {
       routes: {
         AuthScreen.routeName: (ctx) => const AuthScreen(),
         OtpScreen.routeName: (ctx) => const OtpScreen(),
+        QrScannerScreen.routeName: (ctx) => QrScannerScreen(),
       },
     );
   }
