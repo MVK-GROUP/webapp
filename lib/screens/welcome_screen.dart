@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/image_banner.dart';
 import '../widgets/main_button.dart';
+import 'auth_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   static const routeName = '/welcome';
@@ -36,7 +37,7 @@ class WelcomeScreen extends StatelessWidget {
               text: 'Почати',
               icon: Icons.arrow_right_alt,
               iconLocation: IconLocation.right,
-              onButtonPress: nextScreen,
+              onButtonPress: () => nextScreen(context),
             ),
           ),
         ],
@@ -44,5 +45,7 @@ class WelcomeScreen extends StatelessWidget {
     );
   }
 
-  void nextScreen() {}
+  void nextScreen(BuildContext context) {
+    Navigator.of(context).pushReplacementNamed(AuthScreen.routeName);
+  }
 }
