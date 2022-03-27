@@ -12,72 +12,109 @@ class OtpScreen extends StatefulWidget {
 }
 
 class _OtpScreenState extends State<OtpScreen> {
+  List<String?> otpCode = [null, null, null, null];
+  bool isWrongCode = false;
+
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: const Color(0xfff7f6fb),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
-          child: Column(children: [
-            Align(
-              alignment: Alignment.topLeft,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: const Icon(
-                  Icons.arrow_back,
-                  size: 32,
+        body: CustomScrollView(
+      slivers: [
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
+            child: Column(children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Icon(
+                    Icons.arrow_back,
+                    size: 32,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 18,
-            ),
-            Container(
-              width: 200,
-              height: 200,
-              decoration: BoxDecoration(
-                color: Colors.deepPurple.shade50,
-                shape: BoxShape.circle,
+              const SizedBox(
+                height: 18,
               ),
-              child: Image.asset(
-                'assets/images/welcome_img.png',
-                width: 240,
+              const Text(
+                'Верифікація',
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              _textFieldOTP(first: true),
-              _textFieldOTP(),
-              _textFieldOTP(),
-              _textFieldOTP(last: true),
+              Container(
+                child: RichText(
+                  textAlign: TextAlign.center,
+                  text: const TextSpan(
+                      style: TextStyle(fontSize: 18, color: Colors.black45),
+                      children: [
+                        TextSpan(
+                            text:
+                                'Введіть код, який був відправлений на номер '),
+                        TextSpan(
+                            text: '+380954941949',
+                            style: TextStyle(fontWeight: FontWeight.bold))
+                      ]),
+                ),
+                margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
+              ),
+              const SizedBox(
+                height: 36,
+              ),
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                _textFieldOTP(1),
+                _textFieldOTP(2),
+                _textFieldOTP(3),
+                _textFieldOTP(4),
+              ]),
+              if (isWrongCode)
+                const Text(
+                  'Неправильний код',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              const SizedBox(
+                height: 18,
+              ),
+              const Spacer(),
+              const Text(
+                'Не отримали код?',
+                style: TextStyle(fontSize: 16, color: Colors.black45),
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              TextButton(
+                onPressed: () {},
+                child: const Text(
+                  'Відправити новий код',
+                  style: TextStyle(
+                      color: secondaryColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              )
             ]),
-            Container(
-              child: RichText(
-                text: const TextSpan(
-                    style: TextStyle(fontSize: 18, color: Colors.black45),
-                    children: [
-                      TextSpan(text: 'Код був відправлений на номер '),
-                      TextSpan(
-                          text: '+380954941949',
-                          style: TextStyle(fontWeight: FontWeight.bold))
-                    ]),
-              ),
-              margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
-            ),
-            const SizedBox(
-              height: 40,
-            ),
-            MainButton(text: 'Перевірити', onButtonPress: () {}),
-          ]),
-        ),
-      ),
-    );
+          ),
+        )
+      ],
+    ));
   }
 
-  Widget _textFieldOTP({bool first = false, bool last = false}) {
+  Widget _textFieldOTP(int index) {
     return Container(
       height: 75,
       margin: const EdgeInsets.symmetric(horizontal: 5),
@@ -86,11 +123,29 @@ class _OtpScreenState extends State<OtpScreen> {
         child: TextField(
             autofocus: true,
             onChanged: (value) {
-              if (value.length == 1 && last == false) {
+              if (value.length == 1 && index != 4) {
                 FocusScope.of(context).nextFocus();
               }
-              if (value.isEmpty && first == false) {
+              if (value.isEmpty && index != 1) {
                 FocusScope.of(context).previousFocus();
+              }
+              if (value.isEmpty) {
+                otpCode[index - 1] = null;
+              } else {
+                otpCode[index - 1] = value;
+              }
+              if (!otpCode.contains(null)) {
+                print('otp code: $otpCode');
+                if (otpCode.join('') != '1111') {
+                  setState(() {
+                    isWrongCode = true;
+                  });
+                } else {
+                  setState(() {
+                    isWrongCode = false;
+                  });
+                  print('code is correct...');
+                }
               }
             },
             showCursor: false,
