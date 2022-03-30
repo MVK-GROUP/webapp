@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../widgets/main_button.dart';
 import '../colors.dart';
 
 class OtpScreen extends StatefulWidget {
@@ -17,100 +16,92 @@ class _OtpScreenState extends State<OtpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-
     return Scaffold(
-        body: CustomScrollView(
-      slivers: [
-        SliverFillRemaining(
-          hasScrollBody: false,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
-            child: Column(children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Icon(
-                    Icons.arrow_back,
-                    size: 32,
-                  ),
-                ),
+        body: SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
+        child: Column(children: [
+          Align(
+            alignment: Alignment.topLeft,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: const Icon(
+                Icons.arrow_back,
+                size: 32,
               ),
-              const SizedBox(
-                height: 18,
-              ),
-              const Text(
-                'Верифікація',
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Container(
-                child: RichText(
-                  textAlign: TextAlign.center,
-                  text: const TextSpan(
-                      style: TextStyle(fontSize: 18, color: Colors.black45),
-                      children: [
-                        TextSpan(
-                            text:
-                                'Введіть код, який був відправлений на номер '),
-                        TextSpan(
-                            text: '+380954941949',
-                            style: TextStyle(fontWeight: FontWeight.bold))
-                      ]),
-                ),
-                margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
-              ),
-              const SizedBox(
-                height: 36,
-              ),
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                _textFieldOTP(1),
-                _textFieldOTP(2),
-                _textFieldOTP(3),
-                _textFieldOTP(4),
-              ]),
-              if (isWrongCode)
-                const Text(
-                  'Неправильний код',
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              const SizedBox(
-                height: 18,
-              ),
-              const Spacer(),
-              const Text(
-                'Не отримали код?',
-                style: TextStyle(fontSize: 16, color: Colors.black45),
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              TextButton(
-                onPressed: () {},
-                child: const Text(
-                  'Відправити новий код',
-                  style: TextStyle(
-                      color: secondaryColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18),
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              )
-            ]),
+            ),
           ),
-        )
-      ],
+          const SizedBox(
+            height: 18,
+          ),
+          Text(
+            'Верифікація',
+            style: Theme.of(context).textTheme.headline4,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Container(
+            child: RichText(
+              textAlign: TextAlign.center,
+              text: const TextSpan(
+                  style: TextStyle(fontSize: 18, color: Colors.black45),
+                  children: [
+                    TextSpan(
+                        text: 'Введіть код, який був відправлений на номер '),
+                    TextSpan(
+                        text: '+380954941949',
+                        style: TextStyle(fontWeight: FontWeight.bold))
+                  ]),
+            ),
+            margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
+          ),
+          const SizedBox(
+            height: 36,
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            _textFieldOTP(1),
+            _textFieldOTP(2),
+            _textFieldOTP(3),
+            _textFieldOTP(4),
+          ]),
+          if (isWrongCode)
+            const Text(
+              'Неправильний код',
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          const SizedBox(
+            height: 18,
+          ),
+          const Spacer(),
+          const Text(
+            'Не отримали код?',
+            style: TextStyle(fontSize: 16, color: Colors.black45),
+          ),
+          const SizedBox(
+            width: 5,
+          ),
+          TextButton(
+            onPressed: () {},
+            child: const Text(
+              'Відправити новий код',
+              style: TextStyle(
+                  color: secondaryColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18),
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          )
+        ]),
+      ),
     ));
   }
 

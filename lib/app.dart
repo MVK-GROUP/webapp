@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'style.dart';
 import 'screens/welcome_screen.dart';
 import 'screens/auth_screen.dart';
 import 'screens/otp_screen.dart';
@@ -18,6 +19,13 @@ class App extends StatelessWidget {
         OtpScreen.routeName: (ctx) => const OtpScreen(),
         QrScannerScreen.routeName: (ctx) => QrScannerScreen(),
       },
+      theme: _theme(),
+    );
+  }
+
+  ThemeData _theme() {
+    return ThemeData(
+      textTheme: const TextTheme(headline4: titleTextStyle),
     );
   }
 }

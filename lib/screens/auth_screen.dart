@@ -12,8 +12,10 @@ class AuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: AuthBody(),
-    );
+        body: SafeArea(
+      child: Padding(
+          padding: EdgeInsets.only(top: 24, bottom: 24), child: AuthBody()),
+    ));
   }
 }
 
@@ -38,9 +40,20 @@ class _AuthBodyState extends State<AuthBody> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          const SizedBox(
+            height: 50,
+          ),
+          Text(
+            'Верифікація',
+            style: Theme.of(context).textTheme.headline4,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
             child: InternationalPhoneNumberInput(
+              autoFocus: true,
               inputDecoration: InputDecoration(
                   hintText: 'Номер телефону',
                   hintStyle: const TextStyle(
@@ -84,10 +97,11 @@ class _AuthBodyState extends State<AuthBody> {
             margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
           ),
           const SizedBox(
-            height: 100,
+            height: 20,
           ),
+          const Spacer(),
           MainButton(
-            text: 'Далі',
+            text: 'Отримати код',
             onButtonPress: () {
               if (!formKey.currentState!.validate()) {
                 return;
@@ -98,6 +112,9 @@ class _AuthBodyState extends State<AuthBody> {
             },
             mHorizontalInset: 30,
           ),
+          const SizedBox(
+            height: 20,
+          )
         ],
       ),
     );
