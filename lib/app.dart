@@ -28,6 +28,7 @@ class App extends StatelessWidget {
 
   ThemeData _theme() {
     return ThemeData(
+      scaffoldBackgroundColor: Colors.white,
       textTheme: const TextTheme(
         headline4: titleSecondaryTextStyle,
         headline2: titleTextStyle,
