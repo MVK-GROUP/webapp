@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../colors.dart';
 
 class OtpScreen extends StatefulWidget {
   static const routeName = '/otp-confirm';
@@ -89,10 +88,10 @@ class _OtpScreenState extends State<OtpScreen> {
           ),
           TextButton(
             onPressed: () {},
-            child: const Text(
+            child: Text(
               'Відправити новий код',
               style: TextStyle(
-                  color: secondaryColor,
+                  color: Theme.of(context).colorScheme.secondary,
                   fontWeight: FontWeight.bold,
                   fontSize: 18),
             ),
@@ -150,11 +149,15 @@ class _OtpScreenState extends State<OtpScreen> {
             decoration: InputDecoration(
               counter: const Offstage(),
               enabledBorder: OutlineInputBorder(
-                borderSide: const BorderSide(width: 2, color: secondaryColor),
+                borderSide: BorderSide(
+                    width: 2, color: Theme.of(context).colorScheme.secondary),
                 borderRadius: BorderRadius.circular(12),
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(width: 2, color: Colors.blue),
+                borderSide: BorderSide(
+                  width: 2,
+                  color: Theme.of(context).colorScheme.background,
+                ),
                 borderRadius: BorderRadius.circular(12),
               ),
             )),

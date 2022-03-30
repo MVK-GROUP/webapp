@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import '../widgets/main_button.dart';
 import 'otp_screen.dart';
-import '../colors.dart';
 
 class AuthScreen extends StatelessWidget {
   static const routeName = '/auth';
@@ -64,8 +63,14 @@ class _AuthBodyState extends State<AuthBody> {
                   border: const OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide:
-                          const BorderSide(color: secondaryColor, width: 3))),
+                      borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.secondary,
+                          width: 3)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.background,
+                          width: 3))),
               onInputChanged: (PhoneNumber number) {},
               validator: (value) {
                 if (value == null || value.isEmpty || value.length < 6) {

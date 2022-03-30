@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../colors.dart';
 
 enum IconLocation {
   left,
@@ -33,7 +32,7 @@ class MainButton extends StatelessWidget {
           overlayColor: MaterialStateProperty.all(Colors.black12),
           shape: MaterialStateProperty.all(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-          backgroundColor: MaterialStateProperty.all(mainColor),
+          //backgroundColor: MaterialStateProperty.all(mainColor),
           fixedSize: MaterialStateProperty.all(const Size(412, 60)),
         ),
         child: Row(
