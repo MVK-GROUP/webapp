@@ -1,0 +1,83 @@
+[
+    {
+        "locker_id": 10001,
+        "name": "ХАБ #10001",
+        "address": "Соломенская 3",
+        "latitude": 50.447731,
+        "longitude": 30.542721,
+        "services": [
+            {
+                "service_id": 10,
+                "category": "laundry",
+                "title": "Химчистка",
+                "picture_url": "https://d2eajpoqaqhimg.cloudfront.net/content/dam/midea-aem/us/laundry/laundry-kv1.jpg"
+            },
+            {
+                "service_id": 11,
+                "category": "vending_machine",
+                "title": "Торговый автомат",
+                "picture_url": "https://naurok-test2.nyc3.digitaloceanspaces.com/78995/images/219419_1637616504.jpg"
+            },
+            {
+                "service_id": 2,
+                "category": "charge_phone",
+                "title": "Зарядить телефон",
+                "picture_url": "https://wilsontrendit.com/wp-content/uploads/2021/05/The-Best-Way-to-Charge-Your-Device-Will-Make-its-Battery-Last-Way-Longer_578021803_Remitski-Ivan-ft.jpg"
+            }
+        ]
+    },
+    {
+        "locker_id": 10002,
+        "name": "ХАБ #10002",
+        "address": "Григорія Сковороди, 13",
+        "latitude": 50.447731,
+        "longitude": 30.542721,
+        "services": [
+            {
+                "service_id": 10,
+                "category": "laundry",
+                "title": "Химчистка",
+                "picture_url": "https://d2eajpoqaqhimg.cloudfront.net/content/dam/midea-aem/us/laundry/laundry-kv1.jpg"
+            },
+            {
+                "service_id": 11,
+                "category": "vending_machine",
+                "title": "Торговый автомат",
+                "picture_url": "https://naurok-test2.nyc3.digitaloceanspaces.com/78995/images/219419_1637616504.jpg"
+            },
+            {
+                "service_id": 2,
+                "category": "charge_phone",
+                "title": "Зарядить телефон",
+                "picture_url": "https://wilsontrendit.com/wp-content/uploads/2021/05/The-Best-Way-to-Charge-Your-Device-Will-Make-its-Battery-Last-Way-Longer_578021803_Remitski-Ivan-ft.jpg"
+            }
+        ]
+    },
+    {
+        "locker_id": 10003,
+        "name": "ХАБ #10003",
+        "address": "Освіти, 7",
+        "latitude": 50.447731,
+        "longitude": 30.542721,
+        "services": [
+            {
+                "service_id": 10,
+                "category": "laundry",
+                "title": "Химчистка",
+                "picture_url": "https://d2eajpoqaqhimg.cloudfront.net/content/dam/midea-aem/us/laundry/laundry-kv1.jpg"
+            },
+            {
+                "service_id": 11,
+                "category": "vending_machine",
+                "title": "Торговый автомат",
+                "picture_url": "https://naurok-test2.nyc3.digitaloceanspaces.com/78995/images/219419_1637616504.jpg"
+            },
+            {
+                "service_id": 2,
+                "category": "charge_phone",
+                "title": "Зарядить телефон",
+                "picture_url": "https://wilsontrendit.com/wp-content/uploads/2021/05/The-Best-Way-to-Charge-Your-Device-Will-Make-its-Battery-Last-Way-Longer_578021803_Remitski-Ivan-ft.jpg"
+            }
+        ]
+    }
+]
