@@ -14,7 +14,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'MVK APP',
-      home: const MenuScreen(),
+      home: const WelcomeScreen(),
       routes: {
         WelcomeScreen.routeName: (ctx) => const WelcomeScreen(),
         AuthScreen.routeName: (ctx) => const AuthScreen(),

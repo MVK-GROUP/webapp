@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'qr_scanner_screen.dart';
 
 class OtpScreen extends StatefulWidget {
   static const routeName = '/otp-confirm';
@@ -134,7 +135,8 @@ class _OtpScreenState extends State<OtpScreen> {
                   setState(() {
                     isWrongCode = false;
                   });
-                  print('code is correct...');
+                  Navigator.pushReplacementNamed(
+                      context, QrScannerScreen.routeName);
                 }
               }
             },

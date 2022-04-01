@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import '../widgets/qt_overlay.dart';
-import 'welcome_screen.dart';
+import 'global_menu.dart';
 
 class QrScannerScreen extends StatelessWidget {
   static const routeName = '/scanner';
@@ -22,8 +22,7 @@ class QrScannerScreen extends StatelessWidget {
             final String code = barcode.rawValue ?? '';
             debugPrint('Barcode found: $code');
             if (int.tryParse(code) != null) {
-              Navigator.of(context)
-                  .pushReplacementNamed(WelcomeScreen.routeName);
+              Navigator.of(context).pushReplacementNamed(MenuScreen.routeName);
             }
           },
         ),
