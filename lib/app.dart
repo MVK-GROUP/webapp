@@ -6,6 +6,7 @@ import 'screens/auth_screen.dart';
 import 'screens/otp_screen.dart';
 import 'screens/qr_scanner_screen.dart';
 import 'screens/global_menu.dart';
+import 'screens/size_selection_screen.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
@@ -14,8 +15,9 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'MVK APP',
-      home: const WelcomeScreen(),
+      home: const SizeSelectionScreen(),
       routes: {
+        SizeSelectionScreen.routeName: (ctx) => const SizeSelectionScreen(),
         WelcomeScreen.routeName: (ctx) => const WelcomeScreen(),
         AuthScreen.routeName: (ctx) => const AuthScreen(),
         OtpScreen.routeName: (ctx) => const OtpScreen(),

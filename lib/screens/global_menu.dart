@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../style.dart';
 import '../widgets/photo_tile.dart';
 import '../models/lockers.dart';
+import '../widgets/screen_title.dart';
+import '../widgets/main_block.dart';
 
 class MenuScreen extends StatefulWidget {
   static const routeName = '/menu';
@@ -35,82 +37,44 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          actions: [
-            IconButton(
-              iconSize: 36,
-              onPressed: () {},
-              icon: const Icon(Icons.history),
-            ),
-            IconButton(
-              iconSize: 36,
-              onPressed: () {},
-              icon: const Icon(Icons.qr_code),
-            ),
-            const SizedBox(width: 10)
-          ],
-        ),
-        body: isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : SizedBox(
-                width: double.infinity,
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 180,
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Головне меню',
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.headline2,
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: Text(
-                                fullLockerName,
-                                textAlign: TextAlign.center,
-                                style: subtitleTextStyle,
-                              ),
-                            )
-                          ]),
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        actions: [
+          IconButton(
+            iconSize: 36,
+            color: mainColor,
+            onPressed: () {},
+            icon: const Icon(Icons.history),
+          ),
+          IconButton(
+            iconSize: 36,
+            color: mainColor,
+            onPressed: () {},
+            icon: const Icon(Icons.qr_code),
+          ),
+          const SizedBox(width: 10)
+        ],
+      ),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SizedBox(
+              width: double.infinity,
+              child: Column(
+                children: [
+                  ScreenTitle(
+                    'Головне меню',
+                    subTitle: fullLockerName,
+                  ),
+                  MainBlock(
+                    child: ListView(
+                      children: menuItems(),
                     ),
-                    Expanded(
-                      child: Container(
-                          margin: const EdgeInsets.only(top: 20),
-                          decoration: const BoxDecoration(
-                              color: secondaryBackgroundColor,
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(30),
-                                  topRight: Radius.circular(30))),
-                          child: Stack(
-                            children: [
-                              Align(
-                                alignment: Alignment.topCenter,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10)),
-                                  margin: const EdgeInsets.all(20),
-                                  height: 8,
-                                  width: 80,
-                                ),
-                              ),
-                              Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 46, left: 30, right: 30),
-                                  child: ListView(
-                                    children: menuItems(),
-                                  ))
-                            ],
-                          )),
-                    ),
-                  ],
-                ),
-              ));
+                  )
+                ],
+              ),
+            ),
+    );
   }
 
   List<PhotoTile> menuItems() {
