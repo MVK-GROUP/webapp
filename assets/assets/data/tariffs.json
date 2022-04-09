@@ -1,0 +1,95 @@
+{
+  "service": "acl",
+  "color": "2D308F",
+  "algorithm": "tariff_selection",
+  "cell_types": [
+    {
+      "id": 1,
+      "title": "МАЛЕНЬКА\n415x435x798",
+      "symbol": "S",
+      "icon": null,
+      "tariffs": [
+        {
+          "time": 60,
+          "price": 3
+        },
+        {
+          "time": 120,
+          "price": 6
+        },
+        {
+          "time": 180,
+          "price": 9
+        },
+        {
+          "time": 240,
+          "price": 12
+        },
+        {
+          "time": 1440,
+          "price": 15
+        },
+        {
+          "time": 2880,
+          "price": 30
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "СЕРЕДНЯ\n475x435x798",
+      "symbol": "M",
+      "icon": null,
+      "tariffs": [
+        {
+          "time": 120,
+          "price": 7
+        },
+        {
+          "time": 180,
+          "price": 10
+        },
+        {
+          "time": 240,
+          "price": 13
+        },
+        {
+          "time": 1440,
+          "price": 14
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "ВЕЛИКА\n515x435x798",
+      "symbol": "L",
+      "icon": null,
+      "tariffs": [
+        {
+          "time": 60,
+          "price": 3
+        },
+        {
+          "time": 120,
+          "price": 6
+        },
+        {
+          "time": 180,
+          "price": 9
+        },
+        {
+          "time": 240,
+          "price": 12
+        },
+        {
+          "time": 1440,
+          "price": 15
+        },
+        {
+          "time": 2880,
+          "price": 30
+        }
+      ]
+    }
+  ]
+}
