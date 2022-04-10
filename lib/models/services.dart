@@ -4,14 +4,31 @@ import 'package:flutter/material.dart';
 import '../style.dart';
 
 class Tariff {
-  final double price;
-  final int time;
-  const Tariff(this.time, this.price);
+  final double _price;
+  final int _time;
+  const Tariff(this._time, this._price);
 
   String get hours {
-    var d = Duration(minutes: time);
+    var d = Duration(minutes: _time);
     List<String> parts = d.toString().split(':');
     return '${parts[0].padLeft(2, '0')}:${parts[1].padLeft(2, '0')}';
+  }
+
+  String get humanHours {
+    var d = Duration(minutes: _time);
+    var ending = "годин";
+    if (d.inHours < 2) {
+      ending = "години";
+    }
+    return "<${d.inHours} $ending";
+  }
+
+  String get price {
+    return _price.toStringAsFixed(2);
+  }
+
+  String priceWithCurrency(String currency) {
+    return '$price $currency';
   }
 }
 
@@ -20,11 +37,24 @@ class ACLCellType {
   final int id;
   final String? symbol;
   final List<Tariff> _tariffs = [];
+  String _currency = "UAH";
 
   ACLCellType(this.id, this.title, {this.symbol});
 
   List<Tariff> get tariff {
     return _tariffs;
+  }
+
+  String get onelineTitle {
+    return title.replaceAll("\n", ", ");
+  }
+
+  String get currency {
+    return _currency;
+  }
+
+  void setCurrency(String currency) {
+    _currency = currency;
   }
 
   void addTariff(Tariff tariff) {
@@ -47,6 +77,9 @@ Future<Map<String, Object?>> servicesLoad() async {
   if (assets.containsKey("cell_types")) {
     sizes = (assets["cell_types"] as List<dynamic>).map((e) {
       var cellType = ACLCellType(e["id"], e["title"], symbol: e["symbol"]);
+      if (assets.containsKey("currency")) {
+        cellType.setCurrency(assets["currency"]);
+      }
       if ((e as Map<String, dynamic>).containsKey("tariffs")) {
         var tariffs = e["tariffs"] as List<dynamic>;
         for (var tariff in tariffs) {

@@ -2,6 +2,7 @@
   "service": "acl",
   "color": "2D308F",
   "algorithm": "tariff_selection",
+  "currency": "UAH",
   "cell_types": [
     {
       "id": 1,

@@ -11,12 +11,13 @@ class TariffDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
     return Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
         child: Container(
-          constraints: BoxConstraints(maxWidth: 300, maxHeight: 500),
+          constraints: BoxConstraints(maxWidth: 400, maxHeight: 500),
           child: Column(
             children: [
               Align(
@@ -50,7 +51,9 @@ class TariffDialog extends StatelessWidget {
                             height: 70,
                             padding: const EdgeInsets.symmetric(vertical: 8.0),
                             child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.pop(context, e);
+                                },
                                 style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
@@ -60,31 +63,23 @@ class TariffDialog extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     const Spacer(),
-                                    const Icon(
-                                      Icons.lock_clock,
-                                      size: 28,
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
+                                    if (width > 380)
+                                      const Icon(Icons.lock_clock, size: 24),
+                                    const SizedBox(width: 5),
                                     Text(
-                                      e.hours,
+                                      e.humanHours,
                                       style: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                     const Spacer(),
-                                    const Icon(
-                                      Icons.attach_money,
-                                      size: 28,
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
+                                    if (width > 340)
+                                      const Icon(Icons.attach_money, size: 24),
                                     Text(
-                                      e.price.toString(),
+                                      e.priceWithCurrency(cellType.currency),
                                       style: const TextStyle(
-                                          fontSize: 18,
+                                          fontSize: 16,
                                           fontWeight: FontWeight.w600),
                                     ),
                                     const Spacer(),

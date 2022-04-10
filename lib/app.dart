@@ -8,6 +8,7 @@ import 'screens/otp_screen.dart';
 import 'screens/qr_scanner_screen.dart';
 import 'screens/global_menu.dart';
 import 'screens/size_selection_screen.dart';
+import 'screens/pay_screen.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
@@ -24,6 +25,7 @@ class App extends StatelessWidget {
         OtpScreen.routeName: (ctx) => const OtpScreen(),
         QrScannerScreen.routeName: (ctx) => QrScannerScreen(),
         MenuScreen.routeName: (ctx) => const MenuScreen(),
+        PayScreen.routeName: (ctx) => const PayScreen(),
       },
       theme: _theme(),
     );

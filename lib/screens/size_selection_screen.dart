@@ -3,6 +3,7 @@ import '../widgets/main_block.dart';
 import '../widgets/screen_title.dart';
 import '../widgets/tariff_dialog.dart';
 import '../models/services.dart';
+import '../screens/pay_screen.dart';
 
 class SizeSelectionScreen extends StatelessWidget {
   static const routeName = '/size-selection';
@@ -64,13 +65,17 @@ class SizeSelectionScreen extends StatelessWidget {
   }
 
   void tariffSelection(
-      ACLCellType cellType, Color tileColor, BuildContext context) {
-    showDialog(
+      ACLCellType cellType, Color tileColor, BuildContext context) async {
+    var chosenTariff = await showDialog<Tariff>(
         context: context,
         builder: (ctx) => TariffDialog(
               cellType,
               tileColor: tileColor,
             ));
+    if (chosenTariff != null) {
+      Navigator.pushNamed(context, PayScreen.routeName,
+          arguments: {"cell_type": cellType, "chosen_tariff": chosenTariff});
+    }
   }
 
   Widget cellSizeTile(BuildContext context, MediaQueryData mediaQuery,
