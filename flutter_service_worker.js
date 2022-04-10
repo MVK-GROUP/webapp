@@ -3,9 +3,9 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "main.dart.js": "375f1cfbb608d8351e9308c664464191",
-"index.html": "be1a1d139a6567a473830b281c6b3f56",
-"/": "be1a1d139a6567a473830b281c6b3f56",
+  "main.dart.js": "2bcae6d931303df8716d479747dd34cd",
+"index.html": "9528015f086e0f3f8555065e4563607c",
+"/": "9528015f086e0f3f8555065e4563607c",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "assets/fonts/MaterialIcons-Regular.otf": "7e7a6cccddf6d7b20012a548461d5d81",
 "assets/AssetManifest.json": "bd5f918bfd98995a4cccf411bde1e1d9",
@@ -270,7 +270,7 @@ const RESOURCES = {
 "assets/packages/libphonenumber_plugin/assets/js/libphonenumber.js": "8578efe7b5232496cd05944ae9ae8ce8",
 "assets/packages/libphonenumber_plugin/assets/js/stringbuffer.js": "5d8ac81dc841740b2a94e8daa7be8027",
 "assets/FontManifest.json": "7b2a36307916a9721811788013e65289",
-"assets/assets/data/tariffs.json": "7a87130fddfa94648cc777093e2e5116",
+"assets/assets/data/tariffs.json": "cfbec65674712db2ac7a5c8d0da629da",
 "assets/assets/data/lockers.json": "79dab527d63a884d3139082494743548",
 "assets/assets/images/welcome_img.png": "589cda18885e67f28ddd8272df633b09",
 "assets/NOTICES": "52ecabcd542291a4c45aec059ca78076",
