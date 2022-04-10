@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'style.dart';
 import 'screens/welcome_screen.dart';
@@ -31,9 +32,11 @@ class App extends StatelessWidget {
   ThemeData _theme() {
     return ThemeData(
       scaffoldBackgroundColor: Colors.white,
-      textTheme: const TextTheme(
-        headline4: titleSecondaryTextStyle,
-        headline2: titleTextStyle,
+      textTheme: GoogleFonts.openSansTextTheme(
+        const TextTheme(
+          headline4: titleSecondaryTextStyle,
+          headline2: titleTextStyle,
+        ),
       ),
       colorScheme: ThemeData()
           .colorScheme

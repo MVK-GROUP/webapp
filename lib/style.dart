@@ -4,8 +4,6 @@ const mainColor = Color(0xFF5C5E62);
 const secondaryColor = Color(0xFFFF8800);
 const secondaryBackgroundColor = Color(0xFFF5F5F7);
 
-const String fontNameDefault = 'OpenSans';
-
 const titleTextStyle = TextStyle(
   fontSize: 36,
   fontWeight: FontWeight.w600,
