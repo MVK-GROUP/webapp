@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'size_selection_screen.dart';
 import '../style.dart';
 import '../widgets/photo_tile.dart';
 import '../models/lockers.dart';
@@ -77,10 +78,20 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
+  void onTap(String id) {
+    print("Tap on id $id");
+    Navigator.pushNamed(context, SizeSelectionScreen.routeName);
+  }
+
   List<PhotoTile> menuItems() {
     List<PhotoTile> items = [];
     for (var element in locker.services) {
-      items.add(PhotoTile(element.imageUrl, element.title));
+      items.add(PhotoTile(
+        id: element.serviceId.toString(),
+        imageUrl: element.imageUrl,
+        title: element.title,
+        onTap: onTap,
+      ));
     }
     return items;
   }

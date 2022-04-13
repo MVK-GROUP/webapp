@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mvk_app/style.dart';
 import '../widgets/main_block.dart';
 import '../widgets/screen_title.dart';
 import '../widgets/tariff_dialog.dart';
@@ -18,6 +19,7 @@ class SizeSelectionScreen extends StatelessWidget {
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.transparent,
+        iconTheme: const IconThemeData(color: mainColor, size: 32),
       ),
       body: Column(
         children: [
