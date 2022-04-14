@@ -9,6 +9,7 @@ import 'screens/qr_scanner_screen.dart';
 import 'screens/global_menu.dart';
 import 'screens/size_selection_screen.dart';
 import 'screens/pay_screen.dart';
+import 'screens/payment_check_screen.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
@@ -26,6 +27,7 @@ class App extends StatelessWidget {
         QrScannerScreen.routeName: (ctx) => QrScannerScreen(),
         MenuScreen.routeName: (ctx) => const MenuScreen(),
         PayScreen.routeName: (ctx) => const PayScreen(),
+        PaymentCheckScreen.routeName: (ctx) => const PaymentCheckScreen(),
       },
       theme: _theme(),
     );
@@ -38,6 +40,7 @@ class App extends StatelessWidget {
         const TextTheme(
           headline4: titleSecondaryTextStyle,
           headline2: titleTextStyle,
+          bodyText1: bodyText1,
         ),
       ),
       colorScheme: ThemeData()

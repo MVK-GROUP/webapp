@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+//import 'dart:js' as js show context;
 import '../models/services.dart';
 import '../widgets/main_block.dart';
 import '../widgets/screen_title.dart';
 import '../style.dart';
 import 'global_menu.dart';
+import 'payment_check_screen.dart';
 
 class PayScreen extends StatefulWidget {
   static const routeName = '/pay-window';
@@ -108,8 +110,11 @@ class _PayScreenState extends State<PayScreen> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10))),
                       onPressed: () {
+                        //js.context.callMethod('open', [
+                        //  'https://www.liqpay.ua/api/3/checkout?data=eyJ2ZXJzaW9uIjozLCJhY3Rpb24iOiJwYXkiLCJhbW91bnQiOiI1IiwiY3VycmVuY3kiOiJVQUgiLCJkZXNjcmlwdGlvbiI6ItCi0L7QstCw0YAgMSIsInB1YmxpY19rZXkiOiJzYW5kYm94X2k4NjUzNDkxODAyMSIsImxhbmd1YWdlIjoicnUiLCJyZXN1bHRfdXJsIjoiaHR0cHM6Ly9tdmstZ3JvdXAuZ2l0aHViLmlvL3dlYmFwcC8jL3BheS13aW5kb3cifQ==&signature=lLj4McEmzmhrCuKZjuw3G0T/Zyk='
+                        //]);
                         Navigator.of(context)
-                            .pushReplacementNamed(MenuScreen.routeName);
+                            .pushReplacementNamed(PaymentCheckScreen.routeName);
                       },
                       child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 12),

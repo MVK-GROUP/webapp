@@ -19,3 +19,8 @@ const subtitleTextStyle = TextStyle(
   fontSize: 20,
   color: mainColor,
 );
+
+const bodyText1 = TextStyle(
+  color: mainColor,
+  fontSize: 18,
+);
