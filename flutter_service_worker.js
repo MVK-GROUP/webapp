@@ -3,12 +3,12 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "main.dart.js": "5ca93dd79703907d3f7dd8bac930375b",
-"index.html": "2f90c2327f0fef88fa8fb04d7ef62817",
-"/": "2f90c2327f0fef88fa8fb04d7ef62817",
+  "main.dart.js": "637179b626bc2c4e4fe19e9f01fc6e39",
+"index.html": "9737540c62086d0585a2ad5e183308ac",
+"/": "9737540c62086d0585a2ad5e183308ac",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "assets/fonts/MaterialIcons-Regular.otf": "7e7a6cccddf6d7b20012a548461d5d81",
-"assets/AssetManifest.json": "69033528f537c4f161a879d60a131da9",
+"assets/AssetManifest.json": "ab40e3a407da31ad6fc17a9eefcddd03",
 "assets/packages/intl_phone_number_input/assets/flags/mw.png": "ffc1f18eeedc1dfbb1080aa985ce7d05",
 "assets/packages/intl_phone_number_input/assets/flags/er.png": "8ca78e10878a2e97c1371b38c5d258a7",
 "assets/packages/intl_phone_number_input/assets/flags/gm.png": "7148d3715527544c2e7d8d6f4a445bb6",
@@ -273,6 +273,7 @@ const RESOURCES = {
 "assets/assets/data/tariffs.json": "cfbec65674712db2ac7a5c8d0da629da",
 "assets/assets/data/lockers.json": "79dab527d63a884d3139082494743548",
 "assets/assets/images/welcome_img.png": "589cda18885e67f28ddd8272df633b09",
+"assets/assets/images/hero.png": "39cd00910a3a13d7514c22932c8c7775",
 "assets/assets/logo/liqpay_logo.png": "ed744736fc35909e9d50253964d024de",
 "assets/assets/logo/liqpay_logo.svg": "63f084da9e7ecc88a072f0395043324c",
 "assets/NOTICES": "e4554be41b817914a1ce39343273c0ea",
