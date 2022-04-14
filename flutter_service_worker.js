@@ -3,12 +3,12 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "main.dart.js": "637179b626bc2c4e4fe19e9f01fc6e39",
-"index.html": "9737540c62086d0585a2ad5e183308ac",
-"/": "9737540c62086d0585a2ad5e183308ac",
+  "main.dart.js": "abf72d650e4a9a9dd7605dbd495b0e6c",
+"index.html": "cece14a6ba4fb1171e465bc0453845c7",
+"/": "cece14a6ba4fb1171e465bc0453845c7",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "assets/fonts/MaterialIcons-Regular.otf": "7e7a6cccddf6d7b20012a548461d5d81",
-"assets/AssetManifest.json": "ab40e3a407da31ad6fc17a9eefcddd03",
+"assets/AssetManifest.json": "c212fe4a3f1c3d480a91b6e0a80979e7",
 "assets/packages/intl_phone_number_input/assets/flags/mw.png": "ffc1f18eeedc1dfbb1080aa985ce7d05",
 "assets/packages/intl_phone_number_input/assets/flags/er.png": "8ca78e10878a2e97c1371b38c5d258a7",
 "assets/packages/intl_phone_number_input/assets/flags/gm.png": "7148d3715527544c2e7d8d6f4a445bb6",
@@ -270,6 +270,7 @@ const RESOURCES = {
 "assets/packages/libphonenumber_plugin/assets/js/libphonenumber.js": "8578efe7b5232496cd05944ae9ae8ce8",
 "assets/packages/libphonenumber_plugin/assets/js/stringbuffer.js": "5d8ac81dc841740b2a94e8daa7be8027",
 "assets/FontManifest.json": "7b2a36307916a9721811788013e65289",
+"assets/assets/data/orders.json": "4eba4a8639062815cd0d3e8c4a0fa312",
 "assets/assets/data/tariffs.json": "cfbec65674712db2ac7a5c8d0da629da",
 "assets/assets/data/lockers.json": "79dab527d63a884d3139082494743548",
 "assets/assets/images/welcome_img.png": "589cda18885e67f28ddd8272df633b09",
