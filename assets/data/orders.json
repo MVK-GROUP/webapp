@@ -1,0 +1,28 @@
+[
+    {
+        "order_id": "12312",
+        "location": "ХАБ #10001, Соломенская 3",
+        "type": "acl",
+        "status": 1,
+        "amount": 1000,
+        "currency": "UAH",
+        "title": "Оренда комірки на дві доби",
+        "date": "19.05.2021 19:43",
+        "additional_data": {
+            "expiry_date": "19.05.2021 21:43"
+        }
+    },
+    {
+        "order_id": "12313",
+        "location": "ХАБ #10001, Соломенская 3",
+        "type": "acl",
+        "status": 1,
+        "amount": 1000,
+        "currency": "UAH",
+        "title": "Оренда комірки на дві доби",
+        "date": "19.05.2021 19:43",
+        "additional_data": {
+            "expiry_date": "19.05.2021 21:43"
+        }
+    }
+]

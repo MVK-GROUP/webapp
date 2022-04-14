@@ -5,6 +5,7 @@ import '../widgets/main_block.dart';
 import '../widgets/screen_title.dart';
 import '../style.dart';
 import 'global_menu.dart';
+import '../models/order.dart';
 import 'payment_check_screen.dart';
 
 class PayScreen extends StatefulWidget {
@@ -14,22 +15,6 @@ class PayScreen extends StatefulWidget {
 
   @override
   State<PayScreen> createState() => _PayScreenState();
-}
-
-class OrderData {
-  final String title;
-  final String service;
-  final String amount;
-  final String currency;
-  final String tariff;
-
-  OrderData({
-    required this.title,
-    required this.service,
-    required this.amount,
-    required this.currency,
-    required this.tariff,
-  });
 }
 
 class _PayScreenState extends State<PayScreen> {
@@ -46,6 +31,7 @@ class _PayScreenState extends State<PayScreen> {
     ACLCellType cellType = arguments["cell_type"];
 
     final orderData = OrderData(
+        id: "12345",
         title: "Оренда комірки",
         service: "Оренда комірки (${cellType.onelineTitle})",
         amount: tariff.price,

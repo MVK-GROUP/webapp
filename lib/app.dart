@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import 'style.dart';
 import 'screens/welcome_screen.dart';
@@ -10,26 +11,33 @@ import 'screens/global_menu.dart';
 import 'screens/size_selection_screen.dart';
 import 'screens/pay_screen.dart';
 import 'screens/payment_check_screen.dart';
+import 'screens/history/history_screen.dart';
+
+import 'providers/order.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'MVK APP',
-      home: const MenuScreen(),
-      routes: {
-        SizeSelectionScreen.routeName: (ctx) => const SizeSelectionScreen(),
-        WelcomeScreen.routeName: (ctx) => const WelcomeScreen(),
-        AuthScreen.routeName: (ctx) => const AuthScreen(),
-        OtpScreen.routeName: (ctx) => const OtpScreen(),
-        QrScannerScreen.routeName: (ctx) => QrScannerScreen(),
-        MenuScreen.routeName: (ctx) => const MenuScreen(),
-        PayScreen.routeName: (ctx) => const PayScreen(),
-        PaymentCheckScreen.routeName: (ctx) => const PaymentCheckScreen(),
-      },
-      theme: _theme(),
+    return ChangeNotifierProvider(
+      create: (ctx) => Orders(),
+      child: MaterialApp(
+        title: 'MVK APP',
+        home: const MenuScreen(),
+        routes: {
+          SizeSelectionScreen.routeName: (ctx) => const SizeSelectionScreen(),
+          WelcomeScreen.routeName: (ctx) => const WelcomeScreen(),
+          AuthScreen.routeName: (ctx) => const AuthScreen(),
+          OtpScreen.routeName: (ctx) => const OtpScreen(),
+          QrScannerScreen.routeName: (ctx) => QrScannerScreen(),
+          MenuScreen.routeName: (ctx) => const MenuScreen(),
+          PayScreen.routeName: (ctx) => const PayScreen(),
+          PaymentCheckScreen.routeName: (ctx) => const PaymentCheckScreen(),
+          HistoryScreen.routeName: (ctx) => const HistoryScreen(),
+        },
+        theme: _theme(),
+      ),
     );
   }
 

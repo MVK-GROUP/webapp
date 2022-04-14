@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'size_selection_screen.dart';
+import 'history/history_screen.dart';
 import '../style.dart';
 import '../widgets/photo_tile.dart';
 import '../models/lockers.dart';
@@ -45,7 +46,9 @@ class _MenuScreenState extends State<MenuScreen> {
           IconButton(
             iconSize: 36,
             color: mainColor,
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushNamed(HistoryScreen.routeName);
+            },
             icon: const Icon(Icons.history),
           ),
           IconButton(

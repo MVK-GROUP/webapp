@@ -12,6 +12,7 @@ const titleTextStyle = TextStyle(
 
 const titleSecondaryTextStyle = TextStyle(
   fontSize: 26,
+  color: mainColor,
   fontWeight: FontWeight.bold,
 );
 
@@ -23,4 +24,9 @@ const subtitleTextStyle = TextStyle(
 const bodyText1 = TextStyle(
   color: mainColor,
   fontSize: 18,
+);
+
+const bodySmallText = TextStyle(
+  color: mainColor,
+  fontSize: 13,
 );
