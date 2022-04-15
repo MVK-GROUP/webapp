@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../style.dart';
 
 class ElevatedIconButton extends StatelessWidget {
   final Icon icon;
@@ -36,6 +37,37 @@ class ElevatedIconButton extends StatelessWidget {
                           GoogleFonts.montserrat(fontWeight: FontWeight.w600))),
             ],
           )),
+    );
+  }
+}
+
+class ElevatedDefaultButton extends StatelessWidget {
+  final Widget child;
+  final VoidCallback onPressed;
+  final Color buttonColor;
+
+  const ElevatedDefaultButton(
+      {required this.child,
+      required this.onPressed,
+      this.buttonColor = mainColor,
+      Key? key})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.maxFinite,
+      constraints: const BoxConstraints(maxWidth: 310),
+      child: ElevatedButton(
+        onPressed: onPressed,
+        child: child,
+        style: ElevatedButton.styleFrom(
+            primary: buttonColor,
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            )),
+      ),
     );
   }
 }

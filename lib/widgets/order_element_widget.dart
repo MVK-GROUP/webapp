@@ -4,10 +4,16 @@ import '../style.dart';
 class OrderElementWidget extends StatelessWidget {
   final IconData iconData;
   final String text;
+  final double iconSize;
+  final TextStyle textStyle;
 
-  const OrderElementWidget(
-      {required this.iconData, required this.text, Key? key})
-      : super(key: key);
+  const OrderElementWidget({
+    required this.iconData,
+    required this.text,
+    this.iconSize = 20,
+    this.textStyle = bodySmallText,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +21,7 @@ class OrderElementWidget extends StatelessWidget {
       children: [
         Icon(
           iconData,
-          size: 20,
+          size: iconSize,
           color: mainColor,
         ),
         Expanded(
@@ -23,7 +29,7 @@ class OrderElementWidget extends StatelessWidget {
             padding: const EdgeInsets.only(left: 8, right: 8),
             child: Text(
               text,
-              style: bodySmallText,
+              style: textStyle,
             ),
           ),
         ),

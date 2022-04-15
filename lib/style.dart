@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 const mainColor = Color(0xFF5C5E62);
 const secondaryColor = Color(0xFFFF8800);
+const dangerousColor = Color(0xFFDA534A);
 const secondaryBackgroundColor = Color(0xFFF5F5F7);
 
 const titleTextStyle = TextStyle(
@@ -29,4 +30,10 @@ const bodyText1 = TextStyle(
 const bodySmallText = TextStyle(
   color: mainColor,
   fontSize: 13,
+);
+
+const bodyText2 = TextStyle(
+  color: mainColor,
+  fontSize: 14,
+  fontWeight: FontWeight.w600,
 );

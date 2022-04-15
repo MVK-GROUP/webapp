@@ -1,7 +1,3 @@
-import 'dart:convert';
-
-import 'package:flutter/services.dart';
-
 import 'services.dart';
 
 class OrderItem {
@@ -18,7 +14,7 @@ class OrderData {
   final String id;
   final String title;
   final String service;
-  final String amount;
+  final int priceInCoins;
   final String currency;
   final String tariff;
   final String? place;
@@ -29,10 +25,18 @@ class OrderData {
       required this.id,
       required this.title,
       required this.service,
-      required this.amount,
+      required this.priceInCoins,
       required this.currency,
       required this.tariff,
       this.place}) {
     date = DateTime.now().toString();
+  }
+
+  String get price {
+    return (priceInCoins / 100).toStringAsFixed(2);
+  }
+
+  String get humanPrice {
+    return "$price $currency";
   }
 }

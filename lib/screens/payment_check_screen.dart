@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'history/history_screen.dart';
 import 'global_menu.dart';
 import '../style.dart';
-import '../widgets/icon_button.dart';
+import '../widgets/button.dart';
 
 class PaymentCheckScreen extends StatelessWidget {
   static const routeName = 'payment-check/';
@@ -52,7 +53,10 @@ class PaymentCheckScreen extends StatelessWidget {
                       ElevatedIconButton(
                         icon: const Icon(Icons.history),
                         text: "Переглянути замовлення",
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(
+                              context, HistoryScreen.routeName);
+                        },
                       ),
                       const SizedBox(height: 15),
                       ElevatedIconButton(

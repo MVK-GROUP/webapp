@@ -34,7 +34,7 @@ class _PayScreenState extends State<PayScreen> {
         id: "12345",
         title: "Оренда комірки",
         service: "Оренда комірки (${cellType.onelineTitle})",
-        amount: tariff.price,
+        priceInCoins: (double.parse(tariff.price) * 100).toInt(),
         currency: cellType.currency,
         tariff: tariff.humanHours);
 
@@ -84,8 +84,8 @@ class _PayScreenState extends State<PayScreen> {
                         children: payInfoTile("Послуга", orderData.service)),
                     TableRow(children: payInfoTile("Тариф", orderData.tariff)),
                     TableRow(
-                        children: payInfoTile("До сплати",
-                            "${orderData.amount} ${orderData.currency}")),
+                        children:
+                            payInfoTile("До сплати", orderData.humanPrice)),
                   ],
                 ),
                 const SizedBox(height: 20),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mvk_app/models/order.dart';
+import 'package:mvk_app/widgets/button.dart';
+import 'package:mvk_app/widgets/main_button.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/order.dart';
@@ -8,6 +10,8 @@ import '../../style.dart';
 import '../../widgets/main_block.dart';
 import '../../widgets/screen_title.dart';
 import '../../widgets/order_tile.dart';
+import '../../widgets/dialog.dart';
+import '../../widgets/order_element_widget.dart';
 
 class HistoryScreen extends StatefulWidget {
   static const routeName = 'history/';
@@ -98,11 +102,95 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   void showOrderDetail(BuildContext context, OrderData order) {
-    print("show order ${order.id}");
     showDialog(
+        barrierColor: Colors.transparent,
         context: context,
-        builder: (ctx) => const AlertDialog(
-              title: Text("Title"),
-            ));
+        builder: (ctx) => DefaultDialog(
+            maxHeight: 560,
+            title: "Замовлення ${order.id}",
+            body: SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: Column(children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5.0),
+                    child: OrderElementWidget(
+                      iconData: Icons.location_on,
+                      text: order.place ?? "Невідомо",
+                      iconSize: 26,
+                      textStyle: bodyText2,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5.0),
+                    child: OrderElementWidget(
+                      iconData: Icons.shopping_bag_outlined,
+                      text: order.title,
+                      iconSize: 26,
+                      textStyle: bodyText2,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5.0),
+                    child: OrderElementWidget(
+                      iconData: Icons.calendar_month,
+                      text: order.date,
+                      iconSize: 26,
+                      textStyle: bodyText2,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5.0),
+                    child: OrderElementWidget(
+                      iconData: Icons.attach_money,
+                      text: order.humanPrice,
+                      iconSize: 26,
+                      textStyle: bodyText2,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text("Кінець терміну аренди без доплати"),
+                  Text("19.05.2021 21:43"),
+                  Text("Залишилось: 20 хвилин"),
+                  const SizedBox(height: 7),
+                  Text(
+                    "Після закінченя терміну аренди вам необхідно буде сплатити суму заборгованості",
+                    style: TextStyle(fontSize: 10, color: Colors.grey),
+                  ),
+                  const SizedBox(height: 20),
+                  Container(
+                    child: Column(children: [
+                      const Text(
+                        "ДІЇ",
+                        style: bodyText2,
+                      ),
+                      const SizedBox(height: 10),
+                      ElevatedDefaultButton(
+                          buttonColor: dangerousColor,
+                          child: const Text(
+                            "Завершити оренду",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w700),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          }),
+                      const SizedBox(height: 10),
+                      ElevatedDefaultButton(
+                          child: const Text(
+                            "Відчинити комірку",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w700),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          }),
+                    ]),
+                  )
+                ]),
+              ),
+            )));
   }
 }

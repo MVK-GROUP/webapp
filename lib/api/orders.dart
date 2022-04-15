@@ -10,15 +10,14 @@ class OrderApi {
     final assets = jsonDecode(raw) as List<dynamic>;
     List<OrderData> orders = [];
     for (var e in assets) {
-      String amount = e["amount"].toString();
       orders.add(OrderData(
           status: e["status"],
           id: e["order_id"],
           title: e['title'],
           service: e['type'],
-          amount: amount,
+          priceInCoins: e["amount"],
           currency: e["currency"],
-          tariff: "$amount ${e["currency"]}",
+          tariff: "unknown",
           place: e["location"]));
     }
     return orders;
