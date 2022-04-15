@@ -46,11 +46,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
               iconSize: 36,
               color: mainColor,
               onPressed: () {
-                if (Navigator.canPop(context)) {
-                  Navigator.pop(context);
-                } else {
-                  Navigator.pushReplacementNamed(context, MenuScreen.routeName);
-                }
+                //if (Navigator.canPop(context)) {
+                //  Navigator.pop(context);
+                //} else {
+                //  Navigator.pushReplacementNamed(context, MenuScreen.routeName);
+                //}
+                Navigator.pushReplacementNamed(context, MenuScreen.routeName);
               },
               icon: const Icon(Icons.home),
             ),
@@ -149,13 +150,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Text("Кінець терміну аренди без доплати"),
-                  Text("19.05.2021 21:43"),
-                  Text("Залишилось: 20 хвилин"),
+                  Text(
+                    "Оренда до: 19.05.2021 21:43",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  Text(
+                    "Залишилось: 20 хвилин",
+                    style: TextStyle(fontSize: 16),
+                  ),
                   const SizedBox(height: 7),
                   Text(
                     "Після закінченя терміну аренди вам необхідно буде сплатити суму заборгованості",
-                    style: TextStyle(fontSize: 10, color: Colors.grey),
+                    style: TextStyle(color: Colors.grey),
                   ),
                   const SizedBox(height: 20),
                   Container(
