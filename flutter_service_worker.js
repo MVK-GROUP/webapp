@@ -3,9 +3,9 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "main.dart.js": "abf72d650e4a9a9dd7605dbd495b0e6c",
-"index.html": "cece14a6ba4fb1171e465bc0453845c7",
-"/": "cece14a6ba4fb1171e465bc0453845c7",
+  "main.dart.js": "43d28a4ae0b8f9be4852012067dd637c",
+"index.html": "5e2acec7f2b741445df00843fbf910cb",
+"/": "5e2acec7f2b741445df00843fbf910cb",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "assets/fonts/MaterialIcons-Regular.otf": "7e7a6cccddf6d7b20012a548461d5d81",
 "assets/AssetManifest.json": "c212fe4a3f1c3d480a91b6e0a80979e7",
@@ -277,7 +277,7 @@ const RESOURCES = {
 "assets/assets/images/hero.png": "39cd00910a3a13d7514c22932c8c7775",
 "assets/assets/logo/liqpay_logo.png": "ed744736fc35909e9d50253964d024de",
 "assets/assets/logo/liqpay_logo.svg": "63f084da9e7ecc88a072f0395043324c",
-"assets/NOTICES": "e4554be41b817914a1ce39343273c0ea",
+"assets/NOTICES": "87daa34cea2a6ecf733025eeed6b1ac6",
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
