@@ -12,6 +12,8 @@ import 'screens/size_selection_screen.dart';
 import 'screens/pay_screen.dart';
 import 'screens/payment_check_screen.dart';
 import 'screens/history/history_screen.dart';
+import 'screens/goods/goods_screen.dart';
+import 'screens/goods/all_goods_screen.dart';
 
 import 'providers/order.dart';
 
@@ -24,7 +26,7 @@ class App extends StatelessWidget {
       create: (ctx) => Orders(),
       child: MaterialApp(
         title: 'MVK APP',
-        home: const HistoryScreen(),
+        home: const GoodsScreen(),
         routes: {
           SizeSelectionScreen.routeName: (ctx) => const SizeSelectionScreen(),
           WelcomeScreen.routeName: (ctx) => const WelcomeScreen(),
@@ -35,6 +37,8 @@ class App extends StatelessWidget {
           PayScreen.routeName: (ctx) => const PayScreen(),
           PaymentCheckScreen.routeName: (ctx) => const PaymentCheckScreen(),
           HistoryScreen.routeName: (ctx) => const HistoryScreen(),
+          GoodsScreen.routeName: (ctx) => const GoodsScreen(),
+          AllGoodsScreen.routeName: (ctx) => const AllGoodsScreen(),
         },
         theme: _theme(),
       ),

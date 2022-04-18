@@ -3,7 +3,9 @@ import '../style.dart' show secondaryBackgroundColor;
 
 class MainBlock extends StatelessWidget {
   final Widget child;
-  const MainBlock({required this.child, Key? key}) : super(key: key);
+  final double hContentPadding;
+  const MainBlock({required this.child, this.hContentPadding = 30, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,8 @@ class MainBlock extends StatelessWidget {
                 ),
               ),
               Padding(
-                  padding: const EdgeInsets.only(top: 46, left: 30, right: 30),
+                  padding: EdgeInsets.only(
+                      top: 46, left: hContentPadding, right: hContentPadding),
                   child: child)
             ],
           )),
