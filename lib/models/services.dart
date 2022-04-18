@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import '../style.dart';
 
 class Tariff {
-  final double _price;
+  final int priceInCoins;
   final int _time;
-  const Tariff(this._time, this._price);
+  const Tariff(this._time, this.priceInCoins);
 
   String get hours {
     var d = Duration(minutes: _time);
@@ -24,7 +24,7 @@ class Tariff {
   }
 
   String get price {
-    return _price.toStringAsFixed(2);
+    return (priceInCoins / 100).toStringAsFixed(2);
   }
 
   String priceWithCurrency(String currency) {
@@ -83,8 +83,7 @@ Future<Map<String, Object?>> servicesLoad() async {
       if ((e as Map<String, dynamic>).containsKey("tariffs")) {
         var tariffs = e["tariffs"] as List<dynamic>;
         for (var tariff in tariffs) {
-          cellType.addTariff(
-              Tariff(tariff["time"], (tariff["price"] as num).toDouble()));
+          cellType.addTariff(Tariff(tariff["time"], tariff["price"] as int));
         }
       }
       return cellType;

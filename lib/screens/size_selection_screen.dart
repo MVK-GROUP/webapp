@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mvk_app/style.dart';
+import '../models/order.dart';
+import '../style.dart';
+import '../models/lockers.dart';
 import '../widgets/main_block.dart';
 import '../widgets/screen_title.dart';
 import '../widgets/tariff_dialog.dart';
@@ -75,8 +77,15 @@ class SizeSelectionScreen extends StatelessWidget {
               tileColor: tileColor,
             ));
     if (chosenTariff != null) {
+      final newOrder = OrderItem(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          amountInCoins: chosenTariff.priceInCoins,
+          helperText:
+              "Після сплати комплекс відчинить комірку і ви зможете покласти свої речі",
+          type: ServiceCategory.acl,
+          item: {"cell_type": cellType, "chosen_tariff": chosenTariff});
       Navigator.pushNamed(context, PayScreen.routeName,
-          arguments: {"cell_type": cellType, "chosen_tariff": chosenTariff});
+          arguments: {"order": newOrder});
     }
   }
 

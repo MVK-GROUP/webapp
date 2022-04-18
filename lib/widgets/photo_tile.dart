@@ -5,7 +5,7 @@ class PhotoTile extends StatelessWidget {
   final String imageUrl;
   final String title;
   final double height;
-  final Function onTap;
+  final VoidCallback onTap;
 
   const PhotoTile(
       {required this.id,
@@ -19,7 +19,7 @@ class PhotoTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onTap(id),
+      onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
           color: Colors.black38,

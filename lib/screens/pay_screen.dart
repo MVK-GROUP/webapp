@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mvk_app/models/goods.dart';
 //import 'dart:js' as js show context;
+import '../models/lockers.dart';
 import '../models/services.dart';
 import '../widgets/main_block.dart';
 import '../widgets/screen_title.dart';
@@ -7,6 +9,7 @@ import '../style.dart';
 import 'global_menu.dart';
 import '../models/order.dart';
 import 'payment_check_screen.dart';
+import '../utilities/urils.dart';
 
 class PayScreen extends StatefulWidget {
   static const routeName = '/pay-window';
@@ -20,23 +23,14 @@ class PayScreen extends StatefulWidget {
 class _PayScreenState extends State<PayScreen> {
   @override
   Widget build(BuildContext context) {
-    final arguments = ModalRoute.of(context)?.settings.arguments;
-    if (arguments == null) {
-      Navigator.pushReplacementNamed(context, MenuScreen.routeName);
-      return const Scaffold(
-        body: Text("Не вистачає даних"),
-      );
-    }
-    Tariff tariff = (arguments as Map<String, dynamic>)["chosen_tariff"];
-    ACLCellType cellType = arguments["cell_type"];
+    final navigator = Navigator.of(context);
+    final arg = ModalRoute.of(context)?.settings.arguments;
+    final check = Utils.checkRouteArg(navigator, arg);
+    if (check != null) return check;
 
-    final orderData = OrderData(
-        id: "12345",
-        title: "Оренда комірки",
-        service: "Оренда комірки (${cellType.onelineTitle})",
-        priceInCoins: (double.parse(tariff.price) * 100).toInt(),
-        currency: cellType.currency,
-        tariff: tariff.humanHours);
+    final existArgs = arg as Map<String, Object>;
+
+    final order = existArgs["order"] as OrderItem;
 
     return Scaffold(
       appBar: AppBar(
@@ -49,22 +43,13 @@ class _PayScreenState extends State<PayScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: ScreenTitle(
             "Оплата замовлення",
-            subTitle: orderData.title,
+            subTitle: order.helperText,
           ),
         ),
         MainBlock(
             child: SingleChildScrollView(
                 child: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                "Оплатіть замовлення. Після сплати вам відчиниться комірка і ви зможете покласти свої речі",
-                style: TextStyle(color: mainColor, fontSize: 18),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            const SizedBox(height: 10),
             Container(
               width: double.maxFinite,
               padding: const EdgeInsets.all(20),
@@ -81,11 +66,12 @@ class _PayScreenState extends State<PayScreen> {
                 Table(
                   children: [
                     TableRow(
-                        children: payInfoTile("Послуга", orderData.service)),
-                    TableRow(children: payInfoTile("Тариф", orderData.tariff)),
-                    TableRow(
                         children:
-                            payInfoTile("До сплати", orderData.humanPrice)),
+                            payInfoTile("Послуга", getServiceName(order))),
+                    getAdditionalInfo(order)!,
+                    TableRow(
+                        children: payInfoTile(
+                            "До сплати", order.payableWithCurrency)),
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -120,6 +106,35 @@ class _PayScreenState extends State<PayScreen> {
         )))
       ]),
     );
+  }
+
+  String getServiceName(OrderItem order) {
+    switch (order.type) {
+      case ServiceCategory.acl:
+        return "Оренда комірки";
+      case ServiceCategory.laundry:
+        return "Хімчистка";
+      case ServiceCategory.vendingMachine:
+        return "Торговий автомат";
+      default:
+        return "----------";
+    }
+  }
+
+  TableRow? getAdditionalInfo(OrderItem order) {
+    switch (order.type) {
+      case ServiceCategory.acl:
+        final tariff =
+            (order.item as Map<String, Object>)["chosen_tariff"] as Tariff;
+        return TableRow(children: payInfoTile("Тариф", tariff.humanHours));
+      case ServiceCategory.vendingMachine:
+        return TableRow(
+            children: payInfoTile("Товар", (order.item as GoodsItem).title));
+      case ServiceCategory.laundry:
+        return TableRow(children: payInfoTile("Категорія", "10kg"));
+      default:
+        return null;
+    }
   }
 
   List<Widget> payInfoTile(String left, String right) {

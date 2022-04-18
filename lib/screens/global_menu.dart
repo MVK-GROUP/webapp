@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mvk_app/screens/goods/goods_screen.dart';
 import 'size_selection_screen.dart';
 import 'history/history_screen.dart';
 import '../style.dart';
@@ -72,7 +73,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   ),
                   MainBlock(
                     child: ListView(
-                      children: menuItems(),
+                      children: menuItems(context),
                     ),
                   )
                 ],
@@ -81,19 +82,35 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  void onTap(String id) {
-    print("Tap on id $id");
-    Navigator.pushNamed(context, SizeSelectionScreen.routeName);
+  void onTap(BuildContext context, ServiceCategory category) {
+    String routeName;
+    switch (category) {
+      case ServiceCategory.vendingMachine:
+        routeName = GoodsScreen.routeName;
+        break;
+      case ServiceCategory.acl:
+        routeName = SizeSelectionScreen.routeName;
+        break;
+      default:
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text("Ще не реалізовано"),
+                  content: Text("Даний функціонал буде реалізовано пізніше"),
+                ));
+        return;
+    }
+    Navigator.pushNamed(context, routeName);
   }
 
-  List<PhotoTile> menuItems() {
+  List<PhotoTile> menuItems(BuildContext context) {
     List<PhotoTile> items = [];
     for (var element in locker.services) {
       items.add(PhotoTile(
         id: element.serviceId.toString(),
         imageUrl: element.imageUrl,
         title: element.title,
-        onTap: onTap,
+        onTap: () => onTap(context, element.category),
       ));
     }
     return items;

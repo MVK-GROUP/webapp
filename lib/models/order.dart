@@ -1,12 +1,34 @@
-import 'services.dart';
+import 'lockers.dart';
 
 class OrderItem {
   final String id;
-  final double amount;
-  final ACLCellType chosenCell;
-  final String chosenTariff;
+  final String? helperText;
+  final ServiceCategory type;
+  final Object item;
+  final int amountInCoins;
+  final String currency;
+  final String? place;
+  late final String date;
 
-  OrderItem(this.id, this.amount, this.chosenCell, this.chosenTariff);
+  OrderItem({
+    required this.id,
+    required this.amountInCoins,
+    required this.type,
+    required this.item,
+    this.place,
+    this.helperText,
+    this.currency = "UAH",
+  }) {
+    date = DateTime.now().toString();
+  }
+
+  String get payable {
+    return (amountInCoins / 100).toString();
+  }
+
+  String get payableWithCurrency {
+    return "$payable $currency";
+  }
 }
 
 class OrderData {

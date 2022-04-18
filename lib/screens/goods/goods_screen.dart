@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mvk_app/widgets/main_block.dart';
+import '../../models/lockers.dart';
+import '../../models/order.dart';
+import '../../screens/pay_screen.dart';
+import '../../widgets/main_block.dart';
 import '../../style.dart';
 import '../../widgets/screen_title.dart';
 import '../../models/goods.dart';
@@ -68,7 +71,7 @@ class GoodsScreen extends StatelessWidget {
             hContentPadding: 0,
             child: ListView.builder(
                 itemCount: categories.length,
-                itemBuilder: (context, index) {
+                itemBuilder: (ctx, index) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 20),
                     child: Wrap(
@@ -86,15 +89,10 @@ class GoodsScreen extends StatelessWidget {
                               const SizedBox(width: 10),
                               if (categories[index].goods.length > 2)
                                 TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pushNamed(
-                                          AllGoodsScreen.routeName,
-                                          arguments: {
-                                            "title": "Оберіть товар",
-                                            "subtitle": categories[index].title,
-                                            "goods": categories[index].goods,
-                                          });
-                                    },
+                                    onPressed: () => seeAll(
+                                        context,
+                                        categories[index].title,
+                                        categories[index].goods),
                                     child: const Text("Показати всі",
                                         style: bodyText2)),
                             ],
@@ -107,15 +105,13 @@ class GoodsScreen extends StatelessWidget {
                           child: ListView.builder(
                               scrollDirection: Axis.horizontal,
                               itemCount: categories[index].goods.length,
-                              itemBuilder: (context, productIndex) {
+                              itemBuilder: (ctx, productIndex) {
                                 return Padding(
                                   padding: const EdgeInsets.only(
                                       right: 20, top: 10, bottom: 10),
                                   child: GoodsItemTileWidget(
-                                    onTap: () {
-                                      print(
-                                          "tap ${categories[index].goods[productIndex].id}");
-                                    },
+                                    onTap: () => chooseGoodsItem(context,
+                                        categories[index].goods[productIndex]),
                                     textAlign: TextAlign.left,
                                     imagePath: categories[index]
                                         .goods[productIndex]
@@ -141,5 +137,28 @@ class GoodsScreen extends StatelessWidget {
                 })),
       ]),
     );
+  }
+
+  void seeAll(BuildContext context, String title, List<GoodsItem> goods) async {
+    var goodsItem = await Navigator.pushNamed(context, AllGoodsScreen.routeName,
+        arguments: {
+          "title": "Оберіть товар",
+          "subtitle": title,
+          "goods": goods,
+        });
+    if (goodsItem != null) {
+      chooseGoodsItem(context, goodsItem as GoodsItem);
+    }
+  }
+
+  void chooseGoodsItem(BuildContext context, GoodsItem goodsItem) {
+    final newOrder = OrderItem(
+        id: goodsItem.id + DateTime.now().microsecondsSinceEpoch.toString(),
+        amountInCoins: goodsItem.priceInCoins,
+        type: ServiceCategory.vendingMachine,
+        helperText: "Після сплати апарат видасть вам це замовлення",
+        item: goodsItem);
+    Navigator.of(context)
+        .pushNamed(PayScreen.routeName, arguments: {"order": newOrder});
   }
 }

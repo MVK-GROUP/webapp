@@ -107,7 +107,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         barrierColor: Colors.transparent,
         context: context,
         builder: (ctx) => DefaultDialog(
-            maxHeight: 560,
+            maxHeight: 600,
             title: "Замовлення ${order.id}",
             body: SingleChildScrollView(
               child: Container(
@@ -150,51 +150,49 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Text(
+                  const Text(
                     "Оренда до: 19.05.2021 21:43",
                     style: TextStyle(fontSize: 16),
                   ),
-                  Text(
+                  const Text(
                     "Залишилось: 20 хвилин",
                     style: TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 7),
-                  Text(
+                  const Text(
                     "Після закінченя терміну аренди вам необхідно буде сплатити суму заборгованості",
                     style: TextStyle(color: Colors.grey),
                   ),
                   const SizedBox(height: 20),
-                  Container(
-                    child: Column(children: [
-                      const Text(
-                        "ДІЇ",
-                        style: bodyText2,
-                      ),
-                      const SizedBox(height: 10),
-                      ElevatedDefaultButton(
-                          buttonColor: dangerousColor,
-                          child: const Text(
-                            "Завершити оренду",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w700),
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          }),
-                      const SizedBox(height: 10),
-                      ElevatedDefaultButton(
-                          child: const Text(
-                            "Відчинити комірку",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w700),
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          }),
-                    ]),
-                  )
+                  Column(children: [
+                    const Text(
+                      "ДІЇ",
+                      style: bodyText2,
+                    ),
+                    const SizedBox(height: 10),
+                    ElevatedDefaultButton(
+                        buttonColor: dangerousColor,
+                        child: const Text(
+                          "Завершити оренду",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w700),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        }),
+                    const SizedBox(height: 10),
+                    ElevatedDefaultButton(
+                        child: const Text(
+                          "Відчинити комірку",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w700),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        }),
+                  ])
                 ]),
               ),
             )));

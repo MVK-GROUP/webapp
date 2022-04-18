@@ -7,7 +7,7 @@ const secondaryBackgroundColor = Color(0xFFF5F5F7);
 
 const titleTextStyle = TextStyle(
   fontSize: 34,
-  fontWeight: FontWeight.w600,
+  fontWeight: FontWeight.w500,
   color: secondaryColor,
 );
 

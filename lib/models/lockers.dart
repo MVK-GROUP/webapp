@@ -6,6 +6,7 @@ enum ServiceCategory {
   laundry,
   vendingMachine,
   phoneCharging,
+  acl,
   unknown,
 }
 
@@ -50,10 +51,22 @@ class Assets {
     _lockers = assets.map((element) {
       var locker = Locker(element['locker_id'], element['name']);
       for (var service in (element['services'] as List<dynamic>)) {
+        var serviceCategory = ServiceCategory.unknown;
+        if ((service as Map<String, dynamic>).containsKey('category')) {
+          if (service['category'] == "vending_machine") {
+            serviceCategory = ServiceCategory.vendingMachine;
+          } else if (service['category'] == "laundry") {
+            serviceCategory = ServiceCategory.laundry;
+          } else if (service['category'] == "charge_phone" ||
+              service['category'] == "acl") {
+            serviceCategory = ServiceCategory.acl;
+          }
+        }
         locker.addService(Service(
           serviceId: service['service_id'],
           title: service['title'],
           imageUrl: service['picture_url'],
+          category: serviceCategory,
         ));
       }
       return locker;

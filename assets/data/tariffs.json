@@ -12,27 +12,27 @@
       "tariffs": [
         {
           "time": 60,
-          "price": 3
+          "price": 300
         },
         {
           "time": 120,
-          "price": 6
+          "price": 600
         },
         {
           "time": 180,
-          "price": 9
+          "price": 900
         },
         {
           "time": 240,
-          "price": 12
+          "price": 1200
         },
         {
           "time": 1440,
-          "price": 15
+          "price": 1500
         },
         {
           "time": 2880,
-          "price": 30
+          "price": 3000
         }
       ]
     },
@@ -48,15 +48,15 @@
         },
         {
           "time": 180,
-          "price": 10
+          "price": 1000
         },
         {
           "time": 240,
-          "price": 13
+          "price": 1300
         },
         {
           "time": 1440,
-          "price": 14
+          "price": 1400
         }
       ]
     },
@@ -68,27 +68,27 @@
       "tariffs": [
         {
           "time": 60,
-          "price": 3
+          "price": 300
         },
         {
           "time": 120,
-          "price": 6
+          "price": 600
         },
         {
           "time": 180,
-          "price": 9
+          "price": 900
         },
         {
           "time": 240,
-          "price": 12
+          "price": 1200
         },
         {
           "time": 1440,
-          "price": 15
+          "price": 1500
         },
         {
           "time": 2880,
-          "price": 30
+          "price": 3000
         }
       ]
     }

@@ -35,7 +35,7 @@ class AllGoodsScreen extends StatelessWidget {
       body: SafeArea(
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.only(left: 30, top: 20, right: 30),
+            padding: const EdgeInsets.only(left: 30, top: 10, right: 30),
             child: Column(children: [
               Text(
                 title,
@@ -43,7 +43,7 @@ class AllGoodsScreen extends StatelessWidget {
               ),
               if (subTitle != null)
                 Text(
-                  title,
+                  subTitle,
                   style: subtitleTextStyle,
                 ),
               const SizedBox(height: 20),
@@ -52,23 +52,21 @@ class AllGoodsScreen extends StatelessWidget {
                     itemCount: goods.length,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                            mainAxisExtent: 180,
+                            mainAxisExtent: 160,
                             mainAxisSpacing: 20,
                             crossAxisSpacing: 20,
                             crossAxisCount: 2),
                     itemBuilder: (context, index) {
-                      return SizedBox(
-                        width: 200,
-                        child: GoodsItemTileWidget(
-                            imagePath: goods[index].imagePath,
-                            title: goods[index].title,
-                            subTitle: Text(
-                              goods[index]
-                                  .getPriceWithCurrency(currency: "UAH"),
-                              textAlign: TextAlign.center,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w600),
-                            )),
+                      return GoodsItemTileWidget(
+                        onTap: () => Navigator.of(context).pop(goods[index]),
+                        height: 140,
+                        imagePath: goods[index].imagePath,
+                        title: goods[index].title,
+                        subTitle: Text(
+                          goods[index].getPriceWithCurrency(currency: "UAH"),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontWeight: FontWeight.w600),
+                        ),
                       );
                     }),
               )

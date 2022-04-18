@@ -26,7 +26,7 @@ class App extends StatelessWidget {
       create: (ctx) => Orders(),
       child: MaterialApp(
         title: 'MVK APP',
-        home: const GoodsScreen(),
+        home: const MenuScreen(),
         routes: {
           SizeSelectionScreen.routeName: (ctx) => const SizeSelectionScreen(),
           WelcomeScreen.routeName: (ctx) => const WelcomeScreen(),
@@ -38,7 +38,7 @@ class App extends StatelessWidget {
           PaymentCheckScreen.routeName: (ctx) => const PaymentCheckScreen(),
           HistoryScreen.routeName: (ctx) => const HistoryScreen(),
           GoodsScreen.routeName: (ctx) => const GoodsScreen(),
-          AllGoodsScreen.routeName: (ctx) => const AllGoodsScreen(),
+          AllGoodsScreen.routeName: (ctx) => const AllGoodsScreen()
         },
         theme: _theme(),
       ),
