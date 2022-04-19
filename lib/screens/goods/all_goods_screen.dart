@@ -26,11 +26,11 @@ class AllGoodsScreen extends StatelessWidget {
     final goods = existArgs["goods"] as List<GoodsItem>;
 
     return Scaffold(
-      backgroundColor: secondaryBackgroundColor,
+      backgroundColor: AppColors.secondaryBackgroundColor,
       appBar: AppBar(
         elevation: 0.0,
-        backgroundColor: secondaryBackgroundColor,
-        iconTheme: const IconThemeData(color: mainColor, size: 32),
+        backgroundColor: AppColors.secondaryBackgroundColor,
+        iconTheme: const IconThemeData(color: AppColors.mainColor, size: 32),
       ),
       body: SafeArea(
         child: Center(
@@ -39,12 +39,12 @@ class AllGoodsScreen extends StatelessWidget {
             child: Column(children: [
               Text(
                 title,
-                style: titleTextStyle,
+                style: AppStyles.titleTextStyle,
               ),
               if (subTitle != null)
                 Text(
                   subTitle,
-                  style: subtitleTextStyle,
+                  style: AppStyles.subtitleTextStyle,
                 ),
               const SizedBox(height: 20),
               Expanded(

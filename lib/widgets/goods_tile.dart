@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mvk_app/style.dart';
 
 class GoodsItemTileWidget extends StatelessWidget {
   final String imagePath;
@@ -31,14 +32,7 @@ class GoodsItemTileWidget extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFFA7B0C0).withOpacity(0.2),
-              spreadRadius: 0,
-              blurRadius: 18,
-              offset: const Offset(0, 3), // changes position of shadow
-            ),
-          ],
+          boxShadow: [AppShadows.getShadow200()],
         ),
         child: Column(
           children: [

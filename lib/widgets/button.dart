@@ -49,7 +49,7 @@ class ElevatedDefaultButton extends StatelessWidget {
   const ElevatedDefaultButton(
       {required this.child,
       required this.onPressed,
-      this.buttonColor = mainColor,
+      this.buttonColor = AppColors.mainColor,
       Key? key})
       : super(key: key);
 

@@ -36,7 +36,7 @@ class _PayScreenState extends State<PayScreen> {
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.transparent,
-        iconTheme: const IconThemeData(color: mainColor, size: 32),
+        iconTheme: const IconThemeData(color: AppColors.mainColor, size: 32),
       ),
       body: Column(children: [
         Padding(

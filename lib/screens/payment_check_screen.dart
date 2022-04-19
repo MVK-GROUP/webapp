@@ -32,7 +32,7 @@ class PaymentCheckScreen extends StatelessWidget {
                         style: Theme.of(context)
                             .textTheme
                             .headline4
-                            ?.copyWith(color: secondaryColor),
+                            ?.copyWith(color: AppColors.secondaryColor),
                       ),
                       const SizedBox(height: 10),
                       Text(

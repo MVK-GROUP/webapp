@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mvk_app/models/order.dart';
 import 'package:mvk_app/widgets/button.dart';
-import 'package:mvk_app/widgets/main_button.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/order.dart';
@@ -40,11 +39,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
       appBar: AppBar(
           elevation: 0.0,
           backgroundColor: Colors.transparent,
-          iconTheme: const IconThemeData(color: mainColor, size: 32),
+          iconTheme: const IconThemeData(color: AppColors.mainColor, size: 32),
           actions: [
             IconButton(
               iconSize: 36,
-              color: mainColor,
+              color: AppColors.mainColor,
               onPressed: () {
                 //if (Navigator.canPop(context)) {
                 //  Navigator.pop(context);
@@ -63,6 +62,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             const ScreenTitle(
               'Історія',
               subTitle: "Активні та виконані замовлення",
+              height: 120,
             ),
             MainBlock(
               child: FutureBuilder(
@@ -119,7 +119,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       iconData: Icons.location_on,
                       text: order.place ?? "Невідомо",
                       iconSize: 26,
-                      textStyle: bodyText2,
+                      textStyle: AppStyles.bodyText2,
                     ),
                   ),
                   Padding(
@@ -128,7 +128,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       iconData: Icons.shopping_bag_outlined,
                       text: order.title,
                       iconSize: 26,
-                      textStyle: bodyText2,
+                      textStyle: AppStyles.bodyText2,
                     ),
                   ),
                   Padding(
@@ -137,7 +137,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       iconData: Icons.calendar_month,
                       text: order.date,
                       iconSize: 26,
-                      textStyle: bodyText2,
+                      textStyle: AppStyles.bodyText2,
                     ),
                   ),
                   Padding(
@@ -146,7 +146,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       iconData: Icons.attach_money,
                       text: order.humanPrice,
                       iconSize: 26,
-                      textStyle: bodyText2,
+                      textStyle: AppStyles.bodyText2,
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -167,11 +167,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   Column(children: [
                     const Text(
                       "ДІЇ",
-                      style: bodyText2,
+                      style: AppStyles.bodyText2,
                     ),
                     const SizedBox(height: 10),
                     ElevatedDefaultButton(
-                        buttonColor: dangerousColor,
+                        buttonColor: AppColors.dangerousColor,
                         child: const Text(
                           "Завершити оренду",
                           textAlign: TextAlign.center,

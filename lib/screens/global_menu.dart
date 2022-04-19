@@ -46,7 +46,7 @@ class _MenuScreenState extends State<MenuScreen> {
         actions: [
           IconButton(
             iconSize: 36,
-            color: mainColor,
+            color: AppColors.mainColor,
             onPressed: () {
               Navigator.of(context).pushNamed(HistoryScreen.routeName);
             },
@@ -54,7 +54,7 @@ class _MenuScreenState extends State<MenuScreen> {
           ),
           IconButton(
             iconSize: 36,
-            color: mainColor,
+            color: AppColors.mainColor,
             onPressed: () {},
             icon: const Icon(Icons.qr_code),
           ),
@@ -94,7 +94,7 @@ class _MenuScreenState extends State<MenuScreen> {
       default:
         showDialog(
             context: context,
-            builder: (context) => AlertDialog(
+            builder: (context) => const AlertDialog(
                   title: Text("Ще не реалізовано"),
                   content: Text("Даний функціонал буде реалізовано пізніше"),
                 ));

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 import 'order_element_widget.dart';
 import '../style.dart';
 
@@ -27,6 +29,9 @@ class OrderTile extends StatelessWidget {
         ),
         constraints: const BoxConstraints(minHeight: 100),
         decoration: BoxDecoration(
+          boxShadow: [
+            AppShadows.getShadow100(),
+          ],
           borderRadius: BorderRadius.circular(15),
           color: Colors.white,
         ),
@@ -39,10 +44,10 @@ class OrderTile extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText1
-                        ?.copyWith(fontWeight: FontWeight.w600),
+                    style: GoogleFonts.sourceSansPro(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
+                    ),
                   ),
                   const SizedBox(height: 5),
                   OrderElementWidget(
@@ -57,7 +62,7 @@ class OrderTile extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Icons.remove_red_eye, color: mainColor)
+            const Icon(Icons.remove_red_eye, color: AppColors.mainColor)
           ],
         ),
       ),

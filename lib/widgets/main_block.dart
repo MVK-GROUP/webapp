@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../style.dart' show secondaryBackgroundColor;
+import '../style.dart';
 
 class MainBlock extends StatelessWidget {
   final Widget child;
@@ -13,7 +13,7 @@ class MainBlock extends StatelessWidget {
       child: Container(
           margin: const EdgeInsets.only(top: 20),
           decoration: const BoxDecoration(
-              color: secondaryBackgroundColor,
+              color: AppColors.secondaryBackgroundColor,
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(30), topRight: Radius.circular(30))),
           child: Stack(

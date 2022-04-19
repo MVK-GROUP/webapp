@@ -28,7 +28,7 @@ class ScreenTitle extends StatelessWidget {
                 child: Text(
                   subTitle!,
                   textAlign: TextAlign.center,
-                  style: subtitleTextStyle,
+                  style: AppStyles.subtitleTextStyle,
                 ),
               )
           ]),

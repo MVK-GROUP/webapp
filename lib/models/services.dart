@@ -65,7 +65,7 @@ class ACLCellType {
 Future<Map<String, Object?>> servicesLoad() async {
   final raw = await rootBundle.loadString('assets/data/tariffs.json');
   final assets = jsonDecode(raw) as Map<String, dynamic>;
-  var color = mainColor;
+  var color = AppColors.mainColor;
   if (assets.containsKey("color")) {
     var colorValue = int.tryParse('0xFF' + assets['color']);
     if (colorValue != null) {

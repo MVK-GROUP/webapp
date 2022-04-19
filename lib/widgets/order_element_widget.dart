@@ -11,7 +11,7 @@ class OrderElementWidget extends StatelessWidget {
     required this.iconData,
     required this.text,
     this.iconSize = 20,
-    this.textStyle = bodySmallText,
+    this.textStyle = AppStyles.bodySmallText,
     Key? key,
   }) : super(key: key);
 
@@ -22,7 +22,7 @@ class OrderElementWidget extends StatelessWidget {
         Icon(
           iconData,
           size: iconSize,
-          color: mainColor,
+          color: AppColors.mainColor,
         ),
         Expanded(
           child: Padding(

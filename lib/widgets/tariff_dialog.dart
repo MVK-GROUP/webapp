@@ -6,7 +6,8 @@ class TariffDialog extends StatelessWidget {
   final ACLCellType cellType;
   final Color tileColor;
 
-  const TariffDialog(this.cellType, {Key? key, this.tileColor = mainColor})
+  const TariffDialog(this.cellType,
+      {Key? key, this.tileColor = AppColors.mainColor})
       : super(key: key);
 
   @override
@@ -17,7 +18,7 @@ class TariffDialog extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
         ),
         child: Container(
-          constraints: BoxConstraints(maxWidth: 400, maxHeight: 500),
+          constraints: const BoxConstraints(maxWidth: 400, maxHeight: 500),
           child: Column(
             children: [
               Align(
@@ -26,19 +27,20 @@ class TariffDialog extends StatelessWidget {
                     padding: const EdgeInsets.all(10),
                     child: IconButton(
                         iconSize: 32,
-                        color: mainColor,
+                        color: AppColors.mainColor,
                         onPressed: () => Navigator.pop(context),
                         icon: const Icon(Icons.close))),
               ),
               Text(
                 "Оберіть тариф",
-                style: titleSecondaryTextStyle.copyWith(color: secondaryColor),
+                style: AppStyles.titleSecondaryTextStyle
+                    .copyWith(color: AppColors.secondaryColor),
               ),
               Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: Text(
                   cellType.title,
-                  style: subtitleTextStyle,
+                  style: AppStyles.subtitleTextStyle,
                   textAlign: TextAlign.center,
                 ),
               ),

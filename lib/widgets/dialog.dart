@@ -10,7 +10,7 @@ class DefaultDialog extends StatelessWidget {
   const DefaultDialog({
     required this.title,
     required this.body,
-    this.titleColor = secondaryColor,
+    this.titleColor = AppColors.secondaryColor,
     this.maxHeight = 500,
     Key? key,
   }) : super(key: key);
@@ -32,7 +32,7 @@ class DefaultDialog extends StatelessWidget {
                         top: 10, left: 10, right: 10, bottom: 5),
                     child: IconButton(
                         iconSize: 32,
-                        color: mainColor,
+                        color: AppColors.mainColor,
                         onPressed: () => Navigator.pop(context),
                         icon: const Icon(Icons.close))),
               ),

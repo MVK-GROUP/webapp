@@ -56,7 +56,7 @@ class GoodsScreen extends StatelessWidget {
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.transparent,
-        iconTheme: const IconThemeData(color: mainColor, size: 32),
+        iconTheme: const IconThemeData(color: AppColors.mainColor, size: 32),
       ),
       body: Column(children: [
         const Padding(
@@ -84,7 +84,7 @@ class GoodsScreen extends StatelessWidget {
                               Flexible(
                                   child: Text(
                                 categories[index].title,
-                                style: titleSecondaryTextStyle,
+                                style: AppStyles.titleSecondaryTextStyle,
                               )),
                               const SizedBox(width: 10),
                               if (categories[index].goods.length > 2)
@@ -94,7 +94,7 @@ class GoodsScreen extends StatelessWidget {
                                         categories[index].title,
                                         categories[index].goods),
                                     child: const Text("Показати всі",
-                                        style: bodyText2)),
+                                        style: AppStyles.bodyText2)),
                             ],
                           ),
                         ),

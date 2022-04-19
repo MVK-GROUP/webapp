@@ -50,14 +50,13 @@ class App extends StatelessWidget {
       scaffoldBackgroundColor: Colors.white,
       textTheme: GoogleFonts.openSansTextTheme(
         const TextTheme(
-          headline4: titleSecondaryTextStyle,
-          headline2: titleTextStyle,
-          bodyText1: bodyText1,
+          headline4: AppStyles.titleSecondaryTextStyle,
+          headline2: AppStyles.titleTextStyle,
+          bodyText1: AppStyles.bodyText1,
         ),
       ),
-      colorScheme: ThemeData()
-          .colorScheme
-          .copyWith(primary: mainColor, secondary: secondaryColor),
+      colorScheme: ThemeData().colorScheme.copyWith(
+          primary: AppColors.mainColor, secondary: AppColors.secondaryColor),
     );
   }
 }
