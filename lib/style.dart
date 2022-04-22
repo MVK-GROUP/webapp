@@ -4,7 +4,7 @@ class AppColors {
   static const mainColor = Color(0xFF5C5E62);
   static const secondaryColor = Color(0xFFFF8800);
   static const dangerousColor = Color(0xFFDA534A);
-  static const secondaryBackgroundColor = Color(0xFFF5F5F7);
+  static const backgroundColor = Color(0xFFF5F5F7);
 }
 
 class AppStyles {

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:mvk_app/screens/goods/goods_screen.dart';
+import 'package:provider/provider.dart';
+
+import 'goods/goods_screen.dart';
 import 'size_selection_screen.dart';
 import 'history/history_screen.dart';
+import 'enter_lockerid_screen.dart';
 import '../style.dart';
-import '../widgets/photo_tile.dart';
 import '../models/lockers.dart';
+import '../widgets/photo_tile.dart';
+import '../widgets/icon_tile.dart';
 import '../widgets/screen_title.dart';
 import '../widgets/main_block.dart';
 
@@ -48,14 +52,16 @@ class _MenuScreenState extends State<MenuScreen> {
             iconSize: 36,
             color: AppColors.mainColor,
             onPressed: () {
-              Navigator.of(context).pushNamed(HistoryScreen.routeName);
+              //Navigator.of(context).pushNamed(HistoryScreen.routeName);
             },
             icon: const Icon(Icons.history),
           ),
           IconButton(
             iconSize: 36,
             color: AppColors.mainColor,
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushNamed(EnterLockerIdScreen.routeName);
+            },
             icon: const Icon(Icons.qr_code),
           ),
           const SizedBox(width: 10)
@@ -63,21 +69,31 @@ class _MenuScreenState extends State<MenuScreen> {
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
-          : SizedBox(
-              width: double.infinity,
-              child: Column(
-                children: [
-                  ScreenTitle(
-                    'Головне меню',
-                    subTitle: fullLockerName,
+          : Consumer<LockerNotifier>(
+              builder: (context, lockerNotifier, child) {
+                return SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    children: [
+                      ScreenTitle(
+                        'Головне меню',
+                        subTitle: lockerNotifier.locker == null
+                            ? "Для нових замовлень потрібно знайти Locker"
+                            : lockerNotifier.locker?.fullLockerName,
+                      ),
+                      if (lockerNotifier.locker == null)
+                        MainBlock(
+                          maxWidth: 400,
+                          child: ListView(children: iconTiles(context)),
+                        ),
+                      if (lockerNotifier.locker != null)
+                        MainBlock(
+                          child: ListView(children: menuItems(context)),
+                        ),
+                    ],
                   ),
-                  MainBlock(
-                    child: ListView(
-                      children: menuItems(context),
-                    ),
-                  )
-                ],
-              ),
+                );
+              },
             ),
     );
   }
@@ -116,10 +132,24 @@ class _MenuScreenState extends State<MenuScreen> {
     return items;
   }
 
-  String get fullLockerName {
-    if (locker.name.isNotEmpty && locker.address != null) {
-      return "${locker.name}, ${locker.address}";
-    }
-    return locker.address ?? locker.name;
+  List<Widget> iconTiles(BuildContext context) {
+    return [
+      const SizedBox(height: 20),
+      IconTile(
+        text: "Знайти комплекс",
+        icon: Icons.qr_code_scanner_outlined,
+        onTap: () {
+          Navigator.pushNamed(context, EnterLockerIdScreen.routeName);
+        },
+      ),
+      const SizedBox(height: 20),
+      IconTile(
+        text: "Історія замовлень",
+        icon: Icons.history,
+        onTap: () {
+          //Navigator.pushNamed(context, HistoryScreen.routeName);
+        },
+      ),
+    ];
   }
 }

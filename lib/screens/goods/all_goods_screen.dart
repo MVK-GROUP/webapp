@@ -26,10 +26,10 @@ class AllGoodsScreen extends StatelessWidget {
     final goods = existArgs["goods"] as List<GoodsItem>;
 
     return Scaffold(
-      backgroundColor: AppColors.secondaryBackgroundColor,
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
         elevation: 0.0,
-        backgroundColor: AppColors.secondaryBackgroundColor,
+        backgroundColor: AppColors.backgroundColor,
         iconTheme: const IconThemeData(color: AppColors.mainColor, size: 32),
       ),
       body: SafeArea(

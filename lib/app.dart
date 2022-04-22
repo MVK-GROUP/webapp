@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mvk_app/models/lockers.dart';
 import 'package:provider/provider.dart';
 
 import 'style.dart';
@@ -14,20 +15,22 @@ import 'screens/payment_check_screen.dart';
 import 'screens/history/history_screen.dart';
 import 'screens/goods/goods_screen.dart';
 import 'screens/goods/all_goods_screen.dart';
-
-import 'providers/order.dart';
+import 'screens/enter_lockerid_screen.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (ctx) => Orders(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (ctx) => LockerNotifier()),
+      ],
       child: MaterialApp(
         title: 'MVK APP',
-        home: const MenuScreen(),
+        home: const EnterLockerIdScreen(),
         routes: {
+          EnterLockerIdScreen.routeName: (ctx) => const EnterLockerIdScreen(),
           SizeSelectionScreen.routeName: (ctx) => const SizeSelectionScreen(),
           WelcomeScreen.routeName: (ctx) => const WelcomeScreen(),
           AuthScreen.routeName: (ctx) => const AuthScreen(),

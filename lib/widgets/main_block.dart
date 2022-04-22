@@ -4,7 +4,12 @@ import '../style.dart';
 class MainBlock extends StatelessWidget {
   final Widget child;
   final double hContentPadding;
-  const MainBlock({required this.child, this.hContentPadding = 30, Key? key})
+  final double maxWidth;
+  const MainBlock(
+      {required this.child,
+      this.maxWidth = 500,
+      this.hContentPadding = 30,
+      Key? key})
       : super(key: key);
 
   @override
@@ -13,10 +18,11 @@ class MainBlock extends StatelessWidget {
       child: Container(
           margin: const EdgeInsets.only(top: 20),
           decoration: const BoxDecoration(
-              color: AppColors.secondaryBackgroundColor,
+              color: AppColors.backgroundColor,
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(30), topRight: Radius.circular(30))),
           child: Stack(
+            alignment: AlignmentDirectional.topCenter,
             children: [
               Align(
                 alignment: Alignment.topCenter,
@@ -29,7 +35,8 @@ class MainBlock extends StatelessWidget {
                   width: 80,
                 ),
               ),
-              Padding(
+              Container(
+                  constraints: BoxConstraints(maxWidth: maxWidth),
                   padding: EdgeInsets.only(
                       top: 46, left: hContentPadding, right: hContentPadding),
                   child: child)
