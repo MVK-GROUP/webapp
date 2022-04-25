@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mvk_app/models/lockers.dart';
+import 'package:mvk_app/providers/order.dart';
 import 'package:provider/provider.dart';
 
 import 'style.dart';
+
 import 'screens/welcome_screen.dart';
 import 'screens/auth_screen.dart';
 import 'screens/otp_screen.dart';
@@ -25,6 +27,8 @@ class App extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (ctx) => LockerNotifier()),
+        ChangeNotifierProvider(create: (ctx) => ServiceNotifier()),
+        ChangeNotifierProvider(create: (ctx) => Orders()),
       ],
       child: MaterialApp(
         title: 'MVK APP',

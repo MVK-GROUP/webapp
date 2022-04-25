@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:mvk_app/style.dart';
 
 class PhotoTile extends StatelessWidget {
   final String id;
-  final String imageUrl;
+  final String? imageUrl;
+  final Color? backgroundColor;
   final String title;
   final double height;
   final VoidCallback onTap;
 
   const PhotoTile(
       {required this.id,
-      required this.imageUrl,
       required this.title,
       required this.onTap,
+      this.imageUrl,
+      this.backgroundColor = AppColors.mainColor,
       this.height = 100,
       Key? key})
       : super(key: key);
@@ -29,14 +32,15 @@ class PhotoTile extends StatelessWidget {
         height: height,
         child: Stack(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.network(
-                imageUrl,
-                fit: BoxFit.fitWidth,
-                width: double.infinity,
+            if (imageUrl != null)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.network(
+                  imageUrl!,
+                  fit: BoxFit.fitWidth,
+                  width: double.infinity,
+                ),
               ),
-            ),
             Center(
               child: Text(
                 title,

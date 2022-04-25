@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'lockers.dart';
 
 class OrderItem {
@@ -28,6 +29,19 @@ class OrderItem {
 
   String get payableWithCurrency {
     return "$payable $currency";
+  }
+}
+
+class OrderItemNotifier with ChangeNotifier {
+  OrderItem? _orderItem;
+
+  void setOrderItem(OrderItem orderItem) {
+    notifyListeners();
+    _orderItem = orderItem;
+  }
+
+  OrderItem? get orderItem {
+    return _orderItem;
   }
 }
 

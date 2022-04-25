@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
@@ -11,15 +12,19 @@ class Api {
 
   static Future<Locker> fetchLockerById(String lockerId) async {
     var apiUrl = "/lockers/$lockerId";
-    var res = await http.get(Uri.parse(baseUrl + apiUrl));
     try {
+      var res = await http.get(Uri.parse(baseUrl + apiUrl));
+
       if (res.statusCode == 200) {
         var locker = Locker.fromJson(
             json.decode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>);
         return locker;
       } else {
-        throw HttpException(res.reasonPhrase.toString());
+        throw HttpException(res.reasonPhrase.toString(),
+            statusCode: res.statusCode);
       }
+    } on SocketException {
+      throw HttpException("SocketException", statusCode: 500);
     } catch (e) {
       rethrow;
     }

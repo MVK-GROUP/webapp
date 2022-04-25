@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mvk_app/api/http_exceptions.dart';
 import 'package:mvk_app/models/lockers.dart';
 import 'package:mvk_app/screens/global_menu.dart';
 import 'package:mvk_app/style.dart';
@@ -142,8 +143,6 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
   }
 
   void enteredLockerId(BuildContext context, String lockerId) {
-    //var possibleLockerId = "100";
-    print("locker id: $lockerId");
     if (!isValidLockerId(lockerId)) {
       return;
     }
@@ -156,10 +155,18 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
       setState(() {
         isFetchingData = false;
       });
-      print(value);
       Navigator.pushReplacementNamed(context, MenuScreen.routeName);
     }).catchError((onError) async {
-      print(onError);
+      String titleMessage = "Щось пішло не так...";
+      String bodyMessage = "Вибачте, в нас технічні неспровності :(";
+
+      if (onError is HttpException) {
+        if (onError.statusCode == 404) {
+          titleMessage = "Комлпекс не знайдено";
+          bodyMessage =
+              "Спробуйте відсканувати QR-код на комплексі або ввеліть коректний LockerID";
+        }
+      }
       setState(() {
         isFetchingData = false;
       });
@@ -167,9 +174,8 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
         context: context,
         builder: (ctx) {
           return AlertDialog(
-            title: const Text("Комплекс не знайдено"),
-            content: const Text(
-                "Спробуйте відсканувати QR-код на комплексі або ввеліть коректний LockerID"),
+            title: Text(titleMessage),
+            content: Text(bodyMessage),
             actionsPadding:
                 const EdgeInsets.only(bottom: 10, left: 10, right: 10),
             actionsOverflowButtonSpacing: 8,
@@ -200,7 +206,6 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
           );
         },
       );
-      print("action: $action");
       if (action == null) {
       } else {
         Navigator.pushReplacementNamed(context, MenuScreen.routeName);
@@ -232,7 +237,6 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
                 lockerId[index - 1] = value;
               }
               if (!lockerId.contains(null)) {
-                print('otp code: $lockerId');
                 enteredLockerId(context, lockerId.join(''));
               }
             },

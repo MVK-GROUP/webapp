@@ -52,7 +52,7 @@ class _MenuScreenState extends State<MenuScreen> {
             iconSize: 36,
             color: AppColors.mainColor,
             onPressed: () {
-              //Navigator.of(context).pushNamed(HistoryScreen.routeName);
+              Navigator.of(context).pushNamed(HistoryScreen.routeName);
             },
             icon: const Icon(Icons.history),
           ),
@@ -88,7 +88,9 @@ class _MenuScreenState extends State<MenuScreen> {
                         ),
                       if (lockerNotifier.locker != null)
                         MainBlock(
-                          child: ListView(children: menuItems(context)),
+                          child: ListView(
+                              children:
+                                  menuItems(context, lockerNotifier.locker)),
                         ),
                     ],
                   ),
@@ -98,9 +100,9 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  void onTap(BuildContext context, ServiceCategory category) {
+  void onTap(BuildContext context, Service service) {
     String routeName;
-    switch (category) {
+    switch (service.category) {
       case ServiceCategory.vendingMachine:
         routeName = GoodsScreen.routeName;
         break;
@@ -116,19 +118,22 @@ class _MenuScreenState extends State<MenuScreen> {
                 ));
         return;
     }
+    Provider.of<ServiceNotifier>(context, listen: false).setService(service);
     Navigator.pushNamed(context, routeName);
   }
 
-  List<PhotoTile> menuItems(BuildContext context) {
+  List<PhotoTile> menuItems(BuildContext context, Locker? lckr) {
     List<PhotoTile> items = [];
-    for (var element in locker.services) {
+    for (var element in lckr!.services) {
       items.add(PhotoTile(
-        id: element.serviceId.toString(),
+        id: element.serviceId,
         imageUrl: element.imageUrl,
-        title: element.title,
-        onTap: () => onTap(context, element.category),
+        backgroundColor: element.color,
+        title: element.action,
+        onTap: () => onTap(context, element),
       ));
     }
+
     return items;
   }
 
@@ -147,7 +152,7 @@ class _MenuScreenState extends State<MenuScreen> {
         text: "Історія замовлень",
         icon: Icons.history,
         onTap: () {
-          //Navigator.pushNamed(context, HistoryScreen.routeName);
+          Navigator.pushNamed(context, HistoryScreen.routeName);
         },
       ),
     ];

@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:mvk_app/models/services.dart';
 import '../api/orders.dart';
 import 'package:mvk_app/style.dart';
 
@@ -27,19 +27,97 @@ extension ServiceCategoryExt on ServiceCategory {
 }
 
 class Service {
-  final int serviceId;
+  final String serviceId;
   final ServiceCategory category;
   final String title;
-  final String imageUrl;
+  final String? imageUrl;
   final Color color;
+  final String action;
+  final Map<String, Object> data;
 
-  const Service({
-    required this.serviceId,
-    required this.title,
-    required this.imageUrl,
-    this.color = AppColors.mainColor,
-    this.category = ServiceCategory.unknown,
-  });
+  Service(
+      {required this.serviceId,
+      required this.title,
+      this.imageUrl,
+      this.color = AppColors.mainColor,
+      this.action = "Unknown",
+      this.category = ServiceCategory.unknown,
+      this.data = const {}});
+
+  factory Service.fromJson(Map<String, dynamic> json) {
+    var serviceCategory = ServiceCategoryExt.getByString(json["service"]);
+    Map<String, Object> data = {};
+
+    String title;
+    String action;
+    switch (serviceCategory) {
+      case ServiceCategory.acl:
+        title = "Камера схову";
+        action = "Покласти речі";
+        List<ACLCellType> cellTypes = [];
+        if (json.containsKey("cell_types")) {
+          for (var element in (json["cell_types"] as List<dynamic>)) {
+            cellTypes.add(ACLCellType.fromJson(element));
+          }
+        }
+        data["cell_types"] = cellTypes;
+        break;
+      case ServiceCategory.laundry:
+        title = "Хімчистка";
+        action = "Хімчистка";
+        break;
+      case ServiceCategory.phoneCharging:
+        title = "Зарядка гаджету";
+        action = "Зарядити гаджет";
+        break;
+      case ServiceCategory.powerbank:
+        title = "Повербанк";
+        action = "Скористатись повербанком";
+        break;
+      case ServiceCategory.vendingMachine:
+        title = "Торговий автомати";
+        action = title;
+        break;
+
+      default:
+        title = "Невідомо";
+        action = title;
+    }
+    var color = AppColors.mainColor;
+    if (json.containsKey("color")) {
+      var colorValue = int.tryParse('0xFF' + json['color']);
+      if (colorValue != null) {
+        color = Color(colorValue);
+      }
+    }
+
+    return Service(
+      serviceId: json["service_id"],
+      category: serviceCategory,
+      title: title,
+      action: action,
+      color: color,
+      data: data,
+    );
+  }
+}
+
+class ServiceNotifier with ChangeNotifier {
+  Service? _currentService;
+  ServiceNotifier();
+
+  void setService(Service service) {
+    _currentService = service;
+    notifyListeners();
+  }
+
+  Service? get service {
+    return _currentService;
+  }
+
+  bool get isContainService {
+    return _currentService != null;
+  }
 }
 
 enum LockerType {
@@ -128,24 +206,7 @@ class Locker {
     if (json.containsKey("services")) {
       var services = json["services"] as List<dynamic>;
       for (Map<String, dynamic> service in services) {
-        var serviceCategory =
-            ServiceCategoryExt.getByString(service["service"]);
-
-        var color = AppColors.mainColor;
-        if (service.containsKey("color")) {
-          var colorValue = int.tryParse('0xFF' + service['color']);
-          if (colorValue != null) {
-            color = Color(colorValue);
-          }
-        }
-
-        locker.addService(Service(
-          serviceId: 1,
-          title: "service['title']",
-          imageUrl: "service['picture_url']",
-          category: serviceCategory,
-          color: color,
-        ));
+        locker.addService(Service.fromJson(service));
       }
     }
 
@@ -195,6 +256,7 @@ class LockerNotifier with ChangeNotifier {
   Future<Locker?> setLocker(String? id) async {
     if (id == null) {
       notifyListeners();
+      _currenctLocker = null;
       return null;
     } else {
       try {
@@ -234,6 +296,7 @@ class Assets {
             serviceCategory = ServiceCategory.acl;
           }
         }
+        print(service['service_id']);
         locker.addService(Service(
           serviceId: service['service_id'],
           title: service['title'],

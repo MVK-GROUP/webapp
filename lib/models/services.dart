@@ -41,6 +41,15 @@ class ACLCellType {
 
   ACLCellType(this.id, this.title, {this.symbol});
 
+  factory ACLCellType.fromJson(Map<String, dynamic> json) {
+    var cellType =
+        ACLCellType(json["id"], json["title"], symbol: json["symbol"]);
+    if (json.containsKey("tariff")) {
+      // ADD TARIFF
+    }
+    return cellType;
+  }
+
   List<Tariff> get tariff {
     return _tariffs;
   }

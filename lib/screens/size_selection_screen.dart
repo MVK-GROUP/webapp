@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:mvk_app/screens/payment_check_screen.dart';
+import 'package:mvk_app/widgets/confirm_dialog.dart';
+import 'package:provider/provider.dart';
 import '../models/order.dart';
 import '../style.dart';
 import '../models/lockers.dart';
+import '../utilities/urils.dart';
 import '../widgets/main_block.dart';
 import '../widgets/screen_title.dart';
 import '../widgets/tariff_dialog.dart';
@@ -16,6 +20,12 @@ class SizeSelectionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
+    final currentService =
+        Provider.of<ServiceNotifier>(context, listen: false).service;
+    if (currentService == null) {
+      return Utils.goToMenu(Navigator.of(context));
+    }
+    final cellTypes = currentService.data["cell_types"] as List<ACLCellType>;
 
     return Scaffold(
       appBar: AppBar(
@@ -25,44 +35,29 @@ class SizeSelectionScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: ScreenTitle(
               'Оберіть розмір комірки',
+              subTitle: 'Послуга "${currentService.title}"',
             ),
           ),
           MainBlock(
-            child: FutureBuilder(
-                future: servicesLoad(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    if (snapshot.data != null) {
-                      final data = snapshot.data as Map<String, dynamic>;
-                      return Center(
-                        child: Container(
-                          constraints: const BoxConstraints(maxWidth: 700),
-                          child: GridView(
-                            gridDelegate:
-                                SliverGridDelegateWithMaxCrossAxisExtent(
-                                    maxCrossAxisExtent: 250,
-                                    childAspectRatio:
-                                        mediaQuery.size.width <= 310 ? 2 : 1),
-                            shrinkWrap: true,
-                            children: (data["sizes"] as List<ACLCellType>)
-                                .map((size) => cellSizeTile(
-                                    context, mediaQuery, size, data["color"]))
-                                .toList(),
-                          ),
-                        ),
-                      );
-                    }
-                  }
-                  return const Center(child: CircularProgressIndicator());
-                }),
-          ),
+              child: Center(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 700),
+              child: GridView(
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 250,
+                    childAspectRatio: mediaQuery.size.width <= 310 ? 2 : 1),
+                shrinkWrap: true,
+                children: cellTypes
+                    .map((size) => cellSizeTile(
+                        context, mediaQuery, size, currentService.color))
+                    .toList(),
+              ),
+            ),
+          )),
         ],
       ),
     );
@@ -89,6 +84,25 @@ class SizeSelectionScreen extends StatelessWidget {
     }
   }
 
+  void createFreeOrder(BuildContext context, ACLCellType cellType) async {
+    var confirmDialog = await showDialog(
+      context: context,
+      builder: (ctx) => const ConfirmDialog(
+          title: "Увага",
+          text:
+              "Максимальний час безкоштовного використання комірки становить 5 годин. Після підтвердження замовлення Вам відкриється комірка. Підтвердіть або скасуйте замовлення"),
+    );
+    if (confirmDialog != null) {
+      final newOrder = OrderItem(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          amountInCoins: 0,
+          type: ServiceCategory.acl,
+          item: {"cell_type": cellType});
+      Navigator.pushNamed(context, PaymentCheckScreen.routeName,
+          arguments: {"order": newOrder});
+    }
+  }
+
   Widget cellSizeTile(BuildContext context, MediaQueryData mediaQuery,
       ACLCellType cellType, Color color) {
     return Padding(
@@ -98,7 +112,13 @@ class SizeSelectionScreen extends StatelessWidget {
             primary: color,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10))),
-        onPressed: () => tariffSelection(cellType, color, context),
+        onPressed: () {
+          if (cellType.tariff.isEmpty) {
+            createFreeOrder(context, cellType);
+          } else {
+            tariffSelection(cellType, color, context);
+          }
+        },
         child: Center(
           child: mediaQuery.size.width <= 310
               ? Row(
