@@ -3,9 +3,9 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "main.dart.js": "d2614e1001dd45bbddf8031613408afd",
-"index.html": "d491663d549870f2491e6e3d64f1c5a6",
-"/": "d491663d549870f2491e6e3d64f1c5a6",
+  "main.dart.js": "464013218fe8cd36f8feac679c6e7bd2",
+"index.html": "fdb5b1602e9323ba9a3d1f4c70063dc2",
+"/": "fdb5b1602e9323ba9a3d1f4c70063dc2",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "assets/fonts/MaterialIcons-Regular.otf": "7e7a6cccddf6d7b20012a548461d5d81",
 "assets/AssetManifest.json": "423326721ab94f2142d11490e81f390d",
@@ -272,7 +272,7 @@ const RESOURCES = {
 "assets/FontManifest.json": "7b2a36307916a9721811788013e65289",
 "assets/assets/data/orders.json": "4eba4a8639062815cd0d3e8c4a0fa312",
 "assets/assets/data/tariffs.json": "b5830fcc968643ab1c8e539952cdb88a",
-"assets/assets/data/lockers.json": "79dab527d63a884d3139082494743548",
+"assets/assets/data/lockers.json": "f20a7193194b2dd52234abddd9d8bef7",
 "assets/assets/images/welcome_img.png": "589cda18885e67f28ddd8272df633b09",
 "assets/assets/images/uploads/bakery_box.png": "b00b23e0467e71ffec1c7bc293f2840e",
 "assets/assets/images/uploads/chips1.png": "7ff520dc1fb6d194888770e56a55c35e",
