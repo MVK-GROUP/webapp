@@ -28,7 +28,7 @@ class App extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (ctx) => LockerNotifier()),
         ChangeNotifierProvider(create: (ctx) => ServiceNotifier()),
-        ChangeNotifierProvider(create: (ctx) => Orders()),
+        ChangeNotifierProvider(create: (ctx) => OrdersNotifier()),
       ],
       child: MaterialApp(
         title: 'MVK APP',

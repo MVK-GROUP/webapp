@@ -24,6 +24,66 @@ extension ServiceCategoryExt on ServiceCategory {
     }
     return ServiceCategory.unknown;
   }
+
+  static String typeToString(ServiceCategory value) {
+    if (value == ServiceCategory.acl) {
+      return "acl";
+    } else if (value == ServiceCategory.powerbank) {
+      return "powerbank";
+    }
+    return "unknown";
+  }
+}
+
+enum TariffSelectionType {
+  tariffSelection,
+  setTime,
+  quick,
+  unknown,
+}
+
+extension TariffSelectionTypeExt on TariffSelectionType {
+  static TariffSelectionType fromString(String? value) {
+    if (value == "tariff_selection") {
+      return TariffSelectionType.tariffSelection;
+    } else if (value == "set_time") {
+      return TariffSelectionType.setTime;
+    } else if (value == "quick") {
+      return TariffSelectionType.quick;
+    }
+    return TariffSelectionType.unknown;
+  }
+}
+
+enum AlgorithmType {
+  qrReading,
+  enterPinOnComplex,
+  selfService,
+  unknown,
+}
+
+extension AlgorithmTypeExt on AlgorithmType {
+  static AlgorithmType fromString(String? value) {
+    if (value == "qr_reading") {
+      return AlgorithmType.qrReading;
+    } else if (value == "enter_pin") {
+      return AlgorithmType.enterPinOnComplex;
+    } else if (value == "self_service") {
+      return AlgorithmType.selfService;
+    }
+    return AlgorithmType.unknown;
+  }
+
+  static String toStr(AlgorithmType algorithm) {
+    if (algorithm == AlgorithmType.qrReading) {
+      return "qr_reading";
+    } else if (algorithm == AlgorithmType.enterPinOnComplex) {
+      return "enter_pin";
+    } else if (algorithm == AlgorithmType.selfService) {
+      return "self_service";
+    }
+    return "unknown";
+  }
 }
 
 class Service {
@@ -54,7 +114,12 @@ class Service {
       case ServiceCategory.acl:
         title = "Камера схову";
         action = "Покласти речі";
+
+        data["algorithm"] = AlgorithmTypeExt.fromString(json["algorithm"]);
+        data["tariff_selection_type"] =
+            TariffSelectionTypeExt.fromString(json["tariff_selection_type"]);
         List<ACLCellType> cellTypes = [];
+
         if (json.containsKey("cell_types")) {
           for (var element in (json["cell_types"] as List<dynamic>)) {
             cellTypes.add(ACLCellType.fromJson(element));
@@ -135,6 +200,15 @@ extension LockerTypeExt on LockerType {
     }
     return LockerType.free;
   }
+
+  static String typeToString(LockerType value) {
+    if (value == LockerType.paid) {
+      return "paid";
+    } else if (value == LockerType.hub) {
+      return "hub";
+    }
+    return "free";
+  }
 }
 
 enum LockerStatus {
@@ -211,38 +285,6 @@ class Locker {
     }
 
     return locker;
-
-    // "services": [
-    //     {\
-    //         "algorithm": "tariff_selection",
-    //         "cell_types": {
-    //             "service": "acl",
-    //             "color": "2D308F",
-    //             "algorithm": "tariff_selection",
-    //             "currency": "UAH",
-    //             "cell_types": [
-    //                 {
-    //                     "id": 1,
-    //                     "title": "МАЛЕНЬКА\n415x435x798",
-    //                     "symbol": "S",
-    //                     "icon": null
-    //                 },
-    //                 {
-    //                     "id": 2,
-    //                     "title": "СЕРЕДНЯ\n475x435x798",
-    //                     "symbol": "M",
-    //                     "icon": null
-    //                 },
-    //                 {
-    //                     "id": 3,
-    //                     "title": "ВЕЛИКА\n515x435x798",
-    //                     "symbol": "L",
-    //                     "icon": null
-    //                 }
-    //             ]
-    //         }
-    //     }
-    // ]
   }
 }
 

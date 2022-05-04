@@ -11,6 +11,7 @@ import '../../widgets/screen_title.dart';
 import '../../widgets/order_tile.dart';
 import '../../widgets/dialog.dart';
 import '../../widgets/order_element_widget.dart';
+import 'detail_order_dialog.dart';
 
 class HistoryScreen extends StatefulWidget {
   static const routeName = 'history/';
@@ -24,7 +25,12 @@ class HistoryScreen extends StatefulWidget {
 class _HistoryScreenState extends State<HistoryScreen> {
   late Future _ordersFuture;
   Future _obtainOrdersFuture() {
-    return Provider.of<Orders>(context, listen: false).fetchAndSetOrders();
+    var data = Provider.of<OrdersNotifier>(context, listen: false);
+    if (data.orders == null) {
+      return data.fetchAndSetOrders();
+    } else {
+      return Future.value(data.orders);
+    }
   }
 
   @override
@@ -76,17 +82,19 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         child: Text("Error: ${dataSnapshot.error.toString()}"),
                       );
                     } else {
-                      return Consumer<Orders>(
+                      return Consumer<OrdersNotifier>(
                         builder: (ctx, ordersData, child) => ListView.builder(
-                          itemCount: ordersData.orders.length,
+                          itemCount: ordersData.orders == null
+                              ? 0
+                              : ordersData.orders!.length,
                           itemBuilder: (ctx, i) => Padding(
                             padding: const EdgeInsets.only(bottom: 20),
                             child: OrderTile(
-                              title: "Замовлення #${ordersData.orders[i].id}",
-                              place: ordersData.orders[i].place ?? "Невідомо",
-                              date: ordersData.orders[i].date,
+                              title: "Замовлення #${ordersData.orders![i].id}",
+                              place: ordersData.orders![i].place ?? "Невідомо",
+                              date: ordersData.orders![i].humanDate,
                               onPressed: () => showOrderDetail(
-                                  context, ordersData.orders[i]),
+                                  context, ordersData.orders![i]),
                             ),
                           ),
                         ),
@@ -104,97 +112,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   void showOrderDetail(BuildContext context, OrderData order) {
     showDialog(
-        barrierColor: Colors.transparent,
-        context: context,
-        builder: (ctx) => DefaultDialog(
-            maxHeight: 600,
-            title: "Замовлення ${order.id}",
-            body: SingleChildScrollView(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: Column(children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5.0),
-                    child: OrderElementWidget(
-                      iconData: Icons.location_on,
-                      text: order.place ?? "Невідомо",
-                      iconSize: 26,
-                      textStyle: AppStyles.bodyText2,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5.0),
-                    child: OrderElementWidget(
-                      iconData: Icons.shopping_bag_outlined,
-                      text: order.title,
-                      iconSize: 26,
-                      textStyle: AppStyles.bodyText2,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5.0),
-                    child: OrderElementWidget(
-                      iconData: Icons.calendar_month,
-                      text: order.date,
-                      iconSize: 26,
-                      textStyle: AppStyles.bodyText2,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5.0),
-                    child: OrderElementWidget(
-                      iconData: Icons.attach_money,
-                      text: order.humanPrice,
-                      iconSize: 26,
-                      textStyle: AppStyles.bodyText2,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    "Оренда до: 19.05.2021 21:43",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  const Text(
-                    "Залишилось: 20 хвилин",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  const SizedBox(height: 7),
-                  const Text(
-                    "Після закінченя терміну аренди вам необхідно буде сплатити суму заборгованості",
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                  const SizedBox(height: 20),
-                  Column(children: [
-                    const Text(
-                      "ДІЇ",
-                      style: AppStyles.bodyText2,
-                    ),
-                    const SizedBox(height: 10),
-                    ElevatedDefaultButton(
-                        buttonColor: AppColors.dangerousColor,
-                        child: const Text(
-                          "Завершити оренду",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w700),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        }),
-                    const SizedBox(height: 10),
-                    ElevatedDefaultButton(
-                        child: const Text(
-                          "Відчинити комірку",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w700),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        }),
-                  ])
-                ]),
-              ),
-            )));
+      barrierColor: Colors.transparent,
+      context: context,
+      builder: (ctx) => DetailOrderDialog(
+        order: order,
+      ),
+    );
   }
 }

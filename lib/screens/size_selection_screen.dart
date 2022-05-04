@@ -26,6 +26,9 @@ class SizeSelectionScreen extends StatelessWidget {
       return Utils.goToMenu(Navigator.of(context));
     }
     final cellTypes = currentService.data["cell_types"] as List<ACLCellType>;
+    final algorithmType = currentService.data["algorithm"] as AlgorithmType;
+    final lockerType =
+        Provider.of<LockerNotifier>(context, listen: false).locker?.type;
 
     return Scaffold(
       appBar: AppBar(
@@ -52,8 +55,8 @@ class SizeSelectionScreen extends StatelessWidget {
                     childAspectRatio: mediaQuery.size.width <= 310 ? 2 : 1),
                 shrinkWrap: true,
                 children: cellTypes
-                    .map((size) => cellSizeTile(
-                        context, mediaQuery, size, currentService.color))
+                    .map((size) => cellSizeTile(context, mediaQuery,
+                        algorithmType, lockerType, size, currentService.color))
                     .toList(),
               ),
             ),
@@ -72,8 +75,7 @@ class SizeSelectionScreen extends StatelessWidget {
               tileColor: tileColor,
             ));
     if (chosenTariff != null) {
-      final newOrder = OrderItem(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
+      final newOrder = TemporaryOrderData(
           amountInCoins: chosenTariff.priceInCoins,
           helperText:
               "Після сплати комплекс відчинить комірку і ви зможете покласти свої речі",
@@ -84,27 +86,61 @@ class SizeSelectionScreen extends StatelessWidget {
     }
   }
 
-  void createFreeOrder(BuildContext context, ACLCellType cellType) async {
+  void createFreeOrder(BuildContext context, AlgorithmType algorithmType,
+      ACLCellType cellType) async {
     var confirmDialog = await showDialog(
-      context: context,
-      builder: (ctx) => const ConfirmDialog(
-          title: "Увага",
-          text:
-              "Максимальний час безкоштовного використання комірки становить 5 годин. Після підтвердження замовлення Вам відкриється комірка. Підтвердіть або скасуйте замовлення"),
-    );
+        context: context,
+        builder: (ctx) {
+          String message = "";
+          if (cellType.tariff.isNotEmpty) {
+            message +=
+                "Максимальний час безкоштовного використання комірки становить ${cellType.tariff[0].humanHours}. ";
+          }
+          message +=
+              "Після підтвердження замовлення Вам відкриється комірка. Підтвердіть або скасуйте замовлення";
+          return ConfirmDialog(title: "Увага", text: message);
+        });
     if (confirmDialog != null) {
-      final newOrder = OrderItem(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
+      var helperText = "Замовлення оплачено. ";
+      if (algorithmType == AlgorithmType.qrReading) {
+        helperText +=
+            "В замовленні міститься QR-код, який ви можете використати для відкриття комірки. Після відкриття комірки покладіть свої речі та закрийте її";
+      } else {
+        helperText +=
+            "Зараз відчиниться комірка #7 та роздрукується чек. Обережно покладіть речі та закрийте комірку";
+      }
+
+      Map<String, Object> extraData = {};
+      extraData["type"] = "free";
+      extraData["time"] = cellType.tariff.first.minutes;
+      extraData["paid"] = 0;
+      extraData["hourly_pay"] = cellType.tariff.first.priceInCoins;
+      extraData["service"] =
+          ServiceCategoryExt.typeToString(ServiceCategory.acl);
+      extraData["algorithm"] = AlgorithmTypeExt.toStr(algorithmType);
+      extraData["pin"] = "999999";
+
+      final newOrder = TemporaryOrderData(
           amountInCoins: 0,
           type: ServiceCategory.acl,
-          item: {"cell_type": cellType});
+          helperText: helperText,
+          item: {"cell_type": cellType, "algorithm": algorithmType},
+          extraData: extraData);
+
+      // TODO: CREATE ORDER HERE
+
       Navigator.pushNamed(context, PaymentCheckScreen.routeName,
           arguments: {"order": newOrder});
     }
   }
 
-  Widget cellSizeTile(BuildContext context, MediaQueryData mediaQuery,
-      ACLCellType cellType, Color color) {
+  Widget cellSizeTile(
+      BuildContext context,
+      MediaQueryData mediaQuery,
+      AlgorithmType algorithmType,
+      LockerType? type,
+      ACLCellType cellType,
+      Color color) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ElevatedButton(
@@ -113,8 +149,9 @@ class SizeSelectionScreen extends StatelessWidget {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10))),
         onPressed: () {
-          if (cellType.tariff.isEmpty) {
-            createFreeOrder(context, cellType);
+          print("tariff: ${cellType.tariff}");
+          if (type == LockerType.free) {
+            createFreeOrder(context, algorithmType, cellType);
           } else {
             tariffSelection(cellType, color, context);
           }

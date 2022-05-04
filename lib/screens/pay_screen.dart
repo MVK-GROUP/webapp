@@ -6,7 +6,6 @@ import '../models/services.dart';
 import '../widgets/main_block.dart';
 import '../widgets/screen_title.dart';
 import '../style.dart';
-import 'global_menu.dart';
 import '../models/order.dart';
 import 'payment_check_screen.dart';
 import '../utilities/urils.dart';
@@ -30,7 +29,7 @@ class _PayScreenState extends State<PayScreen> {
 
     final existArgs = arg as Map<String, Object>;
 
-    final order = existArgs["order"] as OrderItem;
+    final order = existArgs["order"] as TemporaryOrderData;
 
     return Scaffold(
       appBar: AppBar(
@@ -65,9 +64,7 @@ class _PayScreenState extends State<PayScreen> {
                 const SizedBox(height: 20),
                 Table(
                   children: [
-                    TableRow(
-                        children:
-                            payInfoTile("Послуга", getServiceName(order))),
+                    TableRow(children: payInfoTile("Послуга", order.title)),
                     getAdditionalInfo(order)!,
                     TableRow(
                         children: payInfoTile(
@@ -108,20 +105,7 @@ class _PayScreenState extends State<PayScreen> {
     );
   }
 
-  String getServiceName(OrderItem order) {
-    switch (order.type) {
-      case ServiceCategory.acl:
-        return "Оренда комірки";
-      case ServiceCategory.laundry:
-        return "Хімчистка";
-      case ServiceCategory.vendingMachine:
-        return "Торговий автомат";
-      default:
-        return "----------";
-    }
-  }
-
-  TableRow? getAdditionalInfo(OrderItem order) {
+  TableRow? getAdditionalInfo(TemporaryOrderData order) {
     switch (order.type) {
       case ServiceCategory.acl:
         final tariff =

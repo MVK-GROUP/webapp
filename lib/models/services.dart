@@ -14,6 +14,10 @@ class Tariff {
     return '${parts[0].padLeft(2, '0')}:${parts[1].padLeft(2, '0')}';
   }
 
+  int get minutes {
+    return _time;
+  }
+
   String get humanHours {
     var d = Duration(minutes: _time);
     var ending = "годин";
@@ -39,13 +43,19 @@ class ACLCellType {
   final List<Tariff> _tariffs = [];
   String _currency = "UAH";
 
-  ACLCellType(this.id, this.title, {this.symbol});
+  ACLCellType(
+    this.id,
+    this.title, {
+    this.symbol,
+  });
 
   factory ACLCellType.fromJson(Map<String, dynamic> json) {
     var cellType =
         ACLCellType(json["id"], json["title"], symbol: json["symbol"]);
-    if (json.containsKey("tariff")) {
-      // ADD TARIFF
+    if (json.containsKey("tariffs") && json["tariffs"] != null) {
+      for (var element in (json["tariffs"] as List<dynamic>)) {
+        cellType.addTariff(Tariff(element["time"], element["price"]));
+      }
     }
     return cellType;
   }

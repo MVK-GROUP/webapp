@@ -32,7 +32,61 @@ class Api {
 }
 
 class OrderApi {
+  static const baseUrl = "http://localhost:8000/api/v1";
+
   static Future<List<OrderData>> fetchOrders() async {
+    var apiUrl = "/orders/";
+    try {
+      var res = await http.get(Uri.parse(baseUrl + apiUrl));
+
+      if (res.statusCode == 200) {
+        List<OrderData> orders = [];
+        var data = json.decode(utf8.decode(res.bodyBytes)) as List<dynamic>;
+        for (var element in data) {
+          orders.add(OrderData.fromJson(element));
+        }
+        return orders;
+      } else {
+        throw HttpException(res.reasonPhrase.toString(),
+            statusCode: res.statusCode);
+      }
+    } on SocketException {
+      throw HttpException("SocketException", statusCode: 500);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<OrderData> addOrder(
+      int lockerId, String title, Object? data) async {
+    var apiUrl = "/orders/new";
+    try {
+      final rawResponse = await http.post(
+        Uri.parse(baseUrl + apiUrl),
+        body: json.encode({
+          'locker_id': lockerId,
+          'title': title,
+          'data': data,
+        }),
+        headers: {
+          "content-type": "application/json",
+          "accept": "application/json",
+        },
+      );
+      if (rawResponse.statusCode < 400) {
+        final response = json.decode(utf8.decode(rawResponse.bodyBytes))
+            as Map<String, dynamic>;
+
+        print(response);
+        return OrderData.fromJson(response);
+      }
+      throw HttpException(rawResponse.reasonPhrase ?? "error");
+    } catch (e) {
+      throw HttpException(e.toString());
+    }
+  }
+
+  static Future<List<OrderData>> fetchDumpOrders() async {
     final raw = await rootBundle.loadString('assets/data/orders.json');
 
     final assets = jsonDecode(raw) as List<dynamic>;
@@ -45,7 +99,8 @@ class OrderApi {
           service: e['type'],
           priceInCoins: e["amount"],
           currency: e["currency"],
-          tariff: "unknown",
+          data: null,
+          date: DateTime.now(),
           place: e["location"]));
     }
     return orders;

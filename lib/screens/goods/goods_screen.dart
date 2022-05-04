@@ -152,8 +152,7 @@ class GoodsScreen extends StatelessWidget {
   }
 
   void chooseGoodsItem(BuildContext context, GoodsItem goodsItem) {
-    final newOrder = OrderItem(
-        id: goodsItem.id + DateTime.now().microsecondsSinceEpoch.toString(),
+    final newOrder = TemporaryOrderData(
         amountInCoins: goodsItem.priceInCoins,
         type: ServiceCategory.vendingMachine,
         helperText: "Після сплати апарат видасть вам це замовлення",
