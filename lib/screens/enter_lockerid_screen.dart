@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mvk_app/api/http_exceptions.dart';
 import 'package:mvk_app/models/lockers.dart';
+import 'package:mvk_app/providers/order.dart';
 import 'package:mvk_app/screens/global_menu.dart';
 import 'package:mvk_app/style.dart';
 import 'package:provider/provider.dart';
@@ -155,6 +156,7 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
       setState(() {
         isFetchingData = false;
       });
+      Provider.of<OrdersNotifier>(context, listen: false).resetOrders();
       Navigator.pushReplacementNamed(context, MenuScreen.routeName);
     }).catchError((onError) async {
       String titleMessage = "Щось пішло не так...";

@@ -8,6 +8,8 @@ class OrderTile extends StatelessWidget {
   final String title;
   final String place;
   final String date;
+  final Color containerColor;
+  final Color? pointColor;
   final VoidCallback onPressed;
 
   const OrderTile(
@@ -15,6 +17,8 @@ class OrderTile extends StatelessWidget {
       required this.place,
       required this.date,
       required this.onPressed,
+      this.pointColor,
+      this.containerColor = Colors.white,
       Key? key})
       : super(key: key);
 
@@ -33,7 +37,7 @@ class OrderTile extends StatelessWidget {
             AppShadows.getShadow100(),
           ],
           borderRadius: BorderRadius.circular(15),
-          color: Colors.white,
+          color: containerColor,
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,7 +66,16 @@ class OrderTile extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Icons.remove_red_eye, color: AppColors.mainColor)
+            Column(
+              children: [
+                const Icon(Icons.remove_red_eye, color: AppColors.mainColor),
+                if (pointColor != null)
+                  Text(
+                    ".",
+                    style: TextStyle(fontSize: 40, color: pointColor),
+                  )
+              ],
+            )
           ],
         ),
       ),

@@ -25,7 +25,7 @@ class PhotoTile extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.black38,
+          color: backgroundColor,
           borderRadius: BorderRadius.circular(12),
         ),
         margin: const EdgeInsets.only(bottom: 20),

@@ -1,6 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mvk_app/models/order.dart';
-import 'package:mvk_app/widgets/button.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/order.dart';
@@ -9,8 +10,6 @@ import '../../style.dart';
 import '../../widgets/main_block.dart';
 import '../../widgets/screen_title.dart';
 import '../../widgets/order_tile.dart';
-import '../../widgets/dialog.dart';
-import '../../widgets/order_element_widget.dart';
 import 'detail_order_dialog.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -24,12 +23,20 @@ class HistoryScreen extends StatefulWidget {
 
 class _HistoryScreenState extends State<HistoryScreen> {
   late Future _ordersFuture;
+
   Future _obtainOrdersFuture() {
     var data = Provider.of<OrdersNotifier>(context, listen: false);
     if (data.orders == null) {
       return data.fetchAndSetOrders();
     } else {
-      return Future.value(data.orders);
+      var isExistNewOrders = data.isExistOrdersWithStatus(
+          [OrderStatus.created, OrderStatus.inProgress]);
+      if (isExistNewOrders != null && isExistNewOrders) {
+        print("exist new orders");
+        return data.fetchAndSetOrders();
+      } else {
+        return Future.value(data.orders);
+      }
     }
   }
 
@@ -84,20 +91,41 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     } else {
                       return Consumer<OrdersNotifier>(
                         builder: (ctx, ordersData, child) => ListView.builder(
-                          itemCount: ordersData.orders == null
-                              ? 0
-                              : ordersData.orders!.length,
-                          itemBuilder: (ctx, i) => Padding(
-                            padding: const EdgeInsets.only(bottom: 20),
-                            child: OrderTile(
-                              title: "Замовлення #${ordersData.orders![i].id}",
-                              place: ordersData.orders![i].place ?? "Невідомо",
-                              date: ordersData.orders![i].humanDate,
-                              onPressed: () => showOrderDetail(
-                                  context, ordersData.orders![i]),
-                            ),
-                          ),
-                        ),
+                            itemCount: ordersData.orders == null
+                                ? 0
+                                : ordersData.orders!.length,
+                            itemBuilder: (ctx, i) {
+                              Color containerColor =
+                                  ordersData.orders![i].status ==
+                                          OrderStatus.completed
+                                      ? const Color.fromARGB(255, 230, 228, 228)
+                                      : Colors.white;
+                              Color? pointColor;
+                              if ([OrderStatus.error, OrderStatus.expired]
+                                  .contains(ordersData.orders![i].status)) {
+                                pointColor = AppColors.dangerousColor;
+                              } else if ([
+                                OrderStatus.created,
+                                OrderStatus.inProgress,
+                              ].contains(ordersData.orders![i].status)) {
+                                pointColor = AppColors.successColor;
+                              }
+
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 20),
+                                child: OrderTile(
+                                  title:
+                                      "Замовлення #${ordersData.orders![i].id}",
+                                  place:
+                                      ordersData.orders![i].place ?? "Невідомо",
+                                  containerColor: containerColor,
+                                  pointColor: pointColor,
+                                  date: ordersData.orders![i].humanDate,
+                                  onPressed: () => showOrderDetail(
+                                      context, ordersData.orders![i]),
+                                ),
+                              );
+                            }),
                       );
                     }
                   }

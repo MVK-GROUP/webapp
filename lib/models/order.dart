@@ -41,8 +41,39 @@ class TemporaryOrderData {
   }
 }
 
+enum OrderStatus {
+  created,
+  inProgress,
+  hold,
+  completed,
+  canceled,
+  error,
+  expired,
+}
+
+extension OrderStatusExt on OrderStatus {
+  static OrderStatus fromString(String? value) {
+    if (value == "created") {
+      return OrderStatus.created;
+    } else if (value == "in progress") {
+      return OrderStatus.inProgress;
+    } else if (value == "hold") {
+      return OrderStatus.hold;
+    } else if (value == "completed") {
+      return OrderStatus.completed;
+    } else if (value == "canceled") {
+      return OrderStatus.canceled;
+    } else if (value == "error") {
+      return OrderStatus.error;
+    } else if (value == "expired") {
+      return OrderStatus.expired;
+    }
+    return OrderStatus.error;
+  }
+}
+
 class OrderData {
-  final int status;
+  final OrderStatus status;
   final int id;
   final String title;
   final ServiceCategory service;
@@ -53,7 +84,7 @@ class OrderData {
   final DateTime date;
 
   OrderData({
-    this.status = 0,
+    this.status = OrderStatus.created,
     required this.id,
     required this.title,
     required this.service,
@@ -71,7 +102,7 @@ class OrderData {
 
     Map<String, Object> data = {};
     var jsonData = json["data"] as Map<String, dynamic>;
-    var service = ServiceCategoryExt.getByString(jsonData["service"]);
+    var service = ServiceCategoryExt.fromString(jsonData["service"]);
     if (service == ServiceCategory.acl ||
         service == ServiceCategory.powerbank) {
       data["end_date"] = DateTime.fromMillisecondsSinceEpoch(
@@ -79,6 +110,9 @@ class OrderData {
       data["algorithm"] = AlgorithmTypeExt.fromString(jsonData["algorithm"]);
       if (jsonData.containsKey("pin")) {
         data["pin"] = jsonData["pin"];
+      }
+      if (jsonData.containsKey("cell_id")) {
+        data["cell_id"] = jsonData["cell_id"];
       }
     }
     if (json.containsKey("locker") && json["locker"] != null) {
@@ -88,6 +122,7 @@ class OrderData {
       id: json["id"],
       title: json["title"] ?? "Невідомо",
       service: service,
+      status: OrderStatusExt.fromString(json["status"]),
       priceInCoins: 0,
       data: data.isEmpty ? null : data,
       place: place,
@@ -101,6 +136,10 @@ class OrderData {
 
   String datetimeToHumanDate(DateTime date) {
     return "${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
+  }
+
+  bool get isExpired {
+    return status == OrderStatus.expired || timeLeftInSeconds < 1;
   }
 
   String get humanTimeLeft {

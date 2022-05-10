@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mvk_app/api/orders.dart';
 import 'package:mvk_app/screens/payment_check_screen.dart';
 import 'package:mvk_app/widgets/confirm_dialog.dart';
+import 'package:mvk_app/widgets/sww_dialog.dart';
 import 'package:provider/provider.dart';
 import '../models/order.dart';
 import '../style.dart';
@@ -12,11 +14,16 @@ import '../widgets/tariff_dialog.dart';
 import '../models/services.dart';
 import '../screens/pay_screen.dart';
 
-class SizeSelectionScreen extends StatelessWidget {
+class SizeSelectionScreen extends StatefulWidget {
   static const routeName = '/size-selection';
 
   const SizeSelectionScreen({Key? key}) : super(key: key);
 
+  @override
+  State<SizeSelectionScreen> createState() => _SizeSelectionScreenState();
+}
+
+class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -25,10 +32,12 @@ class SizeSelectionScreen extends StatelessWidget {
     if (currentService == null) {
       return Utils.goToMenu(Navigator.of(context));
     }
+
     final cellTypes = currentService.data["cell_types"] as List<ACLCellType>;
     final algorithmType = currentService.data["algorithm"] as AlgorithmType;
-    final lockerType =
-        Provider.of<LockerNotifier>(context, listen: false).locker?.type;
+    final serviceCategoryType =
+        ServiceCategoryExt.typeToString(currentService.category);
+    final locker = Provider.of<LockerNotifier>(context, listen: false).locker;
 
     return Scaffold(
       appBar: AppBar(
@@ -55,8 +64,14 @@ class SizeSelectionScreen extends StatelessWidget {
                     childAspectRatio: mediaQuery.size.width <= 310 ? 2 : 1),
                 shrinkWrap: true,
                 children: cellTypes
-                    .map((size) => cellSizeTile(context, mediaQuery,
-                        algorithmType, lockerType, size, currentService.color))
+                    .map((size) => cellSizeTile(
+                        context,
+                        mediaQuery,
+                        serviceCategoryType,
+                        algorithmType,
+                        locker,
+                        size,
+                        currentService.color))
                     .toList(),
               ),
             ),
@@ -86,7 +101,11 @@ class SizeSelectionScreen extends StatelessWidget {
     }
   }
 
-  void createFreeOrder(BuildContext context, AlgorithmType algorithmType,
+  void createFreeOrder(
+      BuildContext context,
+      int? lockerId,
+      String serviceCategoryType,
+      AlgorithmType algorithmType,
       ACLCellType cellType) async {
     var confirmDialog = await showDialog(
         context: context,
@@ -101,10 +120,34 @@ class SizeSelectionScreen extends StatelessWidget {
           return ConfirmDialog(title: "Увага", text: message);
         });
     if (confirmDialog != null) {
-      var helperText = "Замовлення оплачено. ";
+      String? orderedCell;
+      try {
+        final res = await LockerApi.getFreeCells(lockerId ?? 0,
+            service: serviceCategoryType, typeId: cellType.id);
+        if (res.isEmpty) {
+          await showDialog(
+              context: context,
+              builder: (ctx) => const SomethingWentWrongDialog(
+                    title: "Немає вільних комірок",
+                    bodyMessage:
+                        "Нажаль немає вільних комірок. Спробуйте орендувати комірку іншого розмірку або типу",
+                  ));
+          return;
+        } else {
+          orderedCell = res.first.cellId;
+        }
+      } catch (e) {
+        print(e);
+        await showDialog(
+            context: context,
+            builder: (ctx) => const SomethingWentWrongDialog());
+        return;
+      }
+
+      var helperText = "Замовлення створено. ";
       if (algorithmType == AlgorithmType.qrReading) {
         helperText +=
-            "В замовленні міститься QR-код, який ви можете використати для відкриття комірки. Після відкриття комірки покладіть свої речі та закрийте її";
+            "В замовленні буде міститись QR-код, який ви можете використати для відкриття комірки. Після відкриття комірки покладіть свої речі та закрийте її";
       } else {
         helperText +=
             "Зараз відчиниться комірка #7 та роздрукується чек. Обережно покладіть речі та закрийте комірку";
@@ -118,7 +161,9 @@ class SizeSelectionScreen extends StatelessWidget {
       extraData["service"] =
           ServiceCategoryExt.typeToString(ServiceCategory.acl);
       extraData["algorithm"] = AlgorithmTypeExt.toStr(algorithmType);
-      extraData["pin"] = "999999";
+      //extraData["cell_id"] = "5";
+      extraData["cell_id"] = orderedCell;
+      //extraData["pin"] = "999999";
 
       final newOrder = TemporaryOrderData(
           amountInCoins: 0,
@@ -126,8 +171,6 @@ class SizeSelectionScreen extends StatelessWidget {
           helperText: helperText,
           item: {"cell_type": cellType, "algorithm": algorithmType},
           extraData: extraData);
-
-      // TODO: CREATE ORDER HERE
 
       Navigator.pushNamed(context, PaymentCheckScreen.routeName,
           arguments: {"order": newOrder});
@@ -137,8 +180,9 @@ class SizeSelectionScreen extends StatelessWidget {
   Widget cellSizeTile(
       BuildContext context,
       MediaQueryData mediaQuery,
+      String serviceCategoryType,
       AlgorithmType algorithmType,
-      LockerType? type,
+      Locker? locker,
       ACLCellType cellType,
       Color color) {
     return Padding(
@@ -150,8 +194,9 @@ class SizeSelectionScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10))),
         onPressed: () {
           print("tariff: ${cellType.tariff}");
-          if (type == LockerType.free) {
-            createFreeOrder(context, algorithmType, cellType);
+          if (locker?.type == LockerType.free) {
+            createFreeOrder(context, locker?.lockerId, serviceCategoryType,
+                algorithmType, cellType);
           } else {
             tariffSelection(cellType, color, context);
           }

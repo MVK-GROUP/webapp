@@ -6,12 +6,14 @@ class DefaultDialog extends StatelessWidget {
   final Color titleColor;
   final Widget body;
   final double maxHeight;
+  final bool useProgressBar;
 
   const DefaultDialog({
     required this.title,
     required this.body,
     this.titleColor = AppColors.secondaryColor,
     this.maxHeight = 500,
+    this.useProgressBar = false,
     Key? key,
   }) : super(key: key);
 
@@ -48,6 +50,18 @@ class DefaultDialog extends StatelessWidget {
               Expanded(
                 child: body,
               ),
+              if (useProgressBar)
+                Align(
+                  child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: const ClipRRect(
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(20),
+                              bottomRight: Radius.circular(20)),
+                          child: LinearProgressIndicator(
+                            minHeight: 5,
+                          ))),
+                ),
             ],
           ),
         ));

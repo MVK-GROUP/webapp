@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mvk_app/models/lockers.dart';
+import 'package:mvk_app/providers/order.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/order.dart';
 import '../../style.dart';
@@ -7,16 +11,105 @@ import '../../widgets/button.dart';
 import '../../widgets/dialog.dart';
 import '../../widgets/order_element_widget.dart';
 
-class DetailOrderDialog extends StatelessWidget {
+class DetailOrderDialog extends StatefulWidget {
   final OrderData order;
 
   const DetailOrderDialog({required this.order, Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final endDate = order.data!["end_date"] as DateTime;
+  State<DetailOrderDialog> createState() => _DetailOrderDialogState();
+}
 
+class _DetailOrderDialogState extends State<DetailOrderDialog> {
+  Timer? timer;
+  late OrderData order;
+  late bool isOrderLoading;
+
+  @override
+  void initState() {
+    order = widget.order;
+
+    isOrderLoading = false;
+    if ([OrderStatus.created, OrderStatus.inProgress].contains(order.status)) {
+      checkOrder();
+      timer = Timer.periodic(const Duration(seconds: 3), (timer) {
+        checkOrder();
+        print("order status: ${order.status}");
+        if (![OrderStatus.created, OrderStatus.inProgress]
+            .contains(order.status)) {
+          timer.cancel();
+        }
+        // GET ORDER STATUS
+      });
+    } else if (order.status == OrderStatus.error) {
+      checkOrder();
+    }
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  Color get orderStatusColor {
+    if ([OrderStatus.created, OrderStatus.inProgress, OrderStatus.hold]
+            .contains(order.status) &&
+        order.isExpired) {
+      return AppColors.dangerousColor;
+    }
+    if ([
+      OrderStatus.hold,
+      OrderStatus.inProgress,
+      OrderStatus.created,
+      OrderStatus.completed
+    ].contains(order.status)) {
+      return AppColors.successColor;
+    } else {
+      return AppColors.dangerousColor;
+    }
+  }
+
+  String get orderStatusText {
+    var text = "Статус замовлення: ";
+    switch (order.status) {
+      case OrderStatus.canceled:
+        text += "скасовано";
+        break;
+      case OrderStatus.error:
+        text += "помилка";
+        break;
+      case OrderStatus.expired:
+        text += "вийшов час";
+        break;
+      case OrderStatus.hold:
+        text += "активний";
+        break;
+      case OrderStatus.inProgress:
+        text += "в процесі";
+        break;
+      case OrderStatus.created:
+        text += "в процесі";
+        break;
+      case OrderStatus.completed:
+        text += "виконано";
+        break;
+      default:
+    }
+    if ([OrderStatus.created, OrderStatus.inProgress, OrderStatus.hold]
+            .contains(order.status) &&
+        order.isExpired) {
+      text = "Статус замовлення: час вийшов";
+    }
+    return text;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return DefaultDialog(
+      useProgressBar: isOrderLoading,
       maxHeight: 600,
       title: "Замовлення ${order.id}",
       body: SingleChildScrollView(
@@ -59,26 +152,39 @@ class DetailOrderDialog extends StatelessWidget {
                 textStyle: AppStyles.bodyText2,
               ),
             ),
-            const SizedBox(height: 10),
-            Text(
-              "Оренда до: ${order.datetimeToHumanDate(endDate)}",
-              style: const TextStyle(fontSize: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5.0),
+              child: OrderElementWidget(
+                iconData: Icons.playlist_add_check_circle_outlined,
+                text: orderStatusText,
+                iconSize: 26,
+                textStyle:
+                    AppStyles.bodyText2.copyWith(color: orderStatusColor),
+              ),
             ),
-            Text(
-              "Залишилось: ${order.humanTimeLeft}",
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 10),
             OrderActionsWidget(order: order),
-            const SizedBox(height: 20),
-            const Text(
-              "Після закінченя терміну аренди вам необхідно буде сплатити суму заборгованості",
-              style: TextStyle(color: Colors.grey),
-            ),
           ]),
         ),
       ),
     );
+  }
+
+  void checkOrder() async {
+    setState(() {
+      isOrderLoading = true;
+    });
+    var checkedOrder = await Provider.of<OrdersNotifier>(context, listen: false)
+        .checkOrder(order.id);
+    if (checkedOrder.status != order.status) {
+      setState(() {
+        order = checkedOrder;
+        isOrderLoading = false;
+      });
+      return;
+    }
+    setState(() {
+      isOrderLoading = false;
+    });
   }
 }
 
@@ -93,55 +199,135 @@ class OrderActionsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (order.service) {
       case ServiceCategory.acl:
-        return buildAclActions(context, order);
+        return buildAclSection(context, order);
       default:
         return Container();
     }
   }
 
-  Widget buildAclActions(BuildContext context, OrderData order) {
-    if (order.timeLeftInSeconds < 1) {
-      return const Center(child: Text("Час оренди минув"));
-    }
+  Column actionsSection(
+      {required List<ElevatedDefaultButton> actionButtons, String? message}) {
+    return Column(
+      children: [
+        if (message != null)
+          Padding(
+              padding: const EdgeInsets.only(top: 20, bottom: 20),
+              child: Text(
+                message,
+                textAlign: TextAlign.center,
+              )),
+        const Text(
+          "ДІЇ",
+          style: AppStyles.bodyText2,
+        ),
+        const SizedBox(height: 10),
+        ...actionButtons.map((btn) => Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: btn,
+            )),
+      ],
+    );
+  }
 
-    final algorithm = order.data!["algorithm"] as AlgorithmType;
-    switch (algorithm) {
-      case AlgorithmType.qrReading:
-        var pinCode = order.data!["pin"] as String?;
-        return Column(
-          children: [
-            Center(
-                child: Text(pinCode == null ? "NO PIN" : "PIN CODE: $pinCode")),
-          ],
-        );
-      default:
-        return Column(children: [
-          const Text(
-            "ДІЇ",
-            style: AppStyles.bodyText2,
+  Widget buildAclSection(BuildContext context, OrderData order) {
+    var problemBtn = ElevatedDefaultButton(
+        buttonColor: AppColors.dangerousColor,
+        child: const Text(
+          "Повідомити про проблему",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+        });
+    if (order.status == OrderStatus.completed) {
+      return actionsSection(
+          actionButtons: [problemBtn],
+          message:
+              "Замовлення виконано. Дякуємо що скористались нашим сервісом!");
+    } else if (order.status == OrderStatus.expired ||
+        order.timeLeftInSeconds < 1) {
+      // MAY ADD "Extend Order" action
+      return actionsSection(
+          actionButtons: [problemBtn],
+          message:
+              "Час замовлення вийшов, якщо Ваші речі ще залишились в комірці, повідомте про це нам");
+    } else if (order.status == OrderStatus.created ||
+        order.status == OrderStatus.inProgress) {
+      return actionsSection(
+          actionButtons: [problemBtn],
+          message:
+              "Замовлення виконується, почекайте декілька секунд. Якщо статус замовлення не зміниться через деякий час - повідомте про це нам");
+    } else if (order.status == OrderStatus.hold) {
+      List<Widget> content = [];
+      final endDate = order.data!["end_date"] as DateTime;
+      content.add(Padding(
+        padding: const EdgeInsets.only(top: 10),
+        child: Text(
+          "Оренда до: ${order.datetimeToHumanDate(endDate)}",
+          style: const TextStyle(fontSize: 16),
+        ),
+      ));
+      content.add(Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: Text(
+          "Залишилось: ${order.humanTimeLeft}",
+          style: const TextStyle(fontSize: 16),
+        ),
+      ));
+
+      final algorithm = order.data!["algorithm"] as AlgorithmType;
+      switch (algorithm) {
+        case AlgorithmType.qrReading:
+          var pinCode = order.data!["pin"] as String?;
+          content.add(Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 20),
+            child: Column(
+              children: [
+                const Text("Пінкод для відкриття комірки"),
+                Text(
+                  pinCode ?? "ПОМИЛКА",
+                  style: const TextStyle(
+                      fontSize: 40, fontWeight: FontWeight.w700),
+                ),
+              ],
+            ),
+          ));
+          break;
+        case AlgorithmType.enterPinOnComplex:
+          var pinCode = order.data!["pin"] as String?;
+          content.add(Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 20),
+            child: Column(
+              children: [
+                const Text("Пінкод для відкриття комірки"),
+                Text(
+                  pinCode ?? "ПОМИЛКА",
+                  style: const TextStyle(
+                      fontSize: 40, fontWeight: FontWeight.w700),
+                ),
+              ],
+            ),
+          ));
+          break;
+        default:
+          content.add(const Center(
+            child: Text("Невідомий алгоритм"),
+          ));
+          break;
+      }
+      content.add(actionsSection(actionButtons: [problemBtn]));
+      return Column(children: content);
+    } else {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.only(top: 20),
+          child: Text(
+            "Щось пішло нет... Спробуйте перезавантажити сторінку",
+            textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 10),
-          ElevatedDefaultButton(
-              buttonColor: AppColors.dangerousColor,
-              child: const Text(
-                "Завершити оренду",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              }),
-          const SizedBox(height: 10),
-          ElevatedDefaultButton(
-              child: const Text(
-                "Відчинити комірку",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              }),
-        ]);
+        ),
+      );
     }
   }
 }

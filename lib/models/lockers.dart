@@ -16,7 +16,7 @@ enum ServiceCategory {
 }
 
 extension ServiceCategoryExt on ServiceCategory {
-  static ServiceCategory getByString(String value) {
+  static ServiceCategory fromString(String? value) {
     if (value == "acl") {
       return ServiceCategory.acl;
     } else if (value == "powerbank") {
@@ -30,6 +30,8 @@ extension ServiceCategoryExt on ServiceCategory {
       return "acl";
     } else if (value == ServiceCategory.powerbank) {
       return "powerbank";
+    } else if (value == ServiceCategory.phoneCharging) {
+      return "phone_charge";
     }
     return "unknown";
   }
@@ -105,7 +107,7 @@ class Service {
       this.data = const {}});
 
   factory Service.fromJson(Map<String, dynamic> json) {
-    var serviceCategory = ServiceCategoryExt.getByString(json["service"]);
+    var serviceCategory = ServiceCategoryExt.fromString(json["service"]);
     Map<String, Object> data = {};
 
     String title;
@@ -302,7 +304,7 @@ class LockerNotifier with ChangeNotifier {
       return null;
     } else {
       try {
-        _currenctLocker = await Api.fetchLockerById(id);
+        _currenctLocker = await LockerApi.fetchLockerById(id);
         notifyListeners();
         return _currenctLocker;
       } catch (e) {
@@ -338,7 +340,6 @@ class Assets {
             serviceCategory = ServiceCategory.acl;
           }
         }
-        print(service['service_id']);
         locker.addService(Service(
           serviceId: service['service_id'],
           title: service['title'],
@@ -357,5 +358,19 @@ class Assets {
   Locker getLockerById(int id) {
     return _lockers?.firstWhere((element) => element.lockerId == id) ??
         Locker(lockerId: 0, name: "", type: LockerType.free);
+  }
+}
+
+class CellStatus {
+  final String cellId;
+  final String status;
+  final String typeId;
+  final String service;
+
+  const CellStatus(this.cellId, this.status, this.typeId, this.service);
+
+  factory CellStatus.fromJson(Map<String, dynamic> json) {
+    return CellStatus(
+        json["cell"], json["status"], json["type"], json["service"]);
   }
 }

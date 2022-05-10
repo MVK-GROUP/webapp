@@ -40,7 +40,10 @@ class _PaymentCheckScreenState extends State<PaymentCheckScreen> {
       final order = existArgs["order"] as TemporaryOrderData;
       Provider.of<OrdersNotifier>(context)
           .addOrder(locker.lockerId, order.title, data: order.extraData)
-          .then((value) {
+          .catchError((err) {
+        Navigator.pushReplacementNamed(context, MenuScreen.routeName);
+        print("error: $err");
+      }).then((value) {
         print("value: $value");
         setState(() {
           _isLoading = false;
