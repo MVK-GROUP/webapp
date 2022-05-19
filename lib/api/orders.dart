@@ -7,10 +7,10 @@ import '../models/lockers.dart';
 import '../models/order.dart';
 import 'http_exceptions.dart';
 
+const domain = "https://lockershub.online";
+
 class LockerApi {
-  //static const baseUrl = "http://localhost:8000/api/v1";
-  static const baseUrl =
-      "http://ec2-3-125-159-217.eu-central-1.compute.amazonaws.com/api/v1";
+  static const baseUrl = domain + "/api/v1";
 
   static Future<Locker> fetchLockerById(String lockerId) async {
     var apiUrl = "/lockers/$lockerId";
@@ -83,9 +83,7 @@ class LockerApi {
 }
 
 class OrderApi {
-  //static const baseUrl = "http://localhost:8000/api/v1";
-  static const baseUrl =
-      "http://ec2-3-125-159-217.eu-central-1.compute.amazonaws.com/api/v1";
+  static const baseUrl = domain + "/api/v1";
 
   static Future<List<OrderData>> fetchOrders() async {
     var apiUrl = "/orders/";

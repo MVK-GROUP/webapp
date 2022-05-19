@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mvk_app/api/orders.dart';
 import 'package:mvk_app/models/lockers.dart';
 import 'package:mvk_app/providers/order.dart';
 import 'package:mvk_app/screens/confirm_locker_screen.dart';
