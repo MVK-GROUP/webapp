@@ -3,8 +3,10 @@ import 'package:mvk_app/api/http_exceptions.dart';
 import 'package:mvk_app/models/lockers.dart';
 import 'package:mvk_app/providers/order.dart';
 import 'package:mvk_app/screens/global_menu.dart';
+import 'package:mvk_app/screens/qr_scanner_screen.dart';
 import 'package:mvk_app/style.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class EnterLockerIdScreen extends StatefulWidget {
   static const routeName = "/enter-lockerid";
@@ -67,31 +69,53 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
                       const SizedBox(
                         height: 16,
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: Colors.white,
-                          boxShadow: [AppShadows.getShadow200()],
-                        ),
-                        padding: const EdgeInsets.all(20),
-                        child: Column(children: [
-                          Container(
-                            height: 92,
-                            width: 92,
-                            child: Image.asset(
-                              "assets/images/scan_qr.png",
-                              fit: BoxFit.cover,
+                      GestureDetector(
+                        onTap: () async {
+                          if (kIsWeb) {
+                            final lockerId = await Navigator.of(context)
+                                .pushNamed(QrScannerScreen.routeName);
+                            if (lockerId != null) {
+                              if (lockerId is String) {
+                                enteredLockerId(context, lockerId);
+                              }
+                            }
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (context) => const AlertDialog(
+                                title: Text("Інформація"),
+                                content: Text(
+                                    "Даний функціонал не доступний на цьому типі пристрою"),
+                              ),
+                            );
+                          }
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.white,
+                            boxShadow: [AppShadows.getShadow200()],
+                          ),
+                          padding: const EdgeInsets.all(20),
+                          child: Column(children: [
+                            SizedBox(
+                              height: 92,
+                              width: 92,
+                              child: Image.asset(
+                                "assets/images/scan_qr.png",
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 10),
-                          const Text(
-                            "СКАНУВАТИ QR",
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: AppColors.mainColor,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ]),
+                            const SizedBox(height: 10),
+                            const Text(
+                              "СКАНУВАТИ QR",
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: AppColors.mainColor,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ]),
+                        ),
                       ),
                       const SizedBox(height: 20),
                       const Spacer(),

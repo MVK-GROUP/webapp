@@ -18,11 +18,31 @@ class QrScannerScreen extends StatelessWidget {
         MobileScanner(
           allowDuplicates: false,
           controller: cameraController,
-          onDetect: (barcode, args) {
-            final String code = barcode.rawValue ?? '';
-            debugPrint('Barcode found: $code');
-            if (int.tryParse(code) != null) {
+          onDetect: (barcode, args) async {
+            final String qrData = barcode.rawValue ?? '';
+            debugPrint('Barcode found: $qrData');
+            if (int.tryParse(qrData) != null) {
               Navigator.of(context).pushReplacementNamed(MenuScreen.routeName);
+            } else {
+              if (Uri.tryParse(qrData) != null) {
+                Map? queryParameters;
+                var uriData = Uri.parse(qrData);
+                queryParameters = uriData.queryParameters;
+                if (queryParameters.containsKey("locker_id") &&
+                    int.tryParse(queryParameters["locker_id"]) != null) {
+                  final String lockerId = queryParameters["locker_id"];
+                  Navigator.of(context).pop(lockerId);
+                } else {
+                  await showDialog(
+                      context: context,
+                      builder: (context) => const AlertDialog(
+                            title: Text("Інформація"),
+                            content: Text(
+                                "Не можемо ідентифікувати комплекс. Спробуйте вести Locker ID"),
+                          ));
+                  Navigator.of(context).pop();
+                }
+              }
             }
           },
         ),
