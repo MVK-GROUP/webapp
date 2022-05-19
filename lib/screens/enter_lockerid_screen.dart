@@ -75,7 +75,14 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
                         ),
                         padding: const EdgeInsets.all(20),
                         child: Column(children: [
-                          Image.asset("assets/images/scan_qr.png"),
+                          Container(
+                            height: 92,
+                            width: 92,
+                            child: Image.asset(
+                              "assets/images/scan_qr.png",
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                           const SizedBox(height: 10),
                           const Text(
                             "СКАНУВАТИ QR",
@@ -157,7 +164,8 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
         isFetchingData = false;
       });
       Provider.of<OrdersNotifier>(context, listen: false).resetOrders();
-      Navigator.pushReplacementNamed(context, MenuScreen.routeName);
+      Navigator.pushNamedAndRemoveUntil(
+          context, MenuScreen.routeName, (route) => false);
     }).catchError((onError) async {
       String titleMessage = "Щось пішло не так...";
       String bodyMessage = "Вибачте, в нас технічні неспровності :(";
@@ -166,7 +174,7 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
         if (onError.statusCode == 404) {
           titleMessage = "Комлпекс не знайдено";
           bodyMessage =
-              "Спробуйте відсканувати QR-код на комплексі або ввеліть коректний LockerID";
+              "Спробуйте відсканувати QR-код на комплексі або введіть коректний LockerID";
         }
       }
       setState(() {

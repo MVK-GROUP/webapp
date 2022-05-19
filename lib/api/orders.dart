@@ -8,13 +8,14 @@ import '../models/order.dart';
 import 'http_exceptions.dart';
 
 class LockerApi {
-  static const baseUrl = "http://localhost:8000/api/v1";
+  //static const baseUrl = "http://localhost:8000/api/v1";
+  static const baseUrl =
+      "http://ec2-3-125-159-217.eu-central-1.compute.amazonaws.com/api/v1";
 
   static Future<Locker> fetchLockerById(String lockerId) async {
     var apiUrl = "/lockers/$lockerId";
     try {
       var res = await http.get(Uri.parse(baseUrl + apiUrl));
-
       if (res.statusCode == 200) {
         var locker = Locker.fromJson(
             json.decode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>);
@@ -54,7 +55,6 @@ class LockerApi {
           "accept": "application/json",
         },
       );
-
       if (res.statusCode == 200) {
         var response =
             json.decode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>;
@@ -65,21 +65,27 @@ class LockerApi {
           cells.add(CellStatus.fromJson(element));
         }
         return cells;
+      } else if (res.body.contains("error")) {
+        throw HttpException("Не можемо зв'язатись з комплексом :(",
+            statusCode: 400);
       } else {
-        print(res.body);
-        throw HttpException(res.reasonPhrase.toString(),
-            statusCode: res.statusCode);
+        throw HttpException(res.reasonPhrase.toString(), statusCode: 500);
       }
     } on SocketException {
       throw HttpException("SocketException", statusCode: 500);
     } catch (e) {
-      rethrow;
+      if (e is HttpException && e.statusCode == 400) {
+        rethrow;
+      }
+      throw HttpException(e.toString(), statusCode: 500);
     }
   }
 }
 
 class OrderApi {
-  static const baseUrl = "http://localhost:8000/api/v1";
+  //static const baseUrl = "http://localhost:8000/api/v1";
+  static const baseUrl =
+      "http://ec2-3-125-159-217.eu-central-1.compute.amazonaws.com/api/v1";
 
   static Future<List<OrderData>> fetchOrders() async {
     var apiUrl = "/orders/";
@@ -147,13 +153,43 @@ class OrderApi {
       if (rawResponse.statusCode < 400) {
         final response = json.decode(utf8.decode(rawResponse.bodyBytes))
             as Map<String, dynamic>;
-
-        print(response);
         return OrderData.fromJson(response);
       }
       throw HttpException(rawResponse.reasonPhrase ?? "error");
     } catch (e) {
       throw HttpException(e.toString());
+    }
+  }
+
+  static Future<void> openCell(int orderId) async {
+    var apiUrl = "/orders/$orderId/open-cell";
+    try {
+      final rawResponse = await http.post(Uri.parse(baseUrl + apiUrl));
+      if (rawResponse.statusCode < 400) {
+        final response = json.decode(utf8.decode(rawResponse.bodyBytes))
+            as Map<String, dynamic>;
+
+        print(response);
+        return;
+      }
+      throw HttpException(rawResponse.reasonPhrase ?? "error");
+    } catch (e) {
+      throw HttpException(e.toString());
+    }
+  }
+
+  static Future<bool> isExistActiveOrders() async {
+    var apiUrl = "/orders/active";
+    try {
+      final rawResponse = await http.post(Uri.parse(baseUrl + apiUrl));
+      if (rawResponse.statusCode < 400) {
+        final response =
+            json.decode(utf8.decode(rawResponse.bodyBytes)) as List<dynamic>;
+        return response.isNotEmpty;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
   }
 

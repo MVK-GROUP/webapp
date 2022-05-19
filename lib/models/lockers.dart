@@ -239,6 +239,7 @@ class Locker {
   final String? description;
   final LockerStatus status;
   final LockerType type;
+  final String? imageUrl;
   final List<Service> services = [];
 
   Locker({
@@ -246,6 +247,7 @@ class Locker {
     required this.name,
     required this.type,
     this.status = LockerStatus.unknown,
+    this.imageUrl,
     this.address,
     this.latitude,
     this.longtitude,
@@ -277,6 +279,7 @@ class Locker {
       status: LockerStatusExt.getByString(
         json["status"],
       ),
+      imageUrl: json["image"],
     );
 
     if (json.containsKey("services")) {
@@ -299,8 +302,8 @@ class LockerNotifier with ChangeNotifier {
 
   Future<Locker?> setLocker(String? id) async {
     if (id == null) {
-      notifyListeners();
       _currenctLocker = null;
+      notifyListeners();
       return null;
     } else {
       try {
@@ -312,6 +315,11 @@ class LockerNotifier with ChangeNotifier {
         rethrow;
       }
     }
+  }
+
+  void setExistingLocker(Locker? locker) {
+    _currenctLocker = locker;
+    notifyListeners();
   }
 }
 

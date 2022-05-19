@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mvk_app/api/http_exceptions.dart';
 import 'package:mvk_app/api/orders.dart';
 import 'package:mvk_app/screens/payment_check_screen.dart';
 import 'package:mvk_app/widgets/confirm_dialog.dart';
@@ -137,7 +138,16 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
           orderedCell = res.first.cellId;
         }
       } catch (e) {
-        print(e);
+        if (e is HttpException) {
+          if (e.statusCode == 400) {
+            await showDialog(
+                context: context,
+                builder: (ctx) => const SomethingWentWrongDialog(
+                      bodyMessage: "Не можемо зв'язатись з комплексом",
+                    ));
+            return;
+          }
+        }
         await showDialog(
             context: context,
             builder: (ctx) => const SomethingWentWrongDialog());

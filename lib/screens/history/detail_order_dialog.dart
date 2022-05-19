@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:mvk_app/api/orders.dart';
 import 'package:mvk_app/models/lockers.dart';
 import 'package:mvk_app/providers/order.dart';
 import 'package:provider/provider.dart';
@@ -8,8 +9,10 @@ import 'package:provider/provider.dart';
 import '../../models/order.dart';
 import '../../style.dart';
 import '../../widgets/button.dart';
+import '../../widgets/confirm_dialog.dart';
 import '../../widgets/dialog.dart';
 import '../../widgets/order_element_widget.dart';
+import '../../widgets/sww_dialog.dart';
 
 class DetailOrderDialog extends StatefulWidget {
   final OrderData order;
@@ -32,12 +35,16 @@ class _DetailOrderDialogState extends State<DetailOrderDialog> {
     isOrderLoading = false;
     if ([OrderStatus.created, OrderStatus.inProgress].contains(order.status)) {
       checkOrder();
+      isOrderLoading = true;
       timer = Timer.periodic(const Duration(seconds: 3), (timer) {
         checkOrder();
         print("order status: ${order.status}");
         if (![OrderStatus.created, OrderStatus.inProgress]
             .contains(order.status)) {
           timer.cancel();
+          setState(() {
+            isOrderLoading = false;
+          });
         }
         // GET ORDER STATUS
       });
@@ -111,7 +118,7 @@ class _DetailOrderDialogState extends State<DetailOrderDialog> {
     return DefaultDialog(
       useProgressBar: isOrderLoading,
       maxHeight: 600,
-      title: "Замовлення ${order.id}",
+      title: "Замовлення #${order.id}",
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -170,21 +177,21 @@ class _DetailOrderDialogState extends State<DetailOrderDialog> {
   }
 
   void checkOrder() async {
-    setState(() {
-      isOrderLoading = true;
-    });
+    //setState(() {
+    //  isOrderLoading = true;
+    //});
     var checkedOrder = await Provider.of<OrdersNotifier>(context, listen: false)
         .checkOrder(order.id);
     if (checkedOrder.status != order.status) {
       setState(() {
         order = checkedOrder;
-        isOrderLoading = false;
+        //isOrderLoading = false;
       });
       return;
     }
-    setState(() {
-      isOrderLoading = false;
-    });
+    //setState(() {
+    //  isOrderLoading = false;
+    //});
   }
 }
 
@@ -205,28 +212,26 @@ class OrderActionsWidget extends StatelessWidget {
     }
   }
 
-  Column actionsSection(
+  List<Widget> actionsSection(
       {required List<ElevatedDefaultButton> actionButtons, String? message}) {
-    return Column(
-      children: [
-        if (message != null)
-          Padding(
-              padding: const EdgeInsets.only(top: 20, bottom: 20),
-              child: Text(
-                message,
-                textAlign: TextAlign.center,
-              )),
-        const Text(
-          "ДІЇ",
-          style: AppStyles.bodyText2,
-        ),
-        const SizedBox(height: 10),
-        ...actionButtons.map((btn) => Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: btn,
+    return [
+      if (message != null)
+        Padding(
+            padding: const EdgeInsets.only(top: 20, bottom: 20),
+            child: Text(
+              message,
+              textAlign: TextAlign.center,
             )),
-      ],
-    );
+      const Text(
+        "ДІЇ",
+        style: AppStyles.bodyText2,
+      ),
+      const SizedBox(height: 10),
+      ...actionButtons.map((btn) => Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: btn,
+          )),
+    ];
   }
 
   Widget buildAclSection(BuildContext context, OrderData order) {
@@ -240,26 +245,48 @@ class OrderActionsWidget extends StatelessWidget {
         onPressed: () {
           Navigator.pop(context);
         });
+
+    Widget? cellIdWidget = order.data!.containsKey("cell_id")
+        ? Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5.0),
+            child: OrderElementWidget(
+                iconData: Icons.clear_all,
+                text: "Комірка №${order.data!["cell_id"]}",
+                iconSize: 26,
+                textStyle: AppStyles.bodyText2),
+          )
+        : null;
+
+    List<Widget> content = [];
+    if (cellIdWidget != null) {
+      content.add(cellIdWidget);
+    }
+
     if (order.status == OrderStatus.completed) {
-      return actionsSection(
-          actionButtons: [problemBtn],
-          message:
-              "Замовлення виконано. Дякуємо що скористались нашим сервісом!");
+      content.addAll(
+        actionsSection(
+            actionButtons: [problemBtn],
+            message:
+                "Замовлення виконано. Дякуємо що скористались нашим сервісом!"),
+      );
     } else if (order.status == OrderStatus.expired ||
         order.timeLeftInSeconds < 1) {
       // MAY ADD "Extend Order" action
-      return actionsSection(
-          actionButtons: [problemBtn],
-          message:
-              "Час замовлення вийшов, якщо Ваші речі ще залишились в комірці, повідомте про це нам");
+      content.addAll(
+        actionsSection(
+            actionButtons: [problemBtn],
+            message:
+                "Час замовлення вийшов, якщо Ваші речі ще залишились в комірці, повідомте про це нам"),
+      );
     } else if (order.status == OrderStatus.created ||
         order.status == OrderStatus.inProgress) {
-      return actionsSection(
-          actionButtons: [problemBtn],
-          message:
-              "Замовлення виконується, почекайте декілька секунд. Якщо статус замовлення не зміниться через деякий час - повідомте про це нам");
+      content.addAll(
+        actionsSection(
+            actionButtons: [problemBtn],
+            message:
+                "Замовлення виконується, почекайте декілька секунд. Якщо статус замовлення не зміниться через деякий час - повідомте про це нам"),
+      );
     } else if (order.status == OrderStatus.hold) {
-      List<Widget> content = [];
       final endDate = order.data!["end_date"] as DateTime;
       content.add(Padding(
         padding: const EdgeInsets.only(top: 10),
@@ -293,6 +320,7 @@ class OrderActionsWidget extends StatelessWidget {
               ],
             ),
           ));
+          content.addAll(actionsSection(actionButtons: [problemBtn]));
           break;
         case AlgorithmType.enterPinOnComplex:
           var pinCode = order.data!["pin"] as String?;
@@ -309,17 +337,65 @@ class OrderActionsWidget extends StatelessWidget {
               ],
             ),
           ));
+          content.addAll(actionsSection(actionButtons: [problemBtn]));
+          break;
+        case AlgorithmType.selfService:
+          content.add(const Padding(
+            padding: EdgeInsets.only(top: 10.0, bottom: 8),
+            child: Text(
+              "ДІЇ",
+              style: AppStyles.bodyText2,
+            ),
+          ));
+          content.add(
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10.0),
+              child: ElevatedDefaultButton(
+                  buttonColor: AppColors.mainColor,
+                  child: const Text(
+                    "Відчинити комірку",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                  ),
+                  onPressed: () async {
+                    var confirmDialog = await showDialog(
+                        context: context,
+                        builder: (ctx) {
+                          return ConfirmDialog(
+                              title: "Увага",
+                              text:
+                                  "Після підтвердження цієї дії відчиниться комірка ${order.data!["cell_id"]}. Ви впевнені що хочете це зробити?");
+                        });
+                    if (confirmDialog != null) {
+                      try {
+                        await OrderApi.openCell(order.id);
+                      } catch (e) {
+                        print("error: $e");
+                        await showDialog(
+                            context: context,
+                            builder: (ctx) => const SomethingWentWrongDialog(
+                                  bodyMessage:
+                                      "Наразі неможливо відчинити цю комірку",
+                                ));
+                      }
+                    }
+
+                    // TODO: show warning dialog, circle loading
+                  }),
+            ),
+          );
+
+          content.add(problemBtn);
           break;
         default:
           content.add(const Center(
             child: Text("Невідомий алгоритм"),
           ));
+          content.addAll(actionsSection(actionButtons: [problemBtn]));
           break;
       }
-      content.add(actionsSection(actionButtons: [problemBtn]));
-      return Column(children: content);
     } else {
-      return const Center(
+      content.add(const Center(
         child: Padding(
           padding: EdgeInsets.only(top: 20),
           child: Text(
@@ -327,7 +403,8 @@ class OrderActionsWidget extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ),
-      );
+      ));
     }
+    return Column(children: content);
   }
 }

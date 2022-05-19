@@ -7,11 +7,13 @@ class ElevatedIconButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
   final double maxWidth;
+  final TextStyle? textStyle;
 
   const ElevatedIconButton({
     required this.icon,
     required this.text,
     required this.onPressed,
+    this.textStyle,
     this.maxWidth = 310,
     Key? key,
   }) : super(key: key);
@@ -33,8 +35,9 @@ class ElevatedIconButton extends StatelessWidget {
               Expanded(
                   child: Text(text,
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.montserrat(
-                          fontSize: 16, fontWeight: FontWeight.w600))),
+                      style: textStyle ??
+                          GoogleFonts.montserrat(
+                              fontSize: 16, fontWeight: FontWeight.w600))),
             ],
           )),
     );

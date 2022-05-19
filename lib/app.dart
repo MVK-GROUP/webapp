@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mvk_app/api/orders.dart';
 import 'package:mvk_app/models/lockers.dart';
 import 'package:mvk_app/providers/order.dart';
+import 'package:mvk_app/screens/confirm_locker_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'style.dart';
@@ -18,6 +20,39 @@ import 'screens/history/history_screen.dart';
 import 'screens/goods/goods_screen.dart';
 import 'screens/goods/all_goods_screen.dart';
 import 'screens/enter_lockerid_screen.dart';
+
+class RouteGenerator {
+  static Route<dynamic> generateRoute(
+      RouteSettings settings, BuildContext context) {
+    if (settings.name == null || settings.name == null) {
+      return MaterialPageRoute(
+        builder: (context) {
+          return const EnterLockerIdScreen();
+        },
+        settings: settings,
+      );
+    }
+
+    Map? queryParameters;
+    var uriData = Uri.parse(settings.name!);
+    queryParameters = uriData.queryParameters;
+    if (queryParameters.containsKey("locker_id") &&
+        int.tryParse(queryParameters["locker_id"]) != null) {
+      return MaterialPageRoute(
+        builder: (context) {
+          return ConfirmLockerScreen(queryParameters!["locker_id"]);
+        },
+        settings: settings,
+      );
+    }
+    return MaterialPageRoute(
+      builder: (context) {
+        return const EnterLockerIdScreen();
+      },
+      settings: settings,
+    );
+  }
+}
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
@@ -47,6 +82,8 @@ class App extends StatelessWidget {
           GoodsScreen.routeName: (ctx) => const GoodsScreen(),
           AllGoodsScreen.routeName: (ctx) => const AllGoodsScreen()
         },
+        onGenerateRoute: (RouteSettings settings) =>
+            RouteGenerator.generateRoute(settings, context),
         theme: _theme(),
       ),
     );

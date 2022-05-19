@@ -63,7 +63,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 //} else {
                 //  Navigator.pushReplacementNamed(context, MenuScreen.routeName);
                 //}
-                Navigator.pushReplacementNamed(context, MenuScreen.routeName);
+                Navigator.pushNamedAndRemoveUntil(
+                    context, MenuScreen.routeName, (route) => false);
+                //Navigator.pushReplacementNamed(context, MenuScreen.routeName);
               },
               icon: const Icon(Icons.home),
             ),
