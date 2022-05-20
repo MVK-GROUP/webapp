@@ -20,18 +20,19 @@ class DefaultDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+        insetPadding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
         child: Container(
-          constraints: BoxConstraints(maxWidth: 400, maxHeight: maxHeight),
+          constraints: BoxConstraints(maxWidth: 500, maxHeight: maxHeight),
           child: Column(
             children: [
               Align(
                 alignment: Alignment.topRight,
                 child: Padding(
                     padding: const EdgeInsets.only(
-                        top: 10, left: 10, right: 10, bottom: 5),
+                        top: 10, left: 10, right: 10, bottom: 0),
                     child: IconButton(
                         iconSize: 32,
                         color: AppColors.mainColor,

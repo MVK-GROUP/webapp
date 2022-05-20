@@ -37,6 +37,7 @@ class MainBlock extends StatelessWidget {
               ),
               Container(
                   constraints: BoxConstraints(maxWidth: maxWidth),
+                  alignment: Alignment.center,
                   padding: EdgeInsets.only(
                       top: 46, left: hContentPadding, right: hContentPadding),
                   child: child)

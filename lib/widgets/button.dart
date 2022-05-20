@@ -8,6 +8,7 @@ class ElevatedIconButton extends StatelessWidget {
   final VoidCallback onPressed;
   final double maxWidth;
   final TextStyle? textStyle;
+  final borderRadis;
 
   const ElevatedIconButton({
     required this.icon,
@@ -15,6 +16,7 @@ class ElevatedIconButton extends StatelessWidget {
     required this.onPressed,
     this.textStyle,
     this.maxWidth = 310,
+    this.borderRadis = 10.0,
     Key? key,
   }) : super(key: key);
 
@@ -27,7 +29,7 @@ class ElevatedIconButton extends StatelessWidget {
           style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8))),
+                  borderRadius: BorderRadius.circular(borderRadis))),
           onPressed: onPressed,
           child: Row(
             children: [
@@ -48,11 +50,15 @@ class ElevatedDefaultButton extends StatelessWidget {
   final Widget child;
   final VoidCallback onPressed;
   final Color buttonColor;
+  final EdgeInsetsGeometry padding;
+  final double borderRadius;
 
   const ElevatedDefaultButton(
       {required this.child,
       required this.onPressed,
       this.buttonColor = AppColors.mainColor,
+      this.padding = const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+      this.borderRadius = 10.0,
       Key? key})
       : super(key: key);
 
@@ -66,9 +72,9 @@ class ElevatedDefaultButton extends StatelessWidget {
         child: child,
         style: ElevatedButton.styleFrom(
             primary: buttonColor,
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+            padding: padding,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(borderRadius),
             )),
       ),
     );

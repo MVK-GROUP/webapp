@@ -16,15 +16,15 @@ class AppStyles {
   );
 
   static const titleTextStyle = TextStyle(
-    fontSize: 34,
+    fontSize: 30,
     fontWeight: FontWeight.w500,
     color: AppColors.secondaryColor,
   );
 
   static const titleSecondaryTextStyle = TextStyle(
-    fontSize: 26,
+    fontSize: 22,
     color: AppColors.mainColor,
-    fontWeight: FontWeight.bold,
+    fontWeight: FontWeight.w600,
   );
 
   static const subtitleTextStyle = TextStyle(

@@ -49,6 +49,26 @@ class _MenuScreenState extends State<MenuScreen> {
         backgroundColor: Colors.transparent,
         actions: [
           IconButton(
+            onPressed: () {
+              final availableHeight = MediaQuery.of(context).size.height -
+                  AppBar().preferredSize.height -
+                  MediaQuery.of(context).padding.top -
+                  MediaQuery.of(context).padding.bottom;
+              final availableWidth = MediaQuery.of(context).size.width;
+              showDialog(
+                  context: context,
+                  builder: (ctx) {
+                    return AlertDialog(
+                      content: Text(
+                          "Available size: ${availableWidth}x$availableHeight"),
+                    );
+                  });
+            },
+            icon: const Icon(Icons.dialpad_outlined),
+            color: AppColors.mainColor,
+            iconSize: 36,
+          ),
+          IconButton(
             iconSize: 36,
             color: AppColors.mainColor,
             onPressed: () {
@@ -89,6 +109,7 @@ class _MenuScreenState extends State<MenuScreen> {
                       if (lockerNotifier.locker != null)
                         MainBlock(
                           child: ListView(
+                              shrinkWrap: true,
                               children:
                                   menuItems(context, lockerNotifier.locker)),
                         ),

@@ -18,6 +18,7 @@ class ConfirmDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+        insetPadding: const EdgeInsets.symmetric(horizontal: 30, vertical: 24),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -29,7 +30,7 @@ class ConfirmDialog extends StatelessWidget {
                 alignment: Alignment.topRight,
                 child: Padding(
                     padding: const EdgeInsets.only(
-                        top: 10, left: 10, right: 10, bottom: 5),
+                        top: 10, left: 10, right: 10, bottom: 0),
                     child: IconButton(
                         iconSize: 32,
                         color: AppColors.mainColor,
@@ -44,19 +45,18 @@ class ConfirmDialog extends StatelessWidget {
                     fontSize: 22,
                     fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 10),
-              Expanded(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: Text(
-                    text,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 18),
-                  ),
+              const SizedBox(height: 6),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Text(
+                  text,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 18),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 6),
+              const Spacer(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -84,7 +84,7 @@ class ConfirmDialog extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               )
             ],

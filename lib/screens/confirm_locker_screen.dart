@@ -69,6 +69,8 @@ class _ConfirmLockerScreenState extends State<ConfirmLockerScreen> {
                 return const Center();
               } else {
                 if (snapshot.error != null) {
+                  // TODO: notify user OR/AND go to menu screen
+                  print("Error: ${snapshot.error.toString()}");
                   return Center(
                     child: Text("Error: ${snapshot.error.toString()}"),
                   );
@@ -76,7 +78,8 @@ class _ConfirmLockerScreenState extends State<ConfirmLockerScreen> {
                   if (locker != null) {
                     return Center(
                         child: Padding(
-                      padding: const EdgeInsets.all(30.0),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 20),
                       child: Column(
                         children: [
                           const Text(
@@ -84,7 +87,7 @@ class _ConfirmLockerScreenState extends State<ConfirmLockerScreen> {
                             textAlign: TextAlign.center,
                             style: AppStyles.titleSecondaryTextStyle,
                           ),
-                          const SizedBox(height: 25),
+                          const SizedBox(height: 10),
                           if (locker!.imageUrl == null)
                             Image.asset(
                               "assets/images/no-image-2.png",
@@ -100,7 +103,7 @@ class _ConfirmLockerScreenState extends State<ConfirmLockerScreen> {
                               height: 250,
                               fit: BoxFit.cover,
                             ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 8),
                           Text(
                             locker!.fullLockerName,
                             style: const TextStyle(
@@ -108,7 +111,7 @@ class _ConfirmLockerScreenState extends State<ConfirmLockerScreen> {
                                 fontWeight: FontWeight.w900,
                                 color: AppColors.mainColor),
                           ),
-                          const SizedBox(height: 30),
+                          const SizedBox(height: 20),
                           ElevatedDefaultButton(
                               child: const Text(
                                 "ТАК",

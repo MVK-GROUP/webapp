@@ -117,11 +117,11 @@ class _DetailOrderDialogState extends State<DetailOrderDialog> {
   Widget build(BuildContext context) {
     return DefaultDialog(
       useProgressBar: isOrderLoading,
-      maxHeight: 600,
+      maxHeight: 620,
       title: "Замовлення #${order.id}",
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 25),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -221,6 +221,7 @@ class OrderActionsWidget extends StatelessWidget {
             child: Text(
               message,
               textAlign: TextAlign.center,
+              style: AppStyles.bodySmallText,
             )),
       const Text(
         "ДІЇ",
@@ -237,10 +238,11 @@ class OrderActionsWidget extends StatelessWidget {
   Widget buildAclSection(BuildContext context, OrderData order) {
     var problemBtn = ElevatedDefaultButton(
         buttonColor: AppColors.dangerousColor,
+        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
         child: const Text(
           "Повідомити про проблему",
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
         ),
         onPressed: () {
           Navigator.pop(context);

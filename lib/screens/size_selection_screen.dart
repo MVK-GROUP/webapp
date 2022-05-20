@@ -171,9 +171,7 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
       extraData["service"] =
           ServiceCategoryExt.typeToString(ServiceCategory.acl);
       extraData["algorithm"] = AlgorithmTypeExt.toStr(algorithmType);
-      //extraData["cell_id"] = "5";
       extraData["cell_id"] = orderedCell;
-      //extraData["pin"] = "999999";
 
       final newOrder = TemporaryOrderData(
           amountInCoins: 0,
@@ -203,7 +201,6 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10))),
         onPressed: () {
-          print("tariff: ${cellType.tariff}");
           if (locker?.type == LockerType.free) {
             createFreeOrder(context, locker?.lockerId, serviceCategoryType,
                 algorithmType, cellType);

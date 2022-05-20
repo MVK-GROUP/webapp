@@ -48,9 +48,9 @@ class OrderTile extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: GoogleFonts.sourceSansPro(
+                    style: GoogleFonts.montserrat(
                       fontWeight: FontWeight.w600,
-                      fontSize: 18,
+                      fontSize: 16,
                     ),
                   ),
                   const SizedBox(height: 5),
