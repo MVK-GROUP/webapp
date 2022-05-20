@@ -150,17 +150,15 @@ class OrderData {
         return "Час вийшов";
       }
       final diffInDays = duration.inDays;
-      var diffInHours = duration.inHours;
-      var diffInMinutes = duration.inMinutes;
+      var diffInHours = duration.inHours - duration.inDays * 24;
+      var diffInMinutes = duration.inMinutes - duration.inHours * 60;
+
       String humanDate = "";
       if (diffInDays >= 1) {
         humanDate += "$diffInDays д. ";
-        diffInHours -= diffInDays * 24;
-        diffInMinutes -= diffInHours * 60;
       }
       if (diffInHours >= 1) {
         humanDate += "$diffInHours год. ";
-        diffInMinutes -= diffInHours * 60;
       }
       if (diffInMinutes >= 1) {
         humanDate += "$diffInMinutes хв.";

@@ -117,11 +117,11 @@ class _DetailOrderDialogState extends State<DetailOrderDialog> {
   Widget build(BuildContext context) {
     return DefaultDialog(
       useProgressBar: isOrderLoading,
-      maxHeight: 580,
+      maxHeight: 600,
       title: "Замовлення #${order.id}",
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 18),
           child: Column(children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -212,6 +212,40 @@ class OrderActionsWidget extends StatelessWidget {
     }
   }
 
+  ElevatedDefaultButton openCell(BuildContext context) {
+    return ElevatedDefaultButton(
+        buttonColor: AppColors.mainColor,
+        child: const Text(
+          "Відчинити комірку",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+        ),
+        onPressed: () async {
+          var confirmDialog = await showDialog(
+              context: context,
+              builder: (ctx) {
+                return ConfirmDialog(
+                    title: "Увага",
+                    text:
+                        "Після підтвердження цієї дії відчиниться комірка ${order.data!["cell_id"]}. Ви впевнені що хочете це зробити?");
+              });
+          if (confirmDialog != null) {
+            try {
+              await OrderApi.openCell(order.id);
+            } catch (e) {
+              print("error: $e");
+              await showDialog(
+                  context: context,
+                  builder: (ctx) => const SomethingWentWrongDialog(
+                        bodyMessage: "Наразі неможливо відчинити цю комірку",
+                      ));
+            }
+          }
+
+          // TODO: show warning dialog, circle loading
+        });
+  }
+
   List<Widget> actionsSection(
       {required List<ElevatedDefaultButton> actionButtons, String? message}) {
     return [
@@ -233,6 +267,21 @@ class OrderActionsWidget extends StatelessWidget {
             child: btn,
           )),
     ];
+  }
+
+  RichText usePincodeWidget(BuildContext context) {
+    var pinCode = order.data!["pin"] as String?;
+    return RichText(
+      textAlign: TextAlign.center,
+      text: TextSpan(style: DefaultTextStyle.of(context).style, children: [
+        const TextSpan(
+            text: "Для відкриття комірки також можна використати PIN код "),
+        TextSpan(
+          text: pinCode,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ]),
+    );
   }
 
   Widget buildAclSection(BuildContext context, OrderData order) {
@@ -351,43 +400,80 @@ class OrderActionsWidget extends StatelessWidget {
           ));
           content.add(
             Padding(
-              padding: const EdgeInsets.only(bottom: 10.0),
-              child: ElevatedDefaultButton(
-                  buttonColor: AppColors.mainColor,
-                  child: const Text(
-                    "Відчинити комірку",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                  ),
-                  onPressed: () async {
-                    var confirmDialog = await showDialog(
-                        context: context,
-                        builder: (ctx) {
-                          return ConfirmDialog(
-                              title: "Увага",
-                              text:
-                                  "Після підтвердження цієї дії відчиниться комірка ${order.data!["cell_id"]}. Ви впевнені що хочете це зробити?");
-                        });
-                    if (confirmDialog != null) {
-                      try {
-                        await OrderApi.openCell(order.id);
-                      } catch (e) {
-                        print("error: $e");
-                        await showDialog(
-                            context: context,
-                            builder: (ctx) => const SomethingWentWrongDialog(
-                                  bodyMessage:
-                                      "Наразі неможливо відчинити цю комірку",
-                                ));
-                      }
-                    }
-
-                    // TODO: show warning dialog, circle loading
-                  }),
-            ),
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: openCell(context)),
           );
-
           content.add(problemBtn);
+          break;
+        case AlgorithmType.selfPlusPin:
+          content.add(const Padding(
+            padding: EdgeInsets.only(top: 10.0, bottom: 8),
+            child: Text(
+              "ДІЇ",
+              style: AppStyles.bodyText2,
+            ),
+          ));
+          content.add(
+            Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: openCell(context)),
+          );
+          content.add(problemBtn);
+          content.add(
+            Padding(
+                padding: const EdgeInsets.only(top: 20, bottom: 10),
+                child: usePincodeWidget(context)),
+          );
+          break;
+        case AlgorithmType.selfPlusQr:
+          content.add(const Padding(
+            padding: EdgeInsets.only(top: 10.0, bottom: 8),
+            child: Text(
+              "ДІЇ",
+              style: AppStyles.bodyText2,
+            ),
+          ));
+          content.add(
+            Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: openCell(context)),
+          );
+          content.add(Padding(
+              padding: const EdgeInsets.only(bottom: 20.0),
+              child: ElevatedDefaultButton(
+                buttonColor: AppColors.mainColor,
+                child: const Text(
+                  "Считати QR-код",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                ),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      alignment: Alignment.center,
+                      title: const Text(
+                        "Проскануйте цей QR-код",
+                        textAlign: TextAlign.center,
+                      ),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                            "QR-КОД",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 80),
+                          ),
+                          const SizedBox(height: 10),
+                          usePincodeWidget(context),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              )));
+          content.add(problemBtn);
+          content.add(const SizedBox(height: 20));
           break;
         default:
           content.add(const Center(

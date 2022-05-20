@@ -61,6 +61,8 @@ enum AlgorithmType {
   qrReading,
   enterPinOnComplex,
   selfService,
+  selfPlusQr,
+  selfPlusPin,
   unknown,
 }
 
@@ -72,6 +74,10 @@ extension AlgorithmTypeExt on AlgorithmType {
       return AlgorithmType.enterPinOnComplex;
     } else if (value == "self_service") {
       return AlgorithmType.selfService;
+    } else if (value == "self_plus_qr") {
+      return AlgorithmType.selfPlusQr;
+    } else if (value == "self_plus_enter_pin") {
+      return AlgorithmType.selfPlusPin;
     }
     return AlgorithmType.unknown;
   }
@@ -83,6 +89,10 @@ extension AlgorithmTypeExt on AlgorithmType {
       return "enter_pin";
     } else if (algorithm == AlgorithmType.selfService) {
       return "self_service";
+    } else if (algorithm == AlgorithmType.selfPlusQr) {
+      return "self_plus_qr";
+    } else if (algorithm == AlgorithmType.selfPlusPin) {
+      return "self_plus_enter_pin";
     }
     return "unknown";
   }
