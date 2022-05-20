@@ -117,7 +117,7 @@ class _DetailOrderDialogState extends State<DetailOrderDialog> {
   Widget build(BuildContext context) {
     return DefaultDialog(
       useProgressBar: isOrderLoading,
-      maxHeight: 620,
+      maxHeight: 580,
       title: "Замовлення #${order.id}",
       body: SingleChildScrollView(
         child: Container(
