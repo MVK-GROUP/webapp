@@ -68,3 +68,23 @@ class DefaultDialog extends StatelessWidget {
         ));
   }
 }
+
+class DefaultAlertDialog extends StatelessWidget {
+  final String title;
+  final String body;
+  final List<Widget>? actions;
+  const DefaultAlertDialog(
+      {required this.title, required this.body, this.actions, Key? key})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+        title: Text(title),
+        content: Text(body),
+        actionsPadding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+        actionsOverflowButtonSpacing: 8,
+        actionsOverflowDirection: VerticalDirection.up,
+        actions: actions);
+  }
+}

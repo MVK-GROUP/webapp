@@ -6,10 +6,12 @@ import 'package:mvk_app/style.dart';
 import 'package:provider/provider.dart';
 
 import '../api/http_exceptions.dart';
+import '../api/lockers.dart';
 import '../api/orders.dart';
 import '../models/lockers.dart';
 import '../providers/order.dart';
 import '../widgets/button.dart';
+import '../widgets/dialog.dart';
 
 class ConfirmLockerScreen extends StatefulWidget {
   final String lockerId;
@@ -21,6 +23,7 @@ class ConfirmLockerScreen extends StatefulWidget {
 
 class _ConfirmLockerScreenState extends State<ConfirmLockerScreen> {
   late Future _getLockerFuture;
+  bool isActiveChecking = false;
   Locker? locker;
 
   Future _obtainGetLockerFuture() async {
@@ -60,6 +63,7 @@ class _ConfirmLockerScreenState extends State<ConfirmLockerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       body: Center(
         child: SafeArea(
           child: SingleChildScrollView(
@@ -115,25 +119,26 @@ class _ConfirmLockerScreenState extends State<ConfirmLockerScreen> {
                             ),
                             const SizedBox(height: 20),
                             ElevatedDefaultButton(
-                                child: const Text(
-                                  "ТАК",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700,
-                                      letterSpacing: 4),
-                                ),
+                                child: isActiveChecking
+                                    ? const SizedBox(
+                                        height: 28,
+                                        width: 28,
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                          strokeWidth: 2,
+                                        ),
+                                      )
+                                    : const Text(
+                                        "ТАК",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w700,
+                                            letterSpacing: 4),
+                                      ),
                                 buttonColor: AppColors.successColor,
-                                onPressed: () {
-                                  Provider.of<LockerNotifier>(context,
-                                          listen: false)
-                                      .setExistingLocker(locker);
-                                  Provider.of<OrdersNotifier>(context,
-                                          listen: false)
-                                      .resetOrders();
-                                  Navigator.pushReplacementNamed(
-                                      context, MenuScreen.routeName);
-                                }),
+                                onPressed:
+                                    isActiveChecking ? null : confirmLocker),
                             const SizedBox(height: 30),
                             ElevatedIconButton(
                               icon: const Icon(Icons.qr_code_scanner_outlined),
@@ -170,5 +175,37 @@ class _ConfirmLockerScreenState extends State<ConfirmLockerScreen> {
         ),
       ),
     );
+  }
+
+  void confirmLocker() async {
+    setState(() {
+      isActiveChecking = true;
+    });
+    try {
+      final isActive = await LockerApi.isActive(widget.lockerId);
+      if (!isActive) {
+        throw Exception();
+      }
+    } catch (e) {
+      await showDialog(
+          context: context,
+          builder: (ctx) {
+            return const DefaultAlertDialog(
+              title: "Технічні несправності",
+              body: "На жаль, даний комплекс не на зв'язку :(",
+            );
+          });
+      Provider.of<OrdersNotifier>(context, listen: false).resetOrders();
+      Provider.of<LockerNotifier>(context, listen: false).resetLocker();
+      setState(() {
+        isActiveChecking = false;
+      });
+      return;
+    }
+
+    Provider.of<LockerNotifier>(context, listen: false)
+        .setExistingLocker(locker);
+    Provider.of<OrdersNotifier>(context, listen: false).resetOrders();
+    Navigator.pushReplacementNamed(context, MenuScreen.routeName);
   }
 }

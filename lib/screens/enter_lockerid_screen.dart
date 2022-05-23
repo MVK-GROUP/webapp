@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:mvk_app/api/http_exceptions.dart';
+import 'package:mvk_app/api/orders.dart';
 import 'package:mvk_app/models/lockers.dart';
 import 'package:mvk_app/providers/order.dart';
 import 'package:mvk_app/screens/global_menu.dart';
 import 'package:mvk_app/screens/qr_scanner_screen.dart';
 import 'package:mvk_app/style.dart';
+import 'package:mvk_app/widgets/dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+
+import '../api/lockers.dart';
 
 class EnterLockerIdScreen extends StatefulWidget {
   static const routeName = "/enter-lockerid";
@@ -48,6 +52,17 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
         backgroundColor: AppColors.backgroundColor,
         iconTheme: const IconThemeData(color: AppColors.mainColor),
         elevation: 0.0,
+        actions: [
+          IconButton(
+            iconSize: 36,
+            onPressed: () {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, MenuScreen.routeName, (route) => false);
+            },
+            icon: const Icon(Icons.home),
+          ),
+          const SizedBox(width: 10)
+        ],
       ),
       body: SafeArea(
         child: isFetchingData
@@ -174,23 +189,54 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
     return lockerId.length >= 4 && int.tryParse(lockerId) != null;
   }
 
-  void enteredLockerId(BuildContext context, String lockerId) {
+  void enteredLockerId(BuildContext context, String lockerId) async {
     if (!isValidLockerId(lockerId)) {
       return;
     }
     setState(() {
       isFetchingData = true;
     });
-    Provider.of<LockerNotifier>(context, listen: false)
-        .setLocker(lockerId)
-        .then((value) {
+
+    final homeMenuButon = TextButton.icon(
+      icon: const Icon(Icons.home),
+      label: const Text('Головне меню'),
+      onPressed: () {
+        Navigator.of(context).pop(true);
+      },
+    );
+    try {
+      final isActive = await LockerApi.isActive(lockerId);
+      if (!isActive) {
+        final action = await showDialog(
+            context: context,
+            builder: (ctx) {
+              return DefaultAlertDialog(
+                title: "Технічні несправності",
+                body: "На жаль, даний комплекс не на зв'язку :(",
+                actions: [homeMenuButon],
+              );
+            });
+        Provider.of<OrdersNotifier>(context, listen: false).resetOrders();
+        Provider.of<LockerNotifier>(context, listen: false).resetLocker();
+        setState(() {
+          isFetchingData = false;
+        });
+        if (action != null) {
+          Navigator.pushReplacementNamed(context, MenuScreen.routeName);
+        }
+        return;
+      }
+
+      await Provider.of<LockerNotifier>(context, listen: false)
+          .setLocker(lockerId);
+
+      Provider.of<OrdersNotifier>(context, listen: false).resetOrders();
       setState(() {
         isFetchingData = false;
       });
-      Provider.of<OrdersNotifier>(context, listen: false).resetOrders();
       Navigator.pushNamedAndRemoveUntil(
           context, MenuScreen.routeName, (route) => false);
-    }).catchError((onError) async {
+    } catch (onError) {
       String titleMessage = "Щось пішло не так...";
       String bodyMessage = "Вибачте, в нас технічні неспровності :(";
 
@@ -205,46 +251,36 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
         isFetchingData = false;
       });
       final action = await showDialog(
-        context: context,
-        builder: (ctx) {
-          return AlertDialog(
-            title: Text(titleMessage),
-            content: Text(bodyMessage),
-            actionsPadding:
-                const EdgeInsets.only(bottom: 10, left: 10, right: 10),
-            actionsOverflowButtonSpacing: 8,
-            actionsOverflowDirection: VerticalDirection.up,
-            actions: [
-              TextButton.icon(
-                icon: const Icon(Icons.home),
-                label: const Text('Головне меню'),
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-              ),
-              const SizedBox(width: 5),
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 16)),
-                icon: const Icon(Icons.qr_code),
-                label: const Text(
-                  'Сканувати ще',
-                  style: TextStyle(fontSize: 16),
+          context: context,
+          builder: (ctx) {
+            return DefaultAlertDialog(
+              title: titleMessage,
+              body: bodyMessage,
+              actions: [
+                homeMenuButon,
+                const SizedBox(width: 5),
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 16)),
+                  icon: const Icon(Icons.qr_code),
+                  label: const Text(
+                    'Сканувати ще',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
                 ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
+              ],
+            );
+          });
+
       if (action == null) {
       } else {
         Navigator.pushReplacementNamed(context, MenuScreen.routeName);
       }
-    });
+    }
   }
 
   Widget _textFieldOTP(int index) {

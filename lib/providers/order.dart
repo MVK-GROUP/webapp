@@ -26,7 +26,12 @@ class OrdersNotifier with ChangeNotifier {
   }
 
   Future<List<OrderData>?> fetchAndSetOrders() async {
-    _orders = await OrderApi.fetchOrders();
+    try {
+      _orders = await OrderApi.fetchOrders();
+    } catch (e) {
+      _orders = null;
+    }
+
     notifyListeners();
     return _orders;
   }

@@ -5,6 +5,7 @@ import 'package:mvk_app/screens/payment_check_screen.dart';
 import 'package:mvk_app/widgets/confirm_dialog.dart';
 import 'package:mvk_app/widgets/sww_dialog.dart';
 import 'package:provider/provider.dart';
+import '../api/lockers.dart';
 import '../models/order.dart';
 import '../style.dart';
 import '../models/lockers.dart';
@@ -154,13 +155,17 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
         return;
       }
 
-      var helperText = "Замовлення створено. ";
+      var helperText =
+          "Замовлення створено. Вам видана комірка #$orderedCell. ";
       if (algorithmType == AlgorithmType.qrReading) {
         helperText +=
-            "В замовленні буде міститись QR-код, який ви можете використати для відкриття комірки. Після відкриття комірки покладіть свої речі та закрийте її";
+            "В замовленні буде міститись QR-код, який ви можете використати для відкриття комірки.";
+      } else if (algorithmType == AlgorithmType.enterPinOnComplex) {
+        helperText +=
+            "В замовленні буде міститись ПІН-код, який ви можете використати для відкриття комірки.";
       } else {
         helperText +=
-            "Зараз відчиниться комірка #7 та роздрукується чек. Обережно покладіть речі та закрийте комірку";
+            "В замовленні буде міститись вся потрібна інформація для користування цією коміркою.";
       }
 
       Map<String, Object> extraData = {};

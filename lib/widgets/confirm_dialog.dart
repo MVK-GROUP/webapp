@@ -23,8 +23,9 @@ class ConfirmDialog extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
         ),
         child: Container(
-          constraints: BoxConstraints(maxWidth: 400, maxHeight: maxHeight),
+          constraints: const BoxConstraints(maxWidth: 400),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Align(
                 alignment: Alignment.topRight,
@@ -55,8 +56,7 @@ class ConfirmDialog extends StatelessWidget {
                   style: const TextStyle(fontSize: 18),
                 ),
               ),
-              const SizedBox(height: 6),
-              const Spacer(),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [

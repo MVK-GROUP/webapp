@@ -19,7 +19,10 @@ class Tariff {
   }
 
   String get humanHours {
-    var d = Duration(minutes: _time);
+    var d = Duration(seconds: _time);
+    if (d.inHours < 1) {
+      return "<${d.inMinutes} хвилин";
+    }
     var ending = "годин";
     if (d.inHours < 2) {
       ending = "години";

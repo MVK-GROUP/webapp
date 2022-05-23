@@ -48,7 +48,7 @@ class ElevatedIconButton extends StatelessWidget {
 
 class ElevatedDefaultButton extends StatelessWidget {
   final Widget child;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final Color buttonColor;
   final EdgeInsetsGeometry padding;
   final double borderRadius;

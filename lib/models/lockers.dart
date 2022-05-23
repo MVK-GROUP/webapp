@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:mvk_app/models/services.dart';
-import '../api/orders.dart';
+import '../api/lockers.dart';
 import 'package:mvk_app/style.dart';
 
 enum ServiceCategory {
@@ -325,6 +325,10 @@ class LockerNotifier with ChangeNotifier {
         rethrow;
       }
     }
+  }
+
+  void resetLocker() {
+    _currenctLocker = null;
   }
 
   void setExistingLocker(Locker? locker) {

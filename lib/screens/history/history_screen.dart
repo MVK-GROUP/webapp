@@ -87,8 +87,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     return const Center(child: CircularProgressIndicator());
                   } else {
                     if (dataSnapshot.error != null) {
-                      return Center(
-                        child: Text("Error: ${dataSnapshot.error.toString()}"),
+                      print("Error: ${dataSnapshot.error.toString()}");
+                      return const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Text(
+                            "На жаль не можемо відобразити Ваші замовлення через технічні проблеми",
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                       );
                     } else {
                       return Consumer<OrdersNotifier>(
