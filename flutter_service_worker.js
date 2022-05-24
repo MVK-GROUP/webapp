@@ -3,13 +3,13 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "main.dart.js": "07390937db0b644383a139a7beda1b0a",
+  "main.dart.js": "267daf7d6a349eb1ffd42b62097c3f92",
 "canvaskit/canvaskit.wasm": "4b83d89d9fecbea8ca46f2f760c5a9ba",
 "canvaskit/profiling/canvaskit.wasm": "95e736ab31147d1b2c7b25f11d4c32cd",
 "canvaskit/profiling/canvaskit.js": "ae2949af4efc61d28a4a80fffa1db900",
 "canvaskit/canvaskit.js": "c2b4e5f3d7a3d82aed024e7249a78487",
-"index.html": "850a9fee04f3b00a66cb07c4541e2ce2",
-"/": "850a9fee04f3b00a66cb07c4541e2ce2",
+"index.html": "7ce96de2eb41df2f27e38a1d9a08367d",
+"/": "7ce96de2eb41df2f27e38a1d9a08367d",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "version.json": "e371efac991124ece08a5445aa24b5d8",
 "assets/AssetManifest.json": "82055b3f0d3893e162a0a48b3027f09b",
@@ -290,7 +290,7 @@ const RESOURCES = {
 "assets/assets/data/orders.json": "4eba4a8639062815cd0d3e8c4a0fa312",
 "assets/assets/data/tariffs.json": "b5830fcc968643ab1c8e539952cdb88a",
 "assets/assets/data/lockers.json": "f20a7193194b2dd52234abddd9d8bef7",
-"assets/NOTICES": "81b22226ecd1bce848d192c1d92069e4",
+"assets/NOTICES": "4945166e217f5494ad5eb66e5320aa34",
 "assets/FontManifest.json": "7b2a36307916a9721811788013e65289",
 "assets/fonts/MaterialIcons-Regular.otf": "7e7a6cccddf6d7b20012a548461d5d81",
 "manifest.json": "cb12460f5e826abe71085b7497f88fb6",
