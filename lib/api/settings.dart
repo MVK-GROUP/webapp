@@ -1,1 +1,1 @@
-const debugServer = false;
+const debugServer = true;

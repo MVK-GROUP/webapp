@@ -64,6 +64,15 @@ class OrdersNotifier with ChangeNotifier {
     }
   }
 
+  Future<OrderData> checkOrderWithoutNotify(int orderId) async {
+    try {
+      var order = await OrderApi.fetchOrderById(orderId);
+      return order;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   void resetOrders() {
     _orders = null;
   }

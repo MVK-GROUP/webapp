@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:mvk_app/providers/order.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/order.dart';
@@ -10,69 +9,54 @@ import '../../widgets/dialog.dart';
 import '../../widgets/order_element_widget.dart';
 import 'order_actions_widget.dart';
 
-class DetailOrderDialog extends StatefulWidget {
-  final OrderData order;
-
-  const DetailOrderDialog({required this.order, Key? key}) : super(key: key);
+class DetailOrderNotifierDialog extends StatefulWidget {
+  const DetailOrderNotifierDialog({Key? key}) : super(key: key);
 
   @override
-  State<DetailOrderDialog> createState() => _DetailOrderDialogState();
+  State<DetailOrderNotifierDialog> createState() =>
+      _DetailOrderNotifierDialogState();
 }
 
-class _DetailOrderDialogState extends State<DetailOrderDialog> {
-  Timer? timer;
+class _DetailOrderNotifierDialogState extends State<DetailOrderNotifierDialog> {
   late OrderData order;
-  late bool isOrderLoading;
+  var _isInit = false;
+  Timer? timer;
+  var _isOrderLoading = false;
 
   @override
-  void initState() {
-    order = widget.order;
-
-    isOrderLoading = false;
-    if ([OrderStatus.created, OrderStatus.inProgress].contains(order.status)) {
-      checkOrder();
-      isOrderLoading = true;
-      timer = Timer.periodic(const Duration(seconds: 3), (timer) {
+  void didChangeDependencies() {
+    if (!_isInit) {
+      order = Provider.of<OrderData>(context, listen: true);
+      _isOrderLoading = false;
+      if ([OrderStatus.created, OrderStatus.inProgress]
+          .contains(order.status)) {
+        setState(() {
+          _isOrderLoading = true;
+        });
         checkOrder();
-        print("order status: ${order.status}");
-        if (![OrderStatus.created, OrderStatus.inProgress]
-            .contains(order.status)) {
-          timer.cancel();
-          setState(() {
-            isOrderLoading = false;
-          });
-        }
-        // GET ORDER STATUS
-      });
-    } else if (order.status == OrderStatus.error) {
-      checkOrder();
-    }
 
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    timer?.cancel();
-    super.dispose();
-  }
-
-  Color get orderStatusColor {
-    if ([OrderStatus.created, OrderStatus.inProgress, OrderStatus.hold]
-            .contains(order.status) &&
-        order.isExpired) {
-      return AppColors.dangerousColor;
+        timer = Timer.periodic(const Duration(seconds: 2, milliseconds: 500),
+            (timer) {
+          checkOrder();
+          print("order status: ${order.status}");
+          if (![OrderStatus.created, OrderStatus.inProgress]
+              .contains(order.status)) {
+            timer.cancel();
+            setState(() {
+              _isOrderLoading = false;
+            });
+          }
+          // GET ORDER STATUS
+        });
+      } else if (order.status == OrderStatus.error) {
+        checkOrder();
+        setState(() {
+          _isOrderLoading = false;
+        });
+      }
     }
-    if ([
-      OrderStatus.hold,
-      OrderStatus.inProgress,
-      OrderStatus.created,
-      OrderStatus.completed
-    ].contains(order.status)) {
-      return AppColors.successColor;
-    } else {
-      return AppColors.dangerousColor;
-    }
+    _isInit = true;
+    super.didChangeDependencies();
   }
 
   String get orderStatusText {
@@ -89,6 +73,9 @@ class _DetailOrderDialogState extends State<DetailOrderDialog> {
         break;
       case OrderStatus.hold:
         text += "активний";
+        break;
+      case OrderStatus.active:
+        text += "виконується";
         break;
       case OrderStatus.inProgress:
         text += "в процесі";
@@ -109,10 +96,29 @@ class _DetailOrderDialogState extends State<DetailOrderDialog> {
     return text;
   }
 
+  Color get orderStatusColor {
+    if ([OrderStatus.created, OrderStatus.inProgress, OrderStatus.hold]
+            .contains(order.status) &&
+        order.isExpired) {
+      return AppColors.dangerousColor;
+    }
+    if ([
+      OrderStatus.hold,
+      OrderStatus.inProgress,
+      OrderStatus.created,
+      OrderStatus.active,
+      OrderStatus.completed
+    ].contains(order.status)) {
+      return AppColors.successColor;
+    } else {
+      return AppColors.dangerousColor;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultDialog(
-      useProgressBar: isOrderLoading,
+      useProgressBar: _isOrderLoading,
       maxHeight: 600,
       title: "Замовлення #${order.id}",
       body: SingleChildScrollView(
@@ -165,26 +171,54 @@ class _DetailOrderDialogState extends State<DetailOrderDialog> {
                     AppStyles.bodyText2.copyWith(color: orderStatusColor),
               ),
             ),
-            OrderActionsWidget(order: order),
+            const OrderActionsWidget(),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: TextButton(
+                  child: const Text(
+                    "Повідомити про проблему",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.dangerousColor),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+            )
           ]),
         ),
       ),
     );
   }
 
-  void checkOrder() async {
+  Future<bool> checkOrder() async {
     //setState(() {
     //  isOrderLoading = true;
     //});
-    var checkedOrder = await Provider.of<OrdersNotifier>(context, listen: false)
-        .checkOrder(order.id);
-    if (checkedOrder.status != order.status) {
-      setState(() {
-        order = checkedOrder;
-        //isOrderLoading = false;
-      });
-      return;
+    try {
+      var updated = await order.checkOrder();
+      if (updated) {
+        print("updated");
+      } else {
+        print("not updated");
+      }
+      return updated;
+      //await Provider.of<OrdersNotifier>(context, listen: false)
+      //    .checkOrder(order.id);
+      //if (checkedOrder.status != order.status) {
+      //  setState(() {
+      //    order = checkedOrder;
+      //    //isOrderLoading = false;
+      //  });
+      //  return;
+      //}
+    } catch (e) {
+      print("error: $e");
+      return false;
     }
+
     //setState(() {
     //  isOrderLoading = false;
     //});

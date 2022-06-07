@@ -2,21 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../style.dart';
 
-class ElevatedIconButton extends StatelessWidget {
-  final Icon icon;
+class ElevatedWaitingButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
   final double maxWidth;
   final TextStyle? textStyle;
-  final borderRadis;
+  final double borderRadius;
 
-  const ElevatedIconButton({
-    required this.icon,
+  const ElevatedWaitingButton({
     required this.text,
-    required this.onPressed,
     this.textStyle,
     this.maxWidth = 310,
-    this.borderRadis = 10.0,
+    this.borderRadius = 10.0,
     Key? key,
   }) : super(key: key);
 
@@ -29,11 +25,12 @@ class ElevatedIconButton extends StatelessWidget {
           style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(borderRadis))),
-          onPressed: onPressed,
+                  borderRadius: BorderRadius.circular(borderRadius))),
+          onPressed: null,
           child: Row(
             children: [
-              icon,
+              const SizedBox(
+                  width: 24, height: 24, child: CircularProgressIndicator()),
               Expanded(
                   child: Text(text,
                       textAlign: TextAlign.center,
@@ -42,6 +39,51 @@ class ElevatedIconButton extends StatelessWidget {
                               fontSize: 16, fontWeight: FontWeight.w600))),
             ],
           )),
+    );
+  }
+}
+
+class ElevatedIconButton extends StatelessWidget {
+  final Icon icon;
+  final String text;
+  final VoidCallback? onPressed;
+  final double maxWidth;
+  final TextStyle? textStyle;
+  final double borderRadius;
+
+  const ElevatedIconButton({
+    required this.icon,
+    required this.text,
+    required this.onPressed,
+    this.textStyle,
+    this.maxWidth = 310,
+    this.borderRadius = 10.0,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.maxFinite,
+      constraints: const BoxConstraints(maxWidth: 310),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(borderRadius))),
+        onPressed: onPressed,
+        child: Row(
+          children: [
+            icon,
+            Expanded(
+                child: Text(text,
+                    textAlign: TextAlign.center,
+                    style: textStyle ??
+                        GoogleFonts.montserrat(
+                            fontSize: 16, fontWeight: FontWeight.w600))),
+          ],
+        ),
+      ),
     );
   }
 }

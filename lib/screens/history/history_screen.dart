@@ -23,16 +23,22 @@ class HistoryScreen extends StatefulWidget {
 
 class _HistoryScreenState extends State<HistoryScreen> {
   late Future _ordersFuture;
+  var isInit = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
 
   Future _obtainOrdersFuture() {
     var data = Provider.of<OrdersNotifier>(context, listen: false);
+
     if (data.orders == null) {
       return data.fetchAndSetOrders();
     } else {
       var isExistNewOrders = data.isExistOrdersWithStatus(
           [OrderStatus.created, OrderStatus.inProgress]);
       if (isExistNewOrders != null && isExistNewOrders) {
-        print("exist new orders");
         return data.fetchAndSetOrders();
       } else {
         return Future.value(data.orders);
@@ -43,6 +49,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   void initState() {
     _ordersFuture = _obtainOrdersFuture();
+    showOrderDetailFromArgs();
     super.initState();
   }
 
@@ -130,8 +137,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                   containerColor: containerColor,
                                   pointColor: pointColor,
                                   date: ordersData.orders![i].humanDate,
-                                  onPressed: () => showOrderDetail(
-                                      context, ordersData.orders![i]),
+                                  onPressed: () =>
+                                      showOrderDetail(ordersData.orders![i]),
                                 ),
                               );
                             }),
@@ -147,13 +154,21 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
   }
 
-  void showOrderDetail(BuildContext context, OrderData order) {
-    showDialog(
-      barrierColor: Colors.transparent,
-      context: context,
-      builder: (ctx) => DetailOrderDialog(
-        order: order,
-      ),
-    );
+  void showOrderDetail(OrderData order) async {
+    await showDialog(
+        barrierColor: Colors.transparent,
+        context: context,
+        builder: (ctx) => ChangeNotifierProvider.value(
+              value: order,
+              child: const DetailOrderNotifierDialog(),
+            ));
+  }
+
+  void showOrderDetailFromArgs() async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    final arg = ModalRoute.of(context)?.settings.arguments;
+    if (arg != null) {
+      showOrderDetail(arg as OrderData);
+    }
   }
 }

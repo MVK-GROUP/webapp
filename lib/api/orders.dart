@@ -102,6 +102,38 @@ class OrderApi {
     }
   }
 
+  static Future<String?> putThings(int orderId) async {
+    var apiUrl = "/orders/$orderId/put-things";
+    try {
+      final rawResponse = await http.post(Uri.parse(baseUrl + apiUrl));
+      if (rawResponse.statusCode < 400) {
+        final response = json.decode(utf8.decode(rawResponse.bodyBytes))
+            as Map<String, dynamic>;
+        print(response);
+        return response["task_num"];
+      }
+      throw HttpException(rawResponse.reasonPhrase ?? "error");
+    } catch (e) {
+      throw HttpException(e.toString());
+    }
+  }
+
+  static Future<String?> getThings(int orderId) async {
+    var apiUrl = "/orders/$orderId/get-things";
+    try {
+      final rawResponse = await http.post(Uri.parse(baseUrl + apiUrl));
+      if (rawResponse.statusCode < 400) {
+        final response = json.decode(utf8.decode(rawResponse.bodyBytes))
+            as Map<String, dynamic>;
+        print(response);
+        return response["task_num"];
+      }
+      throw HttpException(rawResponse.reasonPhrase ?? "error");
+    } catch (e) {
+      throw HttpException(e.toString());
+    }
+  }
+
   static Future<int> checkOpenCellTask(int orderId, String numTask) async {
     var apiUrl = "/orders/$orderId/check-task/$numTask";
     try {

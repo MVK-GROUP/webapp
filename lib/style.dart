@@ -34,7 +34,7 @@ class AppStyles {
 
   static const bodyText1 = TextStyle(
     color: AppColors.mainColor,
-    fontSize: 18,
+    fontSize: 16,
   );
 
   static const bodySmallText = TextStyle(

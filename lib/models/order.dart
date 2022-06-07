@@ -1,3 +1,6 @@
+import 'package:flutter/cupertino.dart';
+
+import '../api/orders.dart';
 import 'lockers.dart';
 
 class TemporaryOrderData {
@@ -45,6 +48,7 @@ enum OrderStatus {
   created,
   inProgress,
   hold,
+  active,
   completed,
   canceled,
   error,
@@ -59,6 +63,8 @@ extension OrderStatusExt on OrderStatus {
       return OrderStatus.inProgress;
     } else if (value == "hold") {
       return OrderStatus.hold;
+    } else if (value == "active") {
+      return OrderStatus.active;
     } else if (value == "completed") {
       return OrderStatus.completed;
     } else if (value == "canceled") {
@@ -72,8 +78,8 @@ extension OrderStatusExt on OrderStatus {
   }
 }
 
-class OrderData {
-  final OrderStatus status;
+class OrderData with ChangeNotifier {
+  OrderStatus status;
   final int id;
   final String title;
   final ServiceCategory service;
@@ -82,6 +88,8 @@ class OrderData {
   final Map<String, Object>? data;
   final String? place;
   final DateTime date;
+  int firstActionTimestamp;
+  int lastActionTimestamp;
 
   OrderData({
     this.status = OrderStatus.created,
@@ -93,6 +101,8 @@ class OrderData {
     this.currency = "UAH",
     this.data,
     this.place,
+    this.firstActionTimestamp = 0,
+    this.lastActionTimestamp = 0,
   });
 
   factory OrderData.fromJson(Map<String, dynamic> json) {
@@ -118,6 +128,16 @@ class OrderData {
     if (json.containsKey("locker") && json["locker"] != null) {
       place = '${json["locker"]["name"]}, ${json["locker"]["address"]}';
     }
+    int firstActionTimestamp = 0;
+    int lastActionTimestamp = 0;
+    if (json.containsKey("first_action_timestamp") &&
+        json["first_action_timestamp"] != null) {
+      firstActionTimestamp = json["first_action_timestamp"];
+    }
+    if (json.containsKey("last_action_timestamp") &&
+        json["last_action_timestamp"] != null) {
+      lastActionTimestamp = json["last_action_timestamp"];
+    }
     return OrderData(
       id: json["id"],
       title: json["title"] ?? "Невідомо",
@@ -127,6 +147,8 @@ class OrderData {
       data: data.isEmpty ? null : data,
       place: place,
       date: date,
+      firstActionTimestamp: firstActionTimestamp,
+      lastActionTimestamp: lastActionTimestamp,
     );
   }
 
@@ -184,5 +206,36 @@ class OrderData {
 
   String get humanPrice {
     return "$price $currency";
+  }
+
+  Future<bool> checkOrder() async {
+    try {
+      print(
+          "before: ${status}, ${firstActionTimestamp} ${lastActionTimestamp}");
+      var fetchedOrder = await OrderApi.fetchOrderById(id);
+      print(
+          "fetched: ${fetchedOrder.status}, ${fetchedOrder.firstActionTimestamp} ${fetchedOrder.lastActionTimestamp}");
+      if (!isEqual(fetchedOrder)) {
+        updateOrder(fetchedOrder);
+        return true;
+      }
+      return false;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  void updateOrder(OrderData changedOrder) {
+    status = changedOrder.status;
+    firstActionTimestamp = changedOrder.firstActionTimestamp;
+    lastActionTimestamp = changedOrder.lastActionTimestamp;
+    notifyListeners();
+  }
+
+  bool isEqual(OrderData other) {
+    return other.id == id &&
+        other.firstActionTimestamp == firstActionTimestamp &&
+        other.lastActionTimestamp == lastActionTimestamp &&
+        other.status == status;
   }
 }

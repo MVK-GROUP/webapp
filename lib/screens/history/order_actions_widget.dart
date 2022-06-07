@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../api/orders.dart';
@@ -12,10 +13,14 @@ import '../../widgets/confirm_dialog.dart';
 import '../../widgets/order_element_widget.dart';
 import '../../widgets/sww_dialog.dart';
 
+enum OpenCellType {
+  firstOpenCell,
+  openCell,
+  lastOpenCell,
+}
+
 class OrderActionsWidget extends StatefulWidget {
-  final OrderData order;
   const OrderActionsWidget({
-    required this.order,
     Key? key,
   }) : super(key: key);
 
@@ -25,9 +30,11 @@ class OrderActionsWidget extends StatefulWidget {
 
 class _OrderActionsWidgetState extends State<OrderActionsWidget> {
   bool isCellOpening = false;
+  var _isInit = false;
   int pollingCellOpeningAttempts = 0;
   int maxPollingAttempts = 5;
   Timer? cellOpeningTimer;
+  late OrderData order;
 
   @override
   void dispose() {
@@ -36,47 +43,116 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
   }
 
   @override
+  void didChangeDependencies() {
+    if (!_isInit) {
+      order = Provider.of<OrderData>(context, listen: true);
+    }
+    _isInit = true;
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    switch (widget.order.service) {
+    switch (order.service) {
       case ServiceCategory.acl:
-        return buildAclSection(context, widget.order);
+        return buildAclSection(context, order);
       default:
         return Container();
     }
   }
 
-  ElevatedDefaultButton openCellButton(BuildContext context) {
+  ElevatedDefaultButton openCellButton(BuildContext context, OrderData order,
+      {justOpen = false}) {
+    String buttonText = "Відчинити комірку";
+    String confirmText =
+        "Після підтвердження цієї дії відчиниться комірка ${order.data!["cell_id"]}. Ви впевнені що хочете це зробити?";
+    var openCellType = OpenCellType.openCell;
+    final algorithm = order.data!["algorithm"] as AlgorithmType;
+    print("${order.status} ${order.firstActionTimestamp}");
+    if (justOpen) {
+      buttonText = "Відчинити комірку та докласти речі";
+      confirmText =
+          "Після підтвердження цієї дії відчиниться комірка ${order.data!["cell_id"]}. Не забудьте зачинити комірку!";
+      openCellType = OpenCellType.openCell;
+    } else if (order.status == OrderStatus.hold &&
+        order.firstActionTimestamp == 0 &&
+        algorithm == AlgorithmType.selfService) {
+      openCellType = OpenCellType.firstOpenCell;
+      buttonText = "Відчинити комірку та покласти речі";
+      confirmText =
+          "Після підтвердження цієї дії відчиниться комірка ${order.data!["cell_id"]}. Не забудьте зачинити комірку!";
+    } else if (order.status == OrderStatus.active &&
+        algorithm == AlgorithmType.selfService) {
+      openCellType = OpenCellType.lastOpenCell;
+      buttonText = "Забрати речі та завершити замовлення";
+      confirmText = order.timeLeftInSeconds < 300
+          ? "Після підтвердження цієї дії відчиниться комірка ${order.data!["cell_id"]}. Ви впевнені що хочете це зробити?"
+          : "У вас ще залишилось ${order.humanTimeLeft} оренди. Забрати свої речі?";
+    }
     return ElevatedDefaultButton(
-        buttonColor: AppColors.mainColor,
-        child: isCellOpening
-            ? const SizedBox(
-                width: 25,
-                height: 25,
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                  strokeWidth: 2,
-                ),
-              )
-            : const Text(
-                "Відчинити комірку",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+      buttonColor: AppColors.mainColor,
+      child: isCellOpening
+          ? const SizedBox(
+              width: 25,
+              height: 25,
+              child: CircularProgressIndicator(
+                color: Colors.white,
+                strokeWidth: 2,
               ),
-        onPressed: isCellOpening
-            ? null
-            : () async {
-                var confirmDialog = await showDialog(
-                    context: context,
-                    builder: (ctx) {
-                      return ConfirmDialog(
-                          title: "Увага",
-                          text:
-                              "Після підтвердження цієї дії відчиниться комірка ${widget.order.data!["cell_id"]}. Ви впевнені що хочете це зробити?");
-                    });
-                if (confirmDialog != null) {
-                  openCell();
-                }
-              });
+            )
+          : Text(
+              buttonText,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+            ),
+      onPressed: isCellOpening
+          ? null
+          : () async {
+              var confirmDialog = await showDialog(
+                  context: context,
+                  builder: (ctx) {
+                    return ConfirmDialog(title: "Увага", text: confirmText);
+                  });
+              if (confirmDialog != null) {
+                openCell(openCellType: openCellType);
+              }
+            },
+    );
+  }
+
+  ElevatedDefaultButton putThingsButton(BuildContext context) {
+    return ElevatedDefaultButton(
+      buttonColor: AppColors.mainColor,
+      child: isCellOpening
+          ? const SizedBox(
+              width: 25,
+              height: 25,
+              child: CircularProgressIndicator(
+                color: Colors.white,
+                strokeWidth: 2,
+              ),
+            )
+          : const Text(
+              "Відчинити комірку та покласти речі",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+            ),
+      onPressed: isCellOpening
+          ? null
+          : () async {
+              var confirmDialog = await showDialog(
+                  context: context,
+                  builder: (ctx) {
+                    return ConfirmDialog(
+                        title: "Увага",
+                        text:
+                            "Після підтвердження цієї дії відчиниться комірка ${order.data!["cell_id"]} та ви зможете покласти свої речі. Не забудьте зачин комірку!");
+                  });
+              if (confirmDialog != null) {
+                openCell();
+              }
+            },
+    );
   }
 
   List<Widget> actionsSection(
@@ -84,16 +160,13 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
     return [
       if (message != null)
         Padding(
-            padding: const EdgeInsets.only(top: 20, bottom: 20),
-            child: Text(
-              message,
-              textAlign: TextAlign.center,
-              style: AppStyles.bodySmallText,
-            )),
-      const Text(
-        "ДІЇ",
-        style: AppStyles.bodyText2,
-      ),
+          padding: const EdgeInsets.only(top: 20, bottom: 20),
+          child: Text(
+            message,
+            textAlign: TextAlign.center,
+            style: AppStyles.bodySmallText,
+          ),
+        ),
       const SizedBox(height: 10),
       ...actionButtons.map((btn) => Padding(
             padding: const EdgeInsets.only(bottom: 10),
@@ -103,7 +176,7 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
   }
 
   RichText usePincodeWidget(BuildContext context) {
-    var pinCode = widget.order.data!["pin"] as String?;
+    var pinCode = order.data!["pin"] as String?;
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(style: DefaultTextStyle.of(context).style, children: [
@@ -141,13 +214,20 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
     }
   }
 
-  void openCell() async {
+  void openCell({OpenCellType openCellType = OpenCellType.openCell}) async {
     String? numTask;
     try {
       setState(() {
         isCellOpening = true;
       });
-      numTask = await OrderApi.openCell(widget.order.id);
+      if (openCellType == OpenCellType.openCell) {
+        numTask = await OrderApi.openCell(order.id);
+      } else if (openCellType == OpenCellType.firstOpenCell) {
+        numTask = await OrderApi.putThings(order.id);
+      } else if (openCellType == OpenCellType.lastOpenCell) {
+        numTask = await OrderApi.getThings(order.id);
+      }
+
       if (numTask == null) {
         throw Exception();
       }
@@ -164,67 +244,97 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
     }
 
     await Future.delayed(const Duration(seconds: 2));
-    int status = 0;
-    try {
-      status = await OrderApi.checkOpenCellTask(widget.order.id, numTask);
-    } catch (e) {
-      showDialogByOpenCellTaskStatus(context, 2);
-      return;
-    }
 
-    pollingCellOpeningAttempts++;
-    if (status == 0) {
-      cellOpeningTimer =
-          Timer.periodic(const Duration(seconds: 2), (timer) async {
-        try {
-          if (numTask == null) {
-            showDialogByOpenCellTaskStatus(context, 2);
-            return;
-          } else {
-            status = await OrderApi.checkOpenCellTask(widget.order.id, numTask);
-            print("status: $status");
-            pollingCellOpeningAttempts++;
-            if (status == 0 &&
-                pollingCellOpeningAttempts < maxPollingAttempts) {
+    if (openCellType == OpenCellType.openCell) {
+      int status = 0;
+      try {
+        status = await OrderApi.checkOpenCellTask(order.id, numTask);
+      } catch (e) {
+        showDialogByOpenCellTaskStatus(context, 2);
+        return;
+      }
+      pollingCellOpeningAttempts++;
+      if (status == 0) {
+        cellOpeningTimer =
+            Timer.periodic(const Duration(seconds: 2), (timer) async {
+          try {
+            if (numTask == null) {
+              showDialogByOpenCellTaskStatus(context, 2);
               return;
-            }
+            } else {
+              status = await OrderApi.checkOpenCellTask(order.id, numTask);
+              pollingCellOpeningAttempts++;
+              if (status == 0 &&
+                  pollingCellOpeningAttempts < maxPollingAttempts) {
+                return;
+              }
 
-            if (status != 0) {
-              showDialogByOpenCellTaskStatus(context, status);
-            } else if (pollingCellOpeningAttempts >= maxPollingAttempts) {
-              showDialogByOpenCellTaskStatus(context, 3);
+              if (status != 0) {
+                showDialogByOpenCellTaskStatus(context, status);
+              } else if (pollingCellOpeningAttempts >= maxPollingAttempts) {
+                showDialogByOpenCellTaskStatus(context, 3);
+              }
             }
+          } catch (e) {
+            showDialogByOpenCellTaskStatus(context, 2);
           }
-        } catch (e) {
-          showDialogByOpenCellTaskStatus(context, 2);
-        }
 
-        timer.cancel();
+          timer.cancel();
+          setState(() {
+            isCellOpening = false;
+          });
+        });
+      } else {
+        showDialogByOpenCellTaskStatus(context, status);
+        if (status == 1 && openCellType != OpenCellType.openCell) {
+          await checkChangingOrder(openCellType: openCellType);
+        }
         setState(() {
           isCellOpening = false;
         });
-      });
+      }
     } else {
-      showDialogByOpenCellTaskStatus(context, status);
+      await checkChangingOrder(openCellType: openCellType);
+      if (openCellType == OpenCellType.firstOpenCell) {
+        showDialogByOpenCellTaskStatus(
+            context, order.status == OrderStatus.active ? 1 : 2);
+      } else {
+        showDialogByOpenCellTaskStatus(
+            context, order.status == OrderStatus.completed ? 1 : 2);
+      }
       setState(() {
         isCellOpening = false;
       });
     }
   }
 
-  Widget buildAclSection(BuildContext context, OrderData order) {
-    var problemBtn = ElevatedDefaultButton(
-        buttonColor: AppColors.dangerousColor,
-        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-        child: const Text(
-          "Повідомити про проблему",
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-        ),
-        onPressed: () {
-          Navigator.pop(context);
-        });
+  Future<void> checkChangingOrder(
+      {attempts = 0,
+      maxAttempts = 20,
+      openCellType = OpenCellType.firstOpenCell}) async {
+    try {
+      await order.checkOrder();
+      if (openCellType == OpenCellType.firstOpenCell) {
+        if ((order.status != OrderStatus.active) && maxAttempts > attempts) {
+          attempts += 1;
+          await Future.delayed(const Duration(seconds: 2));
+          await checkChangingOrder(
+              attempts: attempts, openCellType: openCellType);
+        }
+      } else if (openCellType == OpenCellType.lastOpenCell) {
+        if ((order.status != OrderStatus.completed) && maxAttempts > attempts) {
+          attempts += 1;
+          await Future.delayed(const Duration(seconds: 2));
+          await checkChangingOrder(
+              attempts: attempts, openCellType: openCellType);
+        }
+      }
+    } catch (e) {
+      return;
+    }
+  }
 
+  Widget buildAclSection(BuildContext context, OrderData order) {
     Widget? cellIdWidget = order.data!.containsKey("cell_id")
         ? Padding(
             padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -244,7 +354,7 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
     if (order.status == OrderStatus.completed) {
       content.addAll(
         actionsSection(
-            actionButtons: [problemBtn],
+            actionButtons: [],
             message:
                 "Замовлення виконано. Дякуємо що скористались нашим сервісом!"),
       );
@@ -253,7 +363,7 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
       // MAY ADD "Extend Order" action
       content.addAll(
         actionsSection(
-            actionButtons: [problemBtn],
+            actionButtons: [],
             message:
                 "Час замовлення вийшов, якщо Ваші речі ще залишились в комірці, повідомте про це нам"),
       );
@@ -261,11 +371,12 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
         order.status == OrderStatus.inProgress) {
       content.addAll(
         actionsSection(
-            actionButtons: [problemBtn],
+            actionButtons: [],
             message:
                 "Замовлення виконується, почекайте декілька секунд. Якщо статус замовлення не зміниться через деякий час - повідомте про це нам"),
       );
-    } else if (order.status == OrderStatus.hold) {
+    } else if (order.status == OrderStatus.hold ||
+        order.status == OrderStatus.active) {
       final endDate = order.data!["end_date"] as DateTime;
       content.add(Padding(
         padding: const EdgeInsets.only(top: 10),
@@ -301,7 +412,7 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
               ],
             ),
           ));
-          content.addAll(actionsSection(actionButtons: [problemBtn]));
+          content.addAll(actionsSection(actionButtons: []));
           break;
         case AlgorithmType.enterPinOnComplex:
           var pinCode = order.data!["pin"] as String?;
@@ -318,37 +429,26 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
               ],
             ),
           ));
-          content.addAll(actionsSection(actionButtons: [problemBtn]));
+          content.addAll(actionsSection(actionButtons: []));
           break;
         case AlgorithmType.selfService:
-          content.add(const Padding(
-            padding: EdgeInsets.only(top: 10.0, bottom: 8),
-            child: Text(
-              "ДІЇ",
-              style: AppStyles.bodyText2,
-            ),
-          ));
           content.add(
             Padding(
                 padding: const EdgeInsets.only(bottom: 10.0),
-                child: openCellButton(context)),
+                child: openCellButton(context, order, justOpen: true)),
           );
-          content.add(problemBtn);
+          content.add(
+            Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: openCellButton(context, order)),
+          );
           break;
         case AlgorithmType.selfPlusPin:
-          content.add(const Padding(
-            padding: EdgeInsets.only(top: 10.0, bottom: 8),
-            child: Text(
-              "ДІЇ",
-              style: AppStyles.bodyText2,
-            ),
-          ));
           content.add(
             Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: openCellButton(context)),
+                padding: const EdgeInsets.only(bottom: 6.0, top: 10.0),
+                child: openCellButton(context, order)),
           );
-          content.add(problemBtn);
           content.add(
             Padding(
                 padding: const EdgeInsets.only(top: 20, bottom: 10),
@@ -356,17 +456,10 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
           );
           break;
         case AlgorithmType.selfPlusQr:
-          content.add(const Padding(
-            padding: EdgeInsets.only(top: 10.0, bottom: 8),
-            child: Text(
-              "ДІЇ",
-              style: AppStyles.bodyText2,
-            ),
-          ));
           content.add(
             Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: openCellButton(context)),
+                padding: const EdgeInsets.only(bottom: 8, top: 10),
+                child: openCellButton(context, order)),
           );
           content.add(Padding(
               padding: const EdgeInsets.only(bottom: 20.0),
@@ -405,27 +498,31 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
                   );
                 },
               )));
-          content.add(problemBtn);
           content.add(const SizedBox(height: 20));
           break;
         default:
           content.add(const Center(
             child: Text("Невідомий алгоритм"),
           ));
-          content.addAll(actionsSection(actionButtons: [problemBtn]));
           break;
       }
+    } else if (order.status == OrderStatus.completed) {
+      content.addAll(
+        actionsSection(
+            actionButtons: [],
+            message:
+                "Замовлення виконано. Дякуємо що скористались нашими послугами, чекаємо ще ;)"),
+      );
     } else {
       content.add(const Center(
         child: Padding(
           padding: EdgeInsets.only(top: 20, bottom: 10),
           child: Text(
-            "Щось пішло нет... Через технічні проблеми операцію було скасовано.",
+            "Щось пішло не так... Через технічні проблеми операцію було скасовано.",
             textAlign: TextAlign.center,
           ),
         ),
       ));
-      content.addAll(actionsSection(actionButtons: [problemBtn]));
     }
     return Column(children: content);
   }

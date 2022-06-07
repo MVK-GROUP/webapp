@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mvk_app/models/lockers.dart';
 import 'package:mvk_app/providers/order.dart';
+import 'package:mvk_app/screens/acl/set_datetime.dart';
 import 'package:mvk_app/screens/confirm_locker_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -66,7 +67,7 @@ class App extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'MVK APP',
-        home: const EnterLockerIdScreen(),
+        home: const EnterLockerIdScreen(), // SetACLDateTimeScreen(),
         routes: {
           EnterLockerIdScreen.routeName: (ctx) => const EnterLockerIdScreen(),
           SizeSelectionScreen.routeName: (ctx) => const SizeSelectionScreen(),
@@ -79,7 +80,8 @@ class App extends StatelessWidget {
           PaymentCheckScreen.routeName: (ctx) => const PaymentCheckScreen(),
           HistoryScreen.routeName: (ctx) => const HistoryScreen(),
           GoodsScreen.routeName: (ctx) => const GoodsScreen(),
-          AllGoodsScreen.routeName: (ctx) => const AllGoodsScreen()
+          AllGoodsScreen.routeName: (ctx) => const AllGoodsScreen(),
+          SetACLDateTimeScreen.routeName: (ctx) => const SetACLDateTimeScreen(),
         },
         onGenerateRoute: (RouteSettings settings) =>
             RouteGenerator.generateRoute(settings, context),
