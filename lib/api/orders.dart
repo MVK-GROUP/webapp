@@ -6,9 +6,6 @@ import 'settings.dart';
 import '../models/order.dart';
 import 'http_exceptions.dart';
 
-const domain =
-    debugServer ? "http://localhost:8000" : "https://lockershub.online";
-
 class OrderApi {
   static const baseUrl = domain + "/api/v1";
 

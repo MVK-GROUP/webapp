@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import '../widgets/image_banner.dart';
-import '../widgets/main_button.dart';
-import 'auth_screen.dart';
+import 'package:mvk_app/screens/auth/auth_screen.dart';
+import '../../widgets/image_banner.dart';
+import '../../widgets/main_button.dart';
 
-class WelcomeScreen extends StatelessWidget {
-  static const routeName = '/welcome';
+class WelcomePage extends StatelessWidget {
+  final Function(PageType) changePage;
 
-  const WelcomeScreen({Key? key}) : super(key: key);
+  const WelcomePage({required this.changePage, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: CustomScrollView(slivers: [
+    return CustomScrollView(slivers: [
       SliverFillRemaining(
         hasScrollBody: false,
         child: Padding(
@@ -43,7 +42,7 @@ class WelcomeScreen extends StatelessWidget {
                     text: 'Почати',
                     icon: Icons.arrow_right_alt,
                     iconLocation: IconLocation.right,
-                    onButtonPress: () => nextScreen(context),
+                    onButtonPress: () => changePage(PageType.enterPhone),
                   ),
                 ),
                 const SizedBox(
@@ -52,10 +51,6 @@ class WelcomeScreen extends StatelessWidget {
               ],
             )),
       )
-    ]));
-  }
-
-  void nextScreen(BuildContext context) {
-    Navigator.of(context).pushReplacementNamed(AuthScreen.routeName);
+    ]);
   }
 }

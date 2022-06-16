@@ -7,17 +7,19 @@ enum IconLocation {
 
 class MainButton extends StatelessWidget {
   final String text;
+  final bool isWaitingButton;
   final IconData? icon;
   final IconLocation iconLocation;
-  final VoidCallback onButtonPress;
+  final VoidCallback? onButtonPress;
   final double mHorizontalInset;
 
   const MainButton({
     Key? key,
-    required this.text,
+    this.text = "",
+    this.isWaitingButton = false,
     this.icon,
     this.iconLocation = IconLocation.left,
-    required this.onButtonPress,
+    this.onButtonPress,
     this.mHorizontalInset = 0,
   }) : super(key: key);
 
@@ -39,15 +41,17 @@ class MainButton extends StatelessWidget {
           children: [
             if (icon != null && iconLocation == IconLocation.left) buildIcon(),
             const Spacer(),
-            Text(
-              text,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                  color: Color.fromARGB(221, 255, 255, 255),
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 2.0),
-            ),
+            isWaitingButton
+                ? const CircularProgressIndicator()
+                : Text(
+                    text,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        color: Color.fromARGB(221, 255, 255, 255),
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 2.0),
+                  ),
             const Spacer(),
             if (icon != null && iconLocation == IconLocation.right) buildIcon(),
           ],

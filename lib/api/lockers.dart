@@ -5,9 +5,6 @@ import 'settings.dart';
 import '../models/lockers.dart';
 import 'http_exceptions.dart';
 
-const domain =
-    debugServer ? "http://localhost:8000" : "https://lockershub.online";
-
 class LockerApi {
   static const baseUrl = domain + "/api/v1";
 
@@ -45,7 +42,6 @@ class LockerApi {
       if (typeId != null) {
         bodyData["type_id"] = typeId.toString();
       }
-
       var res = await http.post(
         Uri.parse(baseUrl + apiUrl),
         body: json.encode(bodyData),
@@ -57,7 +53,7 @@ class LockerApi {
       if (res.statusCode == 200) {
         var response =
             json.decode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>;
-
+        print("RESPONSE: $response");
         final data = response["data"] as List<dynamic>;
         List<CellStatus> cells = [];
         for (var element in data) {

@@ -432,11 +432,13 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
           content.addAll(actionsSection(actionButtons: []));
           break;
         case AlgorithmType.selfService:
-          content.add(
-            Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: openCellButton(context, order, justOpen: true)),
-          );
+          if (order.status == OrderStatus.active) {
+            content.add(
+              Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: openCellButton(context, order, justOpen: true)),
+            );
+          }
           content.add(
             Padding(
                 padding: const EdgeInsets.only(bottom: 10.0),

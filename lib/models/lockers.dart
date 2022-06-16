@@ -395,4 +395,8 @@ class CellStatus {
     return CellStatus(
         json["cell"], json["status"], json["type"], json["service"]);
   }
+
+  bool isThisTypeId(String otherTypeId) {
+    return otherTypeId == typeId;
+  }
 }

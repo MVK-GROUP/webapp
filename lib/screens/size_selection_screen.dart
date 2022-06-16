@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mvk_app/api/http_exceptions.dart';
+import 'package:mvk_app/screens/global_menu.dart';
 import 'package:mvk_app/screens/payment_check_screen.dart';
 import 'package:mvk_app/widgets/confirm_dialog.dart';
 import 'package:mvk_app/widgets/sww_dialog.dart';
@@ -8,7 +9,6 @@ import '../api/lockers.dart';
 import '../providers/order.dart';
 import '../style.dart';
 import '../models/lockers.dart';
-import '../utilities/urils.dart';
 import '../widgets/main_block.dart';
 import '../widgets/screen_title.dart';
 import '../widgets/tariff_dialog.dart';
@@ -25,70 +25,143 @@ class SizeSelectionScreen extends StatefulWidget {
 
 class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
   late bool _orderCreating;
+  late Service? currentService;
+  late Locker? locker;
+  late List<ACLCellType> cellTypes;
+  bool _isOnlyOneCellType = false;
+  late Future _getFreeCellsFuture;
+  var isInit = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  Future<List<CellStatus>?> _obtainGetFreeCellsFuture() async {
+    currentService =
+        Provider.of<ServiceNotifier>(context, listen: false).service;
+    if (currentService == null) {
+      Navigator.pushReplacementNamed(context, MenuScreen.routeName);
+      return null;
+    }
+    cellTypes = currentService?.data["cell_types"] as List<ACLCellType>;
+    locker = Provider.of<LockerNotifier>(context, listen: false).locker;
+
+    try {
+      final freeCells = await LockerApi.getFreeCells(locker?.lockerId ?? 0,
+          service: ServiceCategoryExt.typeToString(currentService!.category));
+      if (freeCells.isEmpty) {
+        await showDialog(
+            context: context,
+            builder: (ctx) => const SomethingWentWrongDialog(
+                  title: "Немає вільних комірок",
+                  bodyMessage:
+                      "Нажаль немає вільних комірок. Спробуйте орендувати комірку пізніше",
+                ));
+        Navigator.pushReplacementNamed(context, MenuScreen.routeName);
+        return null;
+      }
+      return freeCells;
+    } catch (e) {
+      await showDialog(
+          context: context,
+          builder: (ctx) => const SomethingWentWrongDialog(
+                title: "Немає вільних комірок",
+                bodyMessage:
+                    "Сталась технічна помилка. Спробуйте орендувати комірку пізніше",
+              ));
+      Navigator.pushReplacementNamed(context, MenuScreen.routeName);
+      return null;
+    }
+  }
 
   @override
   void initState() {
     _orderCreating = false;
+    _getFreeCellsFuture = _obtainGetFreeCellsFuture();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
-    final currentService =
-        Provider.of<ServiceNotifier>(context, listen: false).service;
-    if (currentService == null) {
-      return Utils.goToMenu(Navigator.of(context));
-    }
-
-    final cellTypes = currentService.data["cell_types"] as List<ACLCellType>;
-    final locker = Provider.of<LockerNotifier>(context, listen: false).locker;
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        iconTheme: const IconThemeData(color: AppColors.mainColor, size: 32),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: ScreenTitle(
-              'Оберіть розмір комірки',
-              subTitle: 'Послуга "${currentService.title}"',
-            ),
-          ),
-          MainBlock(
-              child: Center(
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 700),
-              child: GridView(
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 250,
-                    childAspectRatio: mediaQuery.size.width <= 310 ? 2 : 1),
-                shrinkWrap: true,
-                children: cellTypes
-                    .map((size) => cellSizeTile(
-                        context: context,
-                        mediaQuery: mediaQuery,
-                        serviceCategoryType: ServiceCategoryExt.typeToString(
-                            currentService.category),
-                        algorithmType:
-                            currentService.data["algorithm"] as AlgorithmType,
-                        tariffSelectionType:
-                            currentService.data["tariff_selection_type"]
-                                as TariffSelectionType,
-                        locker: locker,
-                        cellType: size,
-                        color: currentService.color))
-                    .toList(),
-              ),
-            ),
-          )),
-        ],
-      ),
-    );
+        appBar: AppBar(
+          elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          iconTheme: const IconThemeData(color: AppColors.mainColor, size: 32),
+        ),
+        body: FutureBuilder(
+          future: _getFreeCellsFuture,
+          builder: (ctx, dataSnapshot) {
+            if (dataSnapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else {
+              if (dataSnapshot.error != null) {
+                return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Text(
+                      "На жаль не можемо відобразити Ваші замовлення через технічні проблеми",
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                );
+              } else {
+                final cellStatuses = dataSnapshot.data as List<CellStatus>?;
+                if (cellStatuses == null || cellStatuses.isEmpty) {
+                  return const Center();
+                } else {
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: ScreenTitle(
+                          'Оберіть розмір комірки',
+                          subTitle: 'Послуга "${currentService!.title}"',
+                        ),
+                      ),
+                      MainBlock(
+                          child: Center(
+                        child: Container(
+                          constraints: const BoxConstraints(maxWidth: 700),
+                          child: GridView(
+                            gridDelegate:
+                                SliverGridDelegateWithMaxCrossAxisExtent(
+                                    maxCrossAxisExtent: 250,
+                                    childAspectRatio:
+                                        mediaQuery.size.width <= 310 ? 2 : 1),
+                            shrinkWrap: true,
+                            children: cellTypes.map((size) {
+                              final index = cellStatuses.indexWhere((element) =>
+                                  element.isThisTypeId(size.id.toString()));
+                              return cellSizeTile(
+                                  context: context,
+                                  mediaQuery: mediaQuery,
+                                  serviceCategoryType:
+                                      ServiceCategoryExt.typeToString(
+                                          currentService!.category),
+                                  algorithmType: currentService!
+                                      .data["algorithm"] as AlgorithmType,
+                                  tariffSelectionType: currentService!
+                                          .data["tariff_selection_type"]
+                                      as TariffSelectionType,
+                                  locker: locker,
+                                  cellType: size,
+                                  color: currentService!.color,
+                                  isExistFree: index > -1);
+                            }).toList(),
+                          ),
+                        ),
+                      )),
+                    ],
+                  );
+                }
+              }
+            }
+          },
+        ));
   }
 
   void tariffSelection(
@@ -226,7 +299,8 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
       required TariffSelectionType tariffSelectionType,
       required Locker? locker,
       required ACLCellType cellType,
-      required Color color}) {
+      required Color color,
+      bool isExistFree = true}) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ElevatedButton(
@@ -234,21 +308,22 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
             primary: color,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10))),
-        onPressed: () {
-          if (locker?.type == LockerType.free) {
-            setState(() {
-              _orderCreating = true;
-            });
-            createFreeOrder(context, locker?.lockerId, serviceCategoryType,
-                algorithmType, cellType);
-            setState(() {
-              _orderCreating = false;
-            });
-          } else {
-            print(tariffSelectionType);
-            tariffSelection(cellType, color, context);
-          }
-        },
+        onPressed: isExistFree
+            ? () {
+                if (locker?.type == LockerType.free) {
+                  setState(() {
+                    _orderCreating = true;
+                  });
+                  createFreeOrder(context, locker?.lockerId,
+                      serviceCategoryType, algorithmType, cellType);
+                  setState(() {
+                    _orderCreating = false;
+                  });
+                } else {
+                  tariffSelection(cellType, color, context);
+                }
+              }
+            : null,
         child: _orderCreating
             ? const Center(
                 child: SizedBox(
