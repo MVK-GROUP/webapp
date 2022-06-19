@@ -8,10 +8,17 @@ import 'http_exceptions.dart';
 class LockerApi {
   static const baseUrl = domain + "/api/v1";
 
-  static Future<Locker> fetchLockerById(String lockerId) async {
+  static Future<Locker> fetchLockerById(String lockerId, String? token) async {
     var apiUrl = "/lockers/$lockerId";
     try {
-      var res = await http.get(Uri.parse(baseUrl + apiUrl));
+      var res = await http.get(
+        Uri.parse(baseUrl + apiUrl),
+        headers: {
+          "content-type": "application/json",
+          "accept": "application/json",
+          "Authorization": "Token $token",
+        },
+      );
       if (res.statusCode == 200) {
         var locker = Locker.fromJson(
             json.decode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>);
@@ -31,6 +38,7 @@ class LockerApi {
     int lockerId, {
     String? service,
     int? typeId,
+    String? token,
   }) async {
     var apiUrl = "/lockers/$lockerId/cells/free";
 
@@ -42,18 +50,20 @@ class LockerApi {
       if (typeId != null) {
         bodyData["type_id"] = typeId.toString();
       }
+      var headers = {
+        "content-type": "application/json",
+        "accept": "application/json",
+        "Authorization": "Token $token",
+      };
       var res = await http.post(
         Uri.parse(baseUrl + apiUrl),
         body: json.encode(bodyData),
-        headers: {
-          "content-type": "application/json",
-          "accept": "application/json",
-        },
+        headers: headers,
       );
       if (res.statusCode == 200) {
         var response =
             json.decode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>;
-        print("RESPONSE: $response");
+
         final data = response["data"] as List<dynamic>;
         List<CellStatus> cells = [];
         for (var element in data) {

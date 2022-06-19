@@ -6,6 +6,10 @@ class OrdersNotifier with ChangeNotifier {
   List<OrderData>? _orders;
   var _lastUpdate = 0;
 
+  final String? authToken;
+
+  OrdersNotifier(this.authToken, this._orders);
+
   List<OrderData>? get orders {
     if (_orders == null) {
       return null;
@@ -27,7 +31,7 @@ class OrdersNotifier with ChangeNotifier {
 
   Future<List<OrderData>?> fetchAndSetOrders() async {
     try {
-      _orders = await OrderApi.fetchOrders();
+      _orders = await OrderApi.fetchOrders(authToken);
     } catch (e) {
       _orders = null;
     }
@@ -39,7 +43,7 @@ class OrdersNotifier with ChangeNotifier {
   Future<OrderData> addOrder(int lockerId, String title,
       {Map<String, Object>? data}) async {
     try {
-      var order = await OrderApi.addOrder(lockerId, title, data);
+      var order = await OrderApi.addOrder(lockerId, title, data, authToken);
       _orders?.insert(0, order);
       notifyListeners();
       return order;
@@ -50,7 +54,7 @@ class OrdersNotifier with ChangeNotifier {
 
   Future<OrderData> checkOrder(int orderId) async {
     try {
-      var order = await OrderApi.fetchOrderById(orderId);
+      var order = await OrderApi.fetchOrderById(orderId, authToken);
       int? index = _orders?.indexWhere((element) => element.id == orderId);
       if (index != null && index != -1) {
         _orders?[index] = order;
@@ -66,7 +70,7 @@ class OrdersNotifier with ChangeNotifier {
 
   Future<OrderData> checkOrderWithoutNotify(int orderId) async {
     try {
-      var order = await OrderApi.fetchOrderById(orderId);
+      var order = await OrderApi.fetchOrderById(orderId, authToken);
       return order;
     } catch (e) {
       rethrow;

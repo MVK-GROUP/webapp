@@ -208,11 +208,11 @@ class OrderData with ChangeNotifier {
     return "$price $currency";
   }
 
-  Future<bool> checkOrder() async {
+  Future<bool> checkOrder(String? token) async {
     try {
       print(
           "before: ${status}, ${firstActionTimestamp} ${lastActionTimestamp}");
-      var fetchedOrder = await OrderApi.fetchOrderById(id);
+      var fetchedOrder = await OrderApi.fetchOrderById(id, token);
       print(
           "fetched: ${fetchedOrder.status}, ${fetchedOrder.firstActionTimestamp} ${fetchedOrder.lastActionTimestamp}");
       if (!isEqual(fetchedOrder)) {

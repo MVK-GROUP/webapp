@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mvk_app/providers/auth.dart';
 import 'package:mvk_app/screens/enter_lockerid_screen.dart';
 import 'package:mvk_app/screens/global_menu.dart';
 import 'package:mvk_app/style.dart';
@@ -25,9 +26,13 @@ class _ConfirmLockerScreenState extends State<ConfirmLockerScreen> {
   late Future _getLockerFuture;
   bool isActiveChecking = false;
   Locker? locker;
+  String? token;
 
   Future _obtainGetLockerFuture() async {
-    final isExist = await OrderApi.isExistActiveOrders();
+    print("token before: $token");
+    token = Provider.of<Auth>(context, listen: false).token;
+    print("token after: $token");
+    final isExist = await OrderApi.isExistActiveOrders(token);
     if (isExist) {
       try {
         await Provider.of<LockerNotifier>(context, listen: false)
@@ -47,7 +52,7 @@ class _ConfirmLockerScreenState extends State<ConfirmLockerScreen> {
       }
     }
     try {
-      locker = await LockerApi.fetchLockerById(widget.lockerId);
+      locker = await LockerApi.fetchLockerById(widget.lockerId, token);
     } catch (e) {
       Navigator.of(context).pushReplacementNamed(EnterLockerIdScreen.routeName);
       return;

@@ -181,7 +181,6 @@ class Service {
 
 class ServiceNotifier with ChangeNotifier {
   Service? _currentService;
-  ServiceNotifier();
 
   void setService(Service service) {
     _currentService = service;
@@ -305,6 +304,9 @@ class Locker {
 
 class LockerNotifier with ChangeNotifier {
   Locker? _currenctLocker;
+  String? authToken;
+
+  LockerNotifier(this._currenctLocker, this.authToken);
 
   Locker? get locker {
     return _currenctLocker;
@@ -317,7 +319,7 @@ class LockerNotifier with ChangeNotifier {
       return null;
     } else {
       try {
-        _currenctLocker = await LockerApi.fetchLockerById(id);
+        _currenctLocker = await LockerApi.fetchLockerById(id, authToken);
         notifyListeners();
         return _currenctLocker;
       } catch (e) {

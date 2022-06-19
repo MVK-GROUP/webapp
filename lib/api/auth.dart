@@ -21,14 +21,11 @@ class AuthApi {
           "accept": "application/json",
         },
       );
-      print("response: ${res.body}");
       if (res.statusCode == 200) {
         final body = jsonDecode(res.body);
         if (body["status"] == "success") {
-          print("ok");
           return true;
         } else {
-          print("not ok");
           return false;
         }
       } else {
@@ -55,7 +52,6 @@ class AuthApi {
           "accept": "application/json",
         },
       );
-      print("response: ${res.body}");
       if (res.statusCode == 200) {
         final body = jsonDecode(res.body) as Map<String, dynamic>;
         if (body["status"] == "success" && body.containsKey("token")) {

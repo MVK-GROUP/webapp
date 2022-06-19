@@ -119,7 +119,9 @@ class _OtpPageState extends State<OtpPage> {
                 const SizedBox(
                   height: 20,
                   width: 20,
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
                 ),
               if (_isCanResend && !_isResendLoading)
                 TextButton(

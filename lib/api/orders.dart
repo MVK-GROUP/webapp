@@ -9,10 +9,18 @@ import 'http_exceptions.dart';
 class OrderApi {
   static const baseUrl = domain + "/api/v1";
 
-  static Future<List<OrderData>> fetchOrders() async {
+  static Future<List<OrderData>> fetchOrders(String? token) async {
+    print("fetch orders");
     var apiUrl = "/orders/";
     try {
-      var res = await http.get(Uri.parse(baseUrl + apiUrl));
+      var res = await http.get(
+        Uri.parse(baseUrl + apiUrl),
+        headers: {
+          "content-type": "application/json",
+          "accept": "application/json",
+          "Authorization": "Token $token",
+        },
+      );
 
       if (res.statusCode == 200) {
         List<OrderData> orders = [];
@@ -20,6 +28,7 @@ class OrderApi {
         for (var element in data) {
           orders.add(OrderData.fromJson(element));
         }
+        print("orders: $orders");
         return orders;
       } else {
         throw HttpException(res.reasonPhrase.toString(),
@@ -32,10 +41,17 @@ class OrderApi {
     }
   }
 
-  static Future<OrderData> fetchOrderById(int orderId) async {
+  static Future<OrderData> fetchOrderById(int orderId, String? token) async {
     var apiUrl = "/orders/$orderId";
     try {
-      var res = await http.get(Uri.parse(baseUrl + apiUrl));
+      var res = await http.get(
+        Uri.parse(baseUrl + apiUrl),
+        headers: {
+          "content-type": "application/json",
+          "accept": "application/json",
+          "Authorization": "Token $token",
+        },
+      );
 
       if (res.statusCode == 200) {
         var data =
@@ -57,7 +73,7 @@ class OrderApi {
   }
 
   static Future<OrderData> addOrder(
-      int lockerId, String title, Object? data) async {
+      int lockerId, String title, Object? data, String? token) async {
     var apiUrl = "/orders/new";
     try {
       final rawResponse = await http.post(
@@ -70,6 +86,7 @@ class OrderApi {
         headers: {
           "content-type": "application/json",
           "accept": "application/json",
+          "Authorization": "Token $token",
         },
       );
       if (rawResponse.statusCode < 400) {
@@ -83,10 +100,17 @@ class OrderApi {
     }
   }
 
-  static Future<String?> openCell(int orderId) async {
+  static Future<String?> openCell(int orderId, String? token) async {
     var apiUrl = "/orders/$orderId/open-cell";
     try {
-      final rawResponse = await http.post(Uri.parse(baseUrl + apiUrl));
+      final rawResponse = await http.post(
+        Uri.parse(baseUrl + apiUrl),
+        headers: {
+          "content-type": "application/json",
+          "accept": "application/json",
+          "Authorization": "Token $token",
+        },
+      );
       if (rawResponse.statusCode < 400) {
         final response = json.decode(utf8.decode(rawResponse.bodyBytes))
             as Map<String, dynamic>;
@@ -99,10 +123,17 @@ class OrderApi {
     }
   }
 
-  static Future<String?> putThings(int orderId) async {
+  static Future<String?> putThings(int orderId, String? token) async {
     var apiUrl = "/orders/$orderId/put-things";
     try {
-      final rawResponse = await http.post(Uri.parse(baseUrl + apiUrl));
+      final rawResponse = await http.post(
+        Uri.parse(baseUrl + apiUrl),
+        headers: {
+          "content-type": "application/json",
+          "accept": "application/json",
+          "Authorization": "Token $token",
+        },
+      );
       if (rawResponse.statusCode < 400) {
         final response = json.decode(utf8.decode(rawResponse.bodyBytes))
             as Map<String, dynamic>;
@@ -115,10 +146,17 @@ class OrderApi {
     }
   }
 
-  static Future<String?> getThings(int orderId) async {
+  static Future<String?> getThings(int orderId, String? token) async {
     var apiUrl = "/orders/$orderId/get-things";
     try {
-      final rawResponse = await http.post(Uri.parse(baseUrl + apiUrl));
+      final rawResponse = await http.post(
+        Uri.parse(baseUrl + apiUrl),
+        headers: {
+          "content-type": "application/json",
+          "accept": "application/json",
+          "Authorization": "Token $token",
+        },
+      );
       if (rawResponse.statusCode < 400) {
         final response = json.decode(utf8.decode(rawResponse.bodyBytes))
             as Map<String, dynamic>;
@@ -131,11 +169,19 @@ class OrderApi {
     }
   }
 
-  static Future<int> checkOpenCellTask(int orderId, String numTask) async {
+  static Future<int> checkOpenCellTask(
+      int orderId, String numTask, String? token) async {
     var apiUrl = "/orders/$orderId/check-task/$numTask";
     try {
       //await Future.delayed(Duration(seconds: 2));
-      final rawResponse = await http.post(Uri.parse(baseUrl + apiUrl));
+      final rawResponse = await http.post(
+        Uri.parse(baseUrl + apiUrl),
+        headers: {
+          "content-type": "application/json",
+          "accept": "application/json",
+          "Authorization": "Token $token",
+        },
+      );
       if (rawResponse.statusCode < 400) {
         final response = json.decode(utf8.decode(rawResponse.bodyBytes))
             as Map<String, dynamic>;
@@ -151,10 +197,17 @@ class OrderApi {
     }
   }
 
-  static Future<bool> isExistActiveOrders() async {
+  static Future<bool> isExistActiveOrders(String? token) async {
     var apiUrl = "/orders/active";
     try {
-      final rawResponse = await http.post(Uri.parse(baseUrl + apiUrl));
+      final rawResponse = await http.post(
+        Uri.parse(baseUrl + apiUrl),
+        headers: {
+          "content-type": "application/json",
+          "accept": "application/json",
+          "Authorization": "Token $token",
+        },
+      );
       if (rawResponse.statusCode < 400) {
         final response =
             json.decode(utf8.decode(rawResponse.bodyBytes)) as List<dynamic>;

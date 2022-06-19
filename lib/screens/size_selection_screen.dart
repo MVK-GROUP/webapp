@@ -6,6 +6,7 @@ import 'package:mvk_app/widgets/confirm_dialog.dart';
 import 'package:mvk_app/widgets/sww_dialog.dart';
 import 'package:provider/provider.dart';
 import '../api/lockers.dart';
+import '../providers/auth.dart';
 import '../providers/order.dart';
 import '../style.dart';
 import '../models/lockers.dart';
@@ -26,6 +27,7 @@ class SizeSelectionScreen extends StatefulWidget {
 class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
   late bool _orderCreating;
   late Service? currentService;
+  String? token;
   late Locker? locker;
   late List<ACLCellType> cellTypes;
   bool _isOnlyOneCellType = false;
@@ -38,6 +40,7 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
   }
 
   Future<List<CellStatus>?> _obtainGetFreeCellsFuture() async {
+    token = Provider.of<Auth>(context, listen: false).token;
     currentService =
         Provider.of<ServiceNotifier>(context, listen: false).service;
     if (currentService == null) {
@@ -49,7 +52,8 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
 
     try {
       final freeCells = await LockerApi.getFreeCells(locker?.lockerId ?? 0,
-          service: ServiceCategoryExt.typeToString(currentService!.category));
+          service: ServiceCategoryExt.typeToString(currentService!.category),
+          token: token);
       if (freeCells.isEmpty) {
         await showDialog(
             context: context,
@@ -213,7 +217,7 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
       String? orderedCell;
       try {
         final res = await LockerApi.getFreeCells(lockerId ?? 0,
-            service: serviceCategoryType, typeId: cellType.id);
+            service: serviceCategoryType, typeId: cellType.id, token: token);
         if (res.isEmpty) {
           await showDialog(
               context: context,

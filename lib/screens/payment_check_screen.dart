@@ -5,6 +5,7 @@ import 'package:mvk_app/models/lockers.dart';
 import 'package:provider/provider.dart';
 import '../api/orders.dart';
 import '../models/order.dart';
+import '../providers/auth.dart';
 import '../providers/order.dart';
 import '../widgets/sww_dialog.dart';
 import 'history/history_screen.dart';
@@ -23,6 +24,7 @@ class PaymentCheckScreen extends StatefulWidget {
 
 class _PaymentCheckScreenState extends State<PaymentCheckScreen> {
   late OrderData order;
+  String? token;
   late Locker? locker;
   String? text;
   Timer? timer;
@@ -43,6 +45,7 @@ class _PaymentCheckScreenState extends State<PaymentCheckScreen> {
   void didChangeDependencies() {
     if (!_isInit) {
       final arg = ModalRoute.of(context)?.settings.arguments;
+      token = Provider.of<Auth>(context).token;
       locker = Provider.of<LockerNotifier>(context).locker;
       if (arg == null || locker == null) {
         Navigator.pushReplacementNamed(context, MenuScreen.routeName);
@@ -204,7 +207,7 @@ class _PaymentCheckScreenState extends State<PaymentCheckScreen> {
         _isCellOpening = true;
       });
       //numTask = await OrderApi.openCell(order.id);
-      numTask = await OrderApi.putThings(order.id);
+      numTask = await OrderApi.putThings(order.id, token);
       if (numTask == null) {
         throw Exception();
       }
@@ -235,7 +238,7 @@ class _PaymentCheckScreenState extends State<PaymentCheckScreen> {
 
   Future<void> checkChangingOrder({attempts = 0, maxAttempts = 10}) async {
     try {
-      await order.checkOrder();
+      await order.checkOrder(token);
       if (order.status != OrderStatus.active && maxAttempts > attempts) {
         attempts += 1;
         await Future.delayed(const Duration(seconds: 2));

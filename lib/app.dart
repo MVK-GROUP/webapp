@@ -49,9 +49,21 @@ class App extends StatelessWidget {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider.value(value: Auth()),
-          ChangeNotifierProvider.value(value: LockerNotifier()),
+          //ChangeNotifierProvider.value(value: LockerNotifier()),
+
+          ChangeNotifierProxyProvider<Auth, LockerNotifier>(
+            create: (context) => LockerNotifier(null, null),
+            update: (context, auth, previousOrders) => LockerNotifier(
+              previousOrders?.locker,
+              auth.token,
+            ),
+          ),
           ChangeNotifierProvider.value(value: ServiceNotifier()),
-          ChangeNotifierProvider.value(value: OrdersNotifier()),
+          ChangeNotifierProxyProvider<Auth, OrdersNotifier>(
+            create: (context) => OrdersNotifier(null, null),
+            update: (context, auth, previousOrders) =>
+                OrdersNotifier(auth.token, previousOrders?.orders),
+          ),
         ],
         child: Consumer<Auth>(builder: (ctx, auth, _) {
           return MaterialApp(
@@ -64,9 +76,6 @@ class App extends StatelessWidget {
                   const EnterLockerIdScreen(),
               SizeSelectionScreen.routeName: (ctx) =>
                   const SizeSelectionScreen(),
-              //WelcomeScreen.routeName: (ctx) => const WelcomeScreen(),
-              //AuthScreen.routeName: (ctx) => const AuthScreen(),
-              //OtpScreen.routeName: (ctx) => const OtpScreen(),
               AuthScreen.routeName: (ctx) => const AuthScreen(),
               QrScannerScreen.routeName: (ctx) => QrScannerScreen(),
               MenuScreen.routeName: (ctx) => const MenuScreen(),

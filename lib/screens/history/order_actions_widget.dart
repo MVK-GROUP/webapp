@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:mvk_app/providers/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -30,11 +31,13 @@ class OrderActionsWidget extends StatefulWidget {
 
 class _OrderActionsWidgetState extends State<OrderActionsWidget> {
   bool isCellOpening = false;
+  bool isJustCellOpening = false;
   var _isInit = false;
   int pollingCellOpeningAttempts = 0;
   int maxPollingAttempts = 5;
   Timer? cellOpeningTimer;
   late OrderData order;
+  String? token;
 
   @override
   void dispose() {
@@ -45,6 +48,7 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
   @override
   void didChangeDependencies() {
     if (!_isInit) {
+      token = Provider.of<Auth>(context, listen: false).token;
       order = Provider.of<OrderData>(context, listen: true);
     }
     _isInit = true;
@@ -105,7 +109,7 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
             ),
-      onPressed: isCellOpening
+      onPressed: isJustCellOpening || isCellOpening
           ? null
           : () async {
               var confirmDialog = await showDialog(
@@ -115,6 +119,44 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
                   });
               if (confirmDialog != null) {
                 openCell(openCellType: openCellType);
+              }
+            },
+    );
+  }
+
+  ElevatedDefaultButton justOpenCellButton(
+      BuildContext context, OrderData order) {
+    String buttonText = "Відчинити комірку та докласти речі";
+    String confirmText =
+        "Після підтвердження цієї дії відчиниться комірка ${order.data!["cell_id"]}. Не забудьте зачинити комірку!";
+    var openCellType = OpenCellType.openCell;
+
+    return ElevatedDefaultButton(
+      buttonColor: AppColors.mainColor,
+      child: isJustCellOpening
+          ? const SizedBox(
+              width: 25,
+              height: 25,
+              child: CircularProgressIndicator(
+                color: Colors.white,
+                strokeWidth: 2,
+              ),
+            )
+          : Text(
+              buttonText,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+            ),
+      onPressed: isJustCellOpening || isCellOpening
+          ? null
+          : () async {
+              var confirmDialog = await showDialog(
+                  context: context,
+                  builder: (ctx) {
+                    return ConfirmDialog(title: "Увага", text: confirmText);
+                  });
+              if (confirmDialog != null) {
+                openCell(openCellType: openCellType, isJustOpen: true);
               }
             },
     );
@@ -137,7 +179,7 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
             ),
-      onPressed: isCellOpening
+      onPressed: isJustCellOpening || isCellOpening
           ? null
           : () async {
               var confirmDialog = await showDialog(
@@ -214,18 +256,24 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
     }
   }
 
-  void openCell({OpenCellType openCellType = OpenCellType.openCell}) async {
+  void openCell(
+      {OpenCellType openCellType = OpenCellType.openCell,
+      bool isJustOpen = false}) async {
     String? numTask;
     try {
       setState(() {
-        isCellOpening = true;
+        if (isJustOpen) {
+          isJustCellOpening = true;
+        } else {
+          isCellOpening = true;
+        }
       });
       if (openCellType == OpenCellType.openCell) {
-        numTask = await OrderApi.openCell(order.id);
+        numTask = await OrderApi.openCell(order.id, token);
       } else if (openCellType == OpenCellType.firstOpenCell) {
-        numTask = await OrderApi.putThings(order.id);
+        numTask = await OrderApi.putThings(order.id, token);
       } else if (openCellType == OpenCellType.lastOpenCell) {
-        numTask = await OrderApi.getThings(order.id);
+        numTask = await OrderApi.getThings(order.id, token);
       }
 
       if (numTask == null) {
@@ -238,8 +286,13 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
                 bodyMessage: "Наразі неможливо відчинити цю комірку",
               ));
       setState(() {
-        isCellOpening = false;
+        if (isJustOpen) {
+          isJustCellOpening = false;
+        } else {
+          isCellOpening = false;
+        }
       });
+
       return;
     }
 
@@ -248,7 +301,7 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
     if (openCellType == OpenCellType.openCell) {
       int status = 0;
       try {
-        status = await OrderApi.checkOpenCellTask(order.id, numTask);
+        status = await OrderApi.checkOpenCellTask(order.id, numTask, token);
       } catch (e) {
         showDialogByOpenCellTaskStatus(context, 2);
         return;
@@ -262,7 +315,8 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
               showDialogByOpenCellTaskStatus(context, 2);
               return;
             } else {
-              status = await OrderApi.checkOpenCellTask(order.id, numTask);
+              status =
+                  await OrderApi.checkOpenCellTask(order.id, numTask, token);
               pollingCellOpeningAttempts++;
               if (status == 0 &&
                   pollingCellOpeningAttempts < maxPollingAttempts) {
@@ -313,7 +367,7 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
       maxAttempts = 20,
       openCellType = OpenCellType.firstOpenCell}) async {
     try {
-      await order.checkOrder();
+      await order.checkOrder(token);
       if (openCellType == OpenCellType.firstOpenCell) {
         if ((order.status != OrderStatus.active) && maxAttempts > attempts) {
           attempts += 1;
@@ -436,7 +490,7 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
             content.add(
               Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
-                  child: openCellButton(context, order, justOpen: true)),
+                  child: justOpenCellButton(context, order)),
             );
           }
           content.add(

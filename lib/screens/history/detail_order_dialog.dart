@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:mvk_app/providers/auth.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/order.dart';
@@ -22,10 +23,18 @@ class _DetailOrderNotifierDialogState extends State<DetailOrderNotifierDialog> {
   var _isInit = false;
   Timer? timer;
   var _isOrderLoading = false;
+  String? token;
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
 
   @override
   void didChangeDependencies() {
     if (!_isInit) {
+      token = Provider.of<Auth>(context, listen: false).token;
       order = Provider.of<OrderData>(context, listen: true);
       _isOrderLoading = false;
       if ([OrderStatus.created, OrderStatus.inProgress]
@@ -198,7 +207,7 @@ class _DetailOrderNotifierDialogState extends State<DetailOrderNotifierDialog> {
     //  isOrderLoading = true;
     //});
     try {
-      var updated = await order.checkOrder();
+      var updated = await order.checkOrder(token);
       if (updated) {
         print("updated");
       } else {
