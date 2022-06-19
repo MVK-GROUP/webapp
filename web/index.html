@@ -14,15 +14,21 @@
   <meta name="apple-mobile-web-app-title" content="mvk_app">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
-  <script src="https://unpkg.com/canvaskit-wasm@0.33.0/bin/canvaskit.js"></script>
-  <link rel="preload" href="https://unpkg.com/canvaskit-wasm@0.33.0/bin/canvaskit.wasm" as="fetch"
-    crossOrigin="anonymous">
+  <!-- <script src="https://unpkg.com/canvaskit-wasm@0.33.0/bin/canvaskit.js"></script> -->
+  <!-- <link rel="preload" href="https://unpkg.com/canvaskit-wasm@0.33.0/bin/canvaskit.wasm" as="fetch" -->
+  <!-- crossOrigin="anonymous"> -->
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png" />
 
-  <title>mvk_app</title>
+  <title>Application</title>
   <link rel="manifest" href="manifest.json">
+  <script>
+    // The value below is injected by flutter build, do not touch.
+    var serviceWorkerVersion = null;
+  </script>
+  <script src="flutter.js" defer></script>
+
   <style>
     .loading {
       display: flex;
@@ -79,6 +85,22 @@
   <div class="loading">
     <div class="loader"></div>
   </div>
+  <script>
+    window.addEventListener('load', function (ev) {
+      // Download main.dart.js
+      _flutter.loader.loadEntrypoint({
+        serviceWorker: {
+          serviceWorkerVersion: serviceWorkerVersion,
+        }
+      }).then(function (engineInitializer) {
+        return engineInitializer.initializeEngine();
+      }).then(function (appRunner) {
+        return appRunner.runApp();
+      });
+    });
+  </script>
+
+  <!--  
   <script>
     var serviceWorkerVersion = null;
     var scriptLoaded = false;
@@ -143,6 +165,7 @@
       loadMainDartJs();
     }
   </script>
+  -->
   <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 </body>
 
