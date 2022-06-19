@@ -3,11 +3,12 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "main.dart.js": "c61cd8dece0880cd75447b965dd52fef",
+  "main.dart.js": "75c981d8004837ab3dacfb1866972031",
 "manifest.json": "cb12460f5e826abe71085b7497f88fb6",
 "version.json": "e371efac991124ece08a5445aa24b5d8",
-"index.html": "eac33e000b78b67c599c33bc712a110c",
-"/": "eac33e000b78b67c599c33bc712a110c",
+"flutter.js": "eb2682e33f25cd8f1fc59011497c35f8",
+"index.html": "66fca81f219200c2fd5d360c29e5400a",
+"/": "66fca81f219200c2fd5d360c29e5400a",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
@@ -17,7 +18,7 @@ const RESOURCES = {
 "canvaskit/profiling/canvaskit.wasm": "95e736ab31147d1b2c7b25f11d4c32cd",
 "canvaskit/canvaskit.wasm": "4b83d89d9fecbea8ca46f2f760c5a9ba",
 "assets/AssetManifest.json": "82055b3f0d3893e162a0a48b3027f09b",
-"assets/fonts/MaterialIcons-Regular.otf": "7e7a6cccddf6d7b20012a548461d5d81",
+"assets/fonts/MaterialIcons-Regular.otf": "95db9098c58fd6db106f1116bae85a0b",
 "assets/packages/intl_phone_number_input/assets/flags/kp.png": "e1c8bb52f31fca22d3368d8f492d8f27",
 "assets/packages/intl_phone_number_input/assets/flags/ke.png": "cf5aae3699d3cacb39db9803edae172b",
 "assets/packages/intl_phone_number_input/assets/flags/la.png": "e8cd9c3ee6e134adcbe3e986e1974e4a",
@@ -295,7 +296,7 @@ const RESOURCES = {
 "assets/assets/images/scan_qr.png": "256f684f3806030fcbe6dfaff84b80ea",
 "assets/assets/images/welcome_img.png": "589cda18885e67f28ddd8272df633b09",
 "assets/assets/images/no-image.png": "fedf42235cc9d88a11e3fb59932970a0",
-"assets/NOTICES": "4945166e217f5494ad5eb66e5320aa34",
+"assets/NOTICES": "5a3475ca6a093516f0066959a503377a",
 "assets/FontManifest.json": "7b2a36307916a9721811788013e65289",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796"
 };
@@ -303,8 +304,7 @@ const RESOURCES = {
 // The application shell files that are downloaded before a service worker can
 // start.
 const CORE = [
-  "/",
-"main.dart.js",
+  "main.dart.js",
 "index.html",
 "assets/NOTICES",
 "assets/AssetManifest.json",
