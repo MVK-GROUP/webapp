@@ -66,7 +66,6 @@ class Auth with ChangeNotifier {
     }
     final extractedUserData = json.decode(prefs.getString('userData') ?? "{}")
         as Map<String, dynamic>;
-    print("extracted user data: $extractedUserData");
 
     _token = extractedUserData['token'] as String;
     _phone = extractedUserData['phone'] as String;
