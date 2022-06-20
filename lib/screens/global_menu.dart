@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mvk_app/screens/auth/auth_screen.dart';
+import 'package:mvk_app/widgets/confirm_dialog.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/auth.dart';
 import 'goods/goods_screen.dart';
 import 'size_selection_screen.dart';
 import 'history/history_screen.dart';
@@ -48,6 +51,25 @@ class _MenuScreenState extends State<MenuScreen> {
         elevation: 0.0,
         backgroundColor: Colors.transparent,
         actions: [
+          const SizedBox(width: 10),
+          IconButton(
+            iconSize: 26,
+            color: AppColors.mainColor,
+            onPressed: () async {
+              var isConfirmed = await showDialog(
+                  context: context,
+                  builder: (context) => const ConfirmDialog(
+                      title: "Вихід",
+                      text: "Ви впевнені що хочете вийти з цього акаунту?"));
+              if (isConfirmed != null) {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, AuthScreen.routeName, (route) => false);
+                Provider.of<Auth>(context, listen: false).logout();
+              }
+            },
+            icon: const Icon(Icons.exit_to_app),
+          ),
+          const Spacer(),
           IconButton(
             iconSize: 36,
             color: AppColors.mainColor,

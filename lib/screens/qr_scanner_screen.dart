@@ -20,7 +20,6 @@ class QrScannerScreen extends StatelessWidget {
           controller: cameraController,
           onDetect: (barcode, args) async {
             final String qrData = barcode.rawValue ?? '';
-            debugPrint('Barcode found: $qrData');
             if (int.tryParse(qrData) != null) {
               Navigator.of(context).pushReplacementNamed(MenuScreen.routeName);
             } else {

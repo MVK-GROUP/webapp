@@ -72,7 +72,6 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
         "Після підтвердження цієї дії відчиниться комірка ${order.data!["cell_id"]}. Ви впевнені що хочете це зробити?";
     var openCellType = OpenCellType.openCell;
     final algorithm = order.data!["algorithm"] as AlgorithmType;
-    print("${order.status} ${order.firstActionTimestamp}");
     if (justOpen) {
       buttonText = "Відчинити комірку та докласти речі";
       confirmText =

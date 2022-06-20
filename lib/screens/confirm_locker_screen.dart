@@ -29,9 +29,7 @@ class _ConfirmLockerScreenState extends State<ConfirmLockerScreen> {
   String? token;
 
   Future _obtainGetLockerFuture() async {
-    print("token before: $token");
     token = Provider.of<Auth>(context, listen: false).token;
-    print("token after: $token");
     final isExist = await OrderApi.isExistActiveOrders(token);
     if (isExist) {
       try {

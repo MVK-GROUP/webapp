@@ -6,6 +6,7 @@ import 'package:mvk_app/providers/order.dart';
 import 'package:mvk_app/screens/acl/set_datetime.dart';
 import 'package:mvk_app/screens/auth/auth_screen.dart';
 import 'package:mvk_app/screens/confirm_locker_screen.dart';
+import 'package:mvk_app/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'style.dart';
@@ -70,7 +71,13 @@ class App extends StatelessWidget {
             title: 'MVK APP',
             home: auth.isAuth
                 ? const MenuScreen()
-                : const AuthScreen(), // SetACLDateTimeScreen(),
+                : FutureBuilder(
+                    future: auth.tryAutoLogin(),
+                    builder: (context, authResultSnapshot) =>
+                        authResultSnapshot.connectionState ==
+                                ConnectionState.waiting
+                            ? const SplashScreen()
+                            : const AuthScreen()),
             routes: {
               EnterLockerIdScreen.routeName: (ctx) =>
                   const EnterLockerIdScreen(),

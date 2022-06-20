@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mvk_app/screens/auth/phone_page.dart';
 import 'package:mvk_app/screens/auth/otp_page.dart';
 import 'package:mvk_app/screens/auth/welcome_page.dart';
+import 'package:mvk_app/screens/global_menu.dart';
 
 enum PageType {
   welcome,
@@ -70,6 +71,8 @@ class _AuthScreenState extends State<AuthScreen> {
       case PageType.nextScreen:
         if (widget.prevRouteName != null) {
           Navigator.pushReplacementNamed(context, widget.prevRouteName ?? '/');
+        } else {
+          Navigator.pushReplacementNamed(context, MenuScreen.routeName);
         }
         break;
       default:

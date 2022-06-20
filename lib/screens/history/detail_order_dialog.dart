@@ -47,7 +47,6 @@ class _DetailOrderNotifierDialogState extends State<DetailOrderNotifierDialog> {
         timer = Timer.periodic(const Duration(seconds: 2, milliseconds: 500),
             (timer) {
           checkOrder();
-          print("order status: ${order.status}");
           if (![OrderStatus.created, OrderStatus.inProgress]
               .contains(order.status)) {
             timer.cancel();
@@ -208,11 +207,6 @@ class _DetailOrderNotifierDialogState extends State<DetailOrderNotifierDialog> {
     //});
     try {
       var updated = await order.checkOrder(token);
-      if (updated) {
-        print("updated");
-      } else {
-        print("not updated");
-      }
       return updated;
       //await Provider.of<OrdersNotifier>(context, listen: false)
       //    .checkOrder(order.id);
