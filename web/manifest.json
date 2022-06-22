@@ -1,6 +1,6 @@
 {
-    "name": "mvk_app",
-    "short_name": "mvk_app",
+    "name": "Mvk Lockers",
+    "short_name": "Mvk Lockers",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#FFFFFF",

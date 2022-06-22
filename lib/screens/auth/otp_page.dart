@@ -41,9 +41,6 @@ class _OtpNewPageState extends State<OtpNewPage> {
       if (!currentFocus.hasPrimaryFocus) {
         print("_OtpNewPageState hasPrimaryFocus");
       }
-      if (!currentFocus.hasFocus) {
-        print("_OtpNewPageState hasFocus");
-      }
       startTimer();
     });
   }

@@ -68,10 +68,8 @@ class _AuthScreenState extends State<AuthScreen> {
       case PageType.enterOtp:
         FocusScopeNode currentFocus = FocusScope.of(context);
         if (!currentFocus.hasPrimaryFocus) {
-          print("changePageTo hasPrimaryFocus");
-        }
-        if (!currentFocus.hasFocus) {
-          print("changePageTo hasFocus");
+          print("changePageTo(2). hasPrimaryFocus");
+          currentFocus.unfocus();
         }
         controller.jumpToPage(2);
         break;

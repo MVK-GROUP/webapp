@@ -128,14 +128,11 @@ class _PhoneWidgetState extends State<PhoneWidget> {
                           if (wasSent) {
                             widget.setPhone(number.phoneNumber);
                             widget.changePage(PageType.enterOtp);
-                            print("was sent");
                             FocusScopeNode currentFocus =
                                 FocusScope.of(context);
                             if (!currentFocus.hasPrimaryFocus) {
                               print("hasPrimaryFocus");
-                            }
-                            if (!currentFocus.hasFocus) {
-                              print("hasFocus");
+                              currentFocus.unfocus();
                             }
                           } else {
                             showDialog(
