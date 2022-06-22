@@ -23158,7 +23158,7 @@ p=4
 j=t.N
 m=A.d(["phone",a],j,t.K)
 s=7
-return A.z(A.np(A.dz(B.b.Y("http://localhost:8000/api/v1/auth",h),0,null),B.N.eU(m),A.d(["content-type","application/json","accept","application/json"],j,j)),$async$Gj)
+return A.z(A.np(A.dz(B.b.Y("https://lockershub.online/api/v1/auth",h),0,null),B.N.eU(m),A.d(["content-type","application/json","accept","application/json"],j,j)),$async$Gj)
 case 7:l=c
 if(l.b===200){j=l
 k=B.N.qw(0,A.amT(J.am(A.alV(j.e).c.a,"charset")).bs(0,j.w),null)
@@ -23188,7 +23188,7 @@ p=4
 j=t.N
 m=A.d(["phone",a,"otp",b],j,t.K)
 s=7
-return A.z(A.np(A.dz(B.b.Y("http://localhost:8000/api/v1/auth",h),0,null),B.N.eU(m),A.d(["content-type","application/json","accept","application/json"],j,j)),$async$Wn)
+return A.z(A.np(A.dz(B.b.Y("https://lockershub.online/api/v1/auth",h),0,null),B.N.eU(m),A.d(["content-type","application/json","accept","application/json"],j,j)),$async$Wn)
 case 7:l=d
 if(l.b===200){j=l
 k=t.P.a(B.N.qw(0,A.amT(J.am(A.alV(j.e).c.a,"charset")).bs(0,j.w),null))
@@ -23218,7 +23218,7 @@ s=p}while(true)switch(s){case 0:i="/lockers/"+a
 p=4
 k=t.N
 s=7
-return A.z(A.amZ(A.dz(B.b.Y("http://localhost:8000/api/v1",i),0,null),A.d(["content-type","application/json","accept","application/json","Authorization","Token "+A.e(b)],k,k)),$async$J1)
+return A.z(A.amZ(A.dz(B.b.Y("https://lockershub.online/api/v1",i),0,null),A.d(["content-type","application/json","accept","application/json","Authorization","Token "+A.e(b)],k,k)),$async$J1)
 case 7:m=d
 if(m.b===200){l=A.aCz(t.P.a(B.N.bs(0,B.F.bs(0,m.w))))
 q=l
@@ -23248,7 +23248,7 @@ J.cE(m,"service",a4)
 if(a6!=null)J.cE(m,"type_id",B.f.j(a6))
 l=A.d(["content-type","application/json","accept","application/json","Authorization","Token "+A.e(a5)],e,e)
 s=7
-return A.z(A.np(A.dz(B.b.Y("http://localhost:8000/api/v1",a1),0,null),B.N.eU(m),l),$async$J2)
+return A.z(A.np(A.dz(B.b.Y("https://lockershub.online/api/v1",a1),0,null),B.N.eU(m),l),$async$J2)
 case 7:k=a8
 if(k.b===200){j=t.P.a(B.N.bs(0,B.F.bs(0,k.w)))
 i=t.j.a(J.am(j,"data"))
@@ -23285,7 +23285,7 @@ var $async$J3=A.F(function(b,c){if(b===1){o=c
 s=p}while(true)switch(s){case 0:i="/lockers/"+a+"/is-active"
 p=4
 s=7
-return A.z(A.amZ(A.dz(B.b.Y("http://localhost:8000/api/v1",i),0,null),null),$async$J3)
+return A.z(A.amZ(A.dz(B.b.Y("https://lockershub.online/api/v1",i),0,null),null),$async$J3)
 case 7:m=c
 if(m.b===200){k=m
 l=B.N.qw(0,A.amT(J.am(A.alV(k.e).c.a,"charset")).bs(0,k.w),null)
@@ -23314,7 +23314,7 @@ m="/orders/"
 p=4
 h=t.N
 s=7
-return A.z(A.amZ(A.dz(B.b.Y("http://localhost:8000/api/v1",m),0,null),A.d(["content-type","application/json","accept","application/json","Authorization","Token "+A.e(a)],h,h)),$async$a4_)
+return A.z(A.amZ(A.dz(B.b.Y("https://lockershub.online/api/v1",m),0,null),A.d(["content-type","application/json","accept","application/json","Authorization","Token "+A.e(a)],h,h)),$async$a4_)
 case 7:l=c
 if(l.b===200){k=A.a([],t.tm)
 j=t.j.a(B.N.bs(0,B.F.bs(0,l.w)))
@@ -23343,7 +23343,7 @@ s=p}while(true)switch(s){case 0:i="/orders/"+a
 p=4
 k=t.N
 s=7
-return A.z(A.amZ(A.dz(B.b.Y("http://localhost:8000/api/v1",i),0,null),A.d(["content-type","application/json","accept","application/json","Authorization","Token "+A.e(b)],k,k)),$async$JE)
+return A.z(A.amZ(A.dz(B.b.Y("https://lockershub.online/api/v1",i),0,null),A.d(["content-type","application/json","accept","application/json","Authorization","Token "+A.e(b)],k,k)),$async$JE)
 case 7:m=d
 if(m.b===200){l=t.P.a(B.N.bs(0,B.F.bs(0,m.w)))
 k=A.aoW(l)
@@ -23371,7 +23371,7 @@ s=p}while(true)switch(s){case 0:h="/orders/new"
 p=4
 j=t.N
 s=7
-return A.z(A.np(A.dz(B.b.Y("http://localhost:8000/api/v1",h),0,null),B.N.eU(A.d(["locker_id",a,"title",b,"data",c],j,t.X)),A.d(["content-type","application/json","accept","application/json","Authorization","Token "+A.e(d)],j,j)),$async$a3Z)
+return A.z(A.np(A.dz(B.b.Y("https://lockershub.online/api/v1",h),0,null),B.N.eU(A.d(["locker_id",a,"title",b,"data",c],j,t.X)),A.d(["content-type","application/json","accept","application/json","Authorization","Token "+A.e(d)],j,j)),$async$a3Z)
 case 7:m=f
 if(m.b<400){l=t.P.a(B.N.bs(0,B.F.bs(0,m.w)))
 j=A.aoW(l)
@@ -23402,7 +23402,7 @@ s=p}while(true)switch(s){case 0:h="/orders/"+a+"/open-cell"
 p=4
 j=t.N
 s=7
-return A.z(A.np(A.dz(B.b.Y("http://localhost:8000/api/v1",h),0,null),null,A.d(["content-type","application/json","accept","application/json","Authorization","Token "+A.e(b)],j,j)),$async$a42)
+return A.z(A.np(A.dz(B.b.Y("https://lockershub.online/api/v1",h),0,null),null,A.d(["content-type","application/json","accept","application/json","Authorization","Token "+A.e(b)],j,j)),$async$a42)
 case 7:m=d
 if(m.b<400){l=t.P.a(B.N.bs(0,B.F.bs(0,m.w)))
 A.cl(l)
@@ -23434,7 +23434,7 @@ s=p}while(true)switch(s){case 0:h="/orders/"+a+"/put-things"
 p=4
 j=t.N
 s=7
-return A.z(A.np(A.dz(B.b.Y("http://localhost:8000/api/v1",h),0,null),null,A.d(["content-type","application/json","accept","application/json","Authorization","Token "+A.e(b)],j,j)),$async$JF)
+return A.z(A.np(A.dz(B.b.Y("https://lockershub.online/api/v1",h),0,null),null,A.d(["content-type","application/json","accept","application/json","Authorization","Token "+A.e(b)],j,j)),$async$JF)
 case 7:m=d
 if(m.b<400){l=t.P.a(B.N.bs(0,B.F.bs(0,m.w)))
 A.cl(l)
@@ -23466,7 +23466,7 @@ s=p}while(true)switch(s){case 0:h="/orders/"+a+"/get-things"
 p=4
 j=t.N
 s=7
-return A.z(A.np(A.dz(B.b.Y("http://localhost:8000/api/v1",h),0,null),null,A.d(["content-type","application/json","accept","application/json","Authorization","Token "+A.e(b)],j,j)),$async$a40)
+return A.z(A.np(A.dz(B.b.Y("https://lockershub.online/api/v1",h),0,null),null,A.d(["content-type","application/json","accept","application/json","Authorization","Token "+A.e(b)],j,j)),$async$a40)
 case 7:m=d
 if(m.b<400){l=t.P.a(B.N.bs(0,B.F.bs(0,m.w)))
 A.cl(l)
@@ -23498,7 +23498,7 @@ s=p}while(true)switch(s){case 0:h="/orders/"+a+"/check-task/"+b
 p=4
 j=t.N
 s=7
-return A.z(A.np(A.dz(B.b.Y("http://localhost:8000/api/v1",h),0,null),null,A.d(["content-type","application/json","accept","application/json","Authorization","Token "+A.e(c)],j,j)),$async$JD)
+return A.z(A.np(A.dz(B.b.Y("https://lockershub.online/api/v1",h),0,null),null,A.d(["content-type","application/json","accept","application/json","Authorization","Token "+A.e(c)],j,j)),$async$JD)
 case 7:m=e
 if(m.b<400){l=t.P.a(B.N.bs(0,B.F.bs(0,m.w)))
 A.cl(l)
@@ -23530,7 +23530,7 @@ s=p}while(true)switch(s){case 0:i="/orders/active"
 p=4
 k=t.N
 s=7
-return A.z(A.np(A.dz(B.b.Y("http://localhost:8000/api/v1",i),0,null),null,A.d(["content-type","application/json","accept","application/json","Authorization","Token "+A.e(a)],k,k)),$async$a41)
+return A.z(A.np(A.dz(B.b.Y("https://lockershub.online/api/v1",i),0,null),null,A.d(["content-type","application/json","accept","application/json","Authorization","Token "+A.e(a)],k,k)),$async$a41)
 case 7:m=c
 if(m.b<400){l=t.j.a(B.N.bs(0,B.F.bs(0,m.w)))
 k=J.vR(l)
