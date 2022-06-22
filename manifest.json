@@ -2,7 +2,7 @@
     "name": "mvk_app",
     "short_name": "mvk_app",
     "start_url": ".",
-    "display": "fullscreen",
+    "display": "standalone",
     "background_color": "#FFFFFF",
     "theme_color": "#FFFFFF",
     "description": "Застосунок для автоматичних камер зберігання.",
