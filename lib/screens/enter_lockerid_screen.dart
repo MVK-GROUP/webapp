@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mvk_app/api/http_exceptions.dart';
-import 'package:mvk_app/api/orders.dart';
 import 'package:mvk_app/models/lockers.dart';
 import 'package:mvk_app/providers/order.dart';
 import 'package:mvk_app/screens/global_menu.dart';
 import 'package:mvk_app/screens/qr_scanner_screen.dart';
 import 'package:mvk_app/style.dart';
 import 'package:mvk_app/widgets/dialog.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -22,27 +23,10 @@ class EnterLockerIdScreen extends StatefulWidget {
 }
 
 class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
-  late TextEditingController _lockerIdController;
-  List<String?> lockerId = [null, null, null, null];
   var isFetchingData = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _lockerIdController = TextEditingController();
-  }
-
-  @override
-  void didChangeDependencies() {
-    lockerId = [null, null, null, null];
-    super.didChangeDependencies();
-  }
-
-  @override
-  void dispose() {
-    _lockerIdController.dispose();
-    super.dispose();
-  }
+  String lockerId = "";
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -87,11 +71,12 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
                       GestureDetector(
                         onTap: () async {
                           if (kIsWeb) {
-                            final lockerId = await Navigator.of(context)
+                            final res = await Navigator.of(context)
                                 .pushNamed(QrScannerScreen.routeName);
-                            if (lockerId != null) {
-                              if (lockerId is String) {
-                                enteredLockerId(context, lockerId);
+                            if (res != null) {
+                              if (res is String) {
+                                lockerId = res;
+                                enteredLockerId();
                               }
                             }
                           } else {
@@ -170,14 +155,66 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
                       const SizedBox(
                         height: 10,
                       ),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            _textFieldOTP(1),
-                            _textFieldOTP(2),
-                            _textFieldOTP(3),
-                            _textFieldOTP(4),
-                          ]),
+                      Container(
+                        constraints: const BoxConstraints(maxWidth: 350),
+                        child: Form(
+                          key: formKey,
+                          child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 0, horizontal: 30),
+                              child: PinCodeTextField(
+                                appContext: context,
+                                autoFocus: false,
+                                textStyle: const TextStyle(
+                                  color: AppColors.mainColor,
+                                  fontSize: 24,
+                                ),
+                                pastedTextStyle: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                length: 4,
+                                blinkWhenObscuring: true,
+                                animationType: AnimationType.fade,
+                                pinTheme: PinTheme(
+                                  activeColor: Colors.white,
+                                  selectedColor:
+                                      Theme.of(context).colorScheme.background,
+                                  selectedFillColor: Colors.white,
+                                  inactiveFillColor: Colors.white,
+                                  inactiveColor: Colors.white,
+                                  shape: PinCodeFieldShape.box,
+                                  borderRadius: BorderRadius.circular(12),
+                                  fieldHeight: 60,
+                                  fieldWidth: 60,
+                                  activeFillColor: Colors.white,
+                                ),
+                                cursorColor: AppColors.mainColor,
+                                animationDuration:
+                                    const Duration(milliseconds: 300),
+                                enableActiveFill: true,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                        signed: true, decimal: true),
+                                boxShadows: [AppShadows.getShadow100()],
+                                onCompleted: (v) async {
+                                  await enteredLockerId();
+                                },
+                                onChanged: (value) {
+                                  setState(() {
+                                    lockerId = value;
+                                  });
+                                },
+                                beforeTextPaste: (text) {
+                                  debugPrint("Allowing to paste $text");
+                                  return true;
+                                },
+                              )),
+                        ),
+                      ),
                       const Spacer(),
                     ]),
               ),
@@ -189,7 +226,7 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
     return lockerId.length >= 4 && int.tryParse(lockerId) != null;
   }
 
-  void enteredLockerId(BuildContext context, String lockerId) async {
+  Future<void> enteredLockerId() async {
     if (!isValidLockerId(lockerId)) {
       return;
     }
@@ -281,62 +318,5 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
         Navigator.pushReplacementNamed(context, MenuScreen.routeName);
       }
     }
-  }
-
-  Widget _textFieldOTP(int index) {
-    return Container(
-      height: 75,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [AppShadows.getShadow100()]),
-      margin: const EdgeInsets.symmetric(horizontal: 5),
-      child: AspectRatio(
-        aspectRatio: 0.8,
-        child: TextField(
-            autofocus: true,
-            onChanged: (value) {
-              if (value.length == 1 && index != 4) {
-                FocusScope.of(context).nextFocus();
-              }
-              if (value.isEmpty && index != 1) {
-                FocusScope.of(context).previousFocus();
-              }
-              if (value.isEmpty) {
-                lockerId[index - 1] = null;
-              } else {
-                lockerId[index - 1] = value;
-              }
-              if (!lockerId.contains(null)) {
-                enteredLockerId(context, lockerId.join(''));
-              }
-            },
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 24,
-            ),
-            keyboardType: TextInputType.number,
-            maxLength: 1,
-            decoration: InputDecoration(
-              counter: const Offstage(),
-              fillColor: Colors.white,
-              filled: true,
-              enabledBorder: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  width: 2,
-                  color: Colors.white,
-                ),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  width: 2,
-                  color: Theme.of(context).colorScheme.background,
-                ),
-                borderRadius: BorderRadius.circular(12),
-              ),
-            )),
-      ),
-    );
   }
 }

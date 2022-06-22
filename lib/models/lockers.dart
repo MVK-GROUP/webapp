@@ -331,6 +331,7 @@ class LockerNotifier with ChangeNotifier {
 
   void resetLocker() {
     _currenctLocker = null;
+    notifyListeners();
   }
 
   void setExistingLocker(Locker? locker) {

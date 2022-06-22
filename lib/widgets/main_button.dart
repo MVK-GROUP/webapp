@@ -42,7 +42,7 @@ class MainButton extends StatelessWidget {
             if (icon != null && iconLocation == IconLocation.left) buildIcon(),
             const Spacer(),
             isWaitingButton
-                ? const CircularProgressIndicator()
+                ? const CircularProgressIndicator(color: Colors.white)
                 : Text(
                     text,
                     textAlign: TextAlign.center,

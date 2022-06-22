@@ -108,7 +108,7 @@ class _PhoneWidgetState extends State<PhoneWidget> {
             ),
             const Spacer(),
             _isSendingPhone
-                ? const MainButton(isWaitingButton: true)
+                ? const MainButton(isWaitingButton: true, mHorizontalInset: 30)
                 : MainButton(
                     text: 'Отримати код',
                     onButtonPress: () async {

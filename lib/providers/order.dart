@@ -79,5 +79,6 @@ class OrdersNotifier with ChangeNotifier {
 
   void resetOrders() {
     _orders = null;
+    notifyListeners();
   }
 }
