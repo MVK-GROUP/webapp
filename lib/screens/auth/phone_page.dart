@@ -124,9 +124,19 @@ class _PhoneWidgetState extends State<PhoneWidget> {
                         try {
                           final wasSent =
                               await AuthApi.createOtp(number.phoneNumber ?? "");
+
                           if (wasSent) {
                             widget.setPhone(number.phoneNumber);
                             widget.changePage(PageType.enterOtp);
+                            print("was sent");
+                            FocusScopeNode currentFocus =
+                                FocusScope.of(context);
+                            if (!currentFocus.hasPrimaryFocus) {
+                              print("hasPrimaryFocus");
+                            }
+                            if (!currentFocus.hasFocus) {
+                              print("hasFocus");
+                            }
                           } else {
                             showDialog(
                                 context: context,

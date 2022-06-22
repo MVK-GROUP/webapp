@@ -37,6 +37,13 @@ class _OtpNewPageState extends State<OtpNewPage> {
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
+      FocusScopeNode currentFocus = FocusScope.of(context);
+      if (!currentFocus.hasPrimaryFocus) {
+        print("_OtpNewPageState hasPrimaryFocus");
+      }
+      if (!currentFocus.hasFocus) {
+        print("_OtpNewPageState hasFocus");
+      }
       startTimer();
     });
   }
