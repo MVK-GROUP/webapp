@@ -432,19 +432,19 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
         order.status == OrderStatus.active) {
       final endDate = order.data!["end_date"] as DateTime;
       content.add(Padding(
-        padding: const EdgeInsets.only(top: 10),
+        padding: const EdgeInsets.only(top: 5, bottom: 10),
         child: Text(
           "Оренда до: ${order.datetimeToHumanDate(endDate)}",
           style: const TextStyle(fontSize: 16),
         ),
       ));
-      content.add(Padding(
-        padding: const EdgeInsets.only(bottom: 8.0),
-        child: Text(
-          "Залишилось: ${order.humanTimeLeft}",
-          style: const TextStyle(fontSize: 16),
-        ),
-      ));
+      //content.add(Padding(
+      //  padding: const EdgeInsets.only(bottom: 8.0),
+      //  child: Text(
+      //    "Залишилось: ${order.humanTimeLeft}",
+      //    style: const TextStyle(fontSize: 16),
+      //  ),
+      //));
 
       final algorithm = order.data!["algorithm"] as AlgorithmType;
       switch (algorithm) {

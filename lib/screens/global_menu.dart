@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mvk_app/providers/order.dart';
 import 'package:mvk_app/screens/auth/auth_screen.dart';
 import 'package:mvk_app/widgets/confirm_dialog.dart';
 import 'package:provider/provider.dart';
@@ -25,23 +26,30 @@ class MenuScreen extends StatefulWidget {
 }
 
 class _MenuScreenState extends State<MenuScreen> {
-  late Locker locker;
-  bool isLoading = true;
+  Locker? locker;
+  late Future _initOrdersFuture;
+  bool _isInit = false;
 
   @override
   void initState() {
-    lockerInit();
     super.initState();
   }
 
-  void lockerInit() {
-    var assets = Assets();
-    assets.load().then((value) {
-      setState(() {
-        locker = assets.getLockerById(10002);
-        isLoading = false;
-      });
-    });
+  @override
+  void didChangeDependencies() {
+    if (!_isInit) {
+      locker = Provider.of<LockerNotifier>(context, listen: false).locker;
+      _initOrdersFuture = _obtainInitOrdersFuture();
+      _isInit = true;
+    }
+    super.didChangeDependencies();
+  }
+
+  Future _obtainInitOrdersFuture() async {
+    final ordersNotifier = Provider.of<OrdersNotifier>(context, listen: false);
+    if (ordersNotifier.orders == null) {
+      await ordersNotifier.fetchAndSetOrders();
+    }
   }
 
   @override
@@ -64,7 +72,12 @@ class _MenuScreenState extends State<MenuScreen> {
               if (isConfirmed != null) {
                 Navigator.pushNamedAndRemoveUntil(
                     context, AuthScreen.routeName, (route) => false);
+
                 Provider.of<Auth>(context, listen: false).logout();
+                Provider.of<OrdersNotifier>(context, listen: false)
+                    .resetOrders();
+                Provider.of<LockerNotifier>(context, listen: false)
+                    .resetLocker();
               }
             },
             icon: const Icon(Icons.exit_to_app),
@@ -89,37 +102,44 @@ class _MenuScreenState extends State<MenuScreen> {
           const SizedBox(width: 10)
         ],
       ),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Consumer<LockerNotifier>(
-              builder: (context, lockerNotifier, child) {
-                return SizedBox(
-                  width: double.infinity,
-                  child: Column(
+      body: SizedBox(
+          width: double.infinity,
+          child: FutureBuilder(
+              future: _initOrdersFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center();
+                } else {
+                  if (snapshot.error != null) {
+                    print("Error: ${snapshot.error.toString()}");
+                    return const Center(
+                      child: Text(
+                          "Сталась невідома помилка. Спробуйте зайти пізніше"),
+                    );
+                  }
+                  return Column(
                     children: [
                       ScreenTitle(
                         'Головне меню',
-                        subTitle: lockerNotifier.locker == null
+                        subTitle: locker == null
                             ? "Для нових замовлень потрібно знайти Locker"
-                            : lockerNotifier.locker?.fullLockerName,
+                            : locker?.fullLockerName,
                       ),
-                      if (lockerNotifier.locker == null)
+                      if (locker == null)
                         MainBlock(
                           maxWidth: 400,
                           child: ListView(children: iconTiles(context)),
                         ),
-                      if (lockerNotifier.locker != null)
+                      if (locker != null)
                         MainBlock(
                           child: ListView(
                               shrinkWrap: true,
-                              children:
-                                  menuItems(context, lockerNotifier.locker)),
+                              children: menuItems(context, locker)),
                         ),
                     ],
-                  ),
-                );
-              },
-            ),
+                  );
+                }
+              })),
     );
   }
 

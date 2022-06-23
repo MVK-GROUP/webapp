@@ -10,7 +10,6 @@ import '../api/http_exceptions.dart';
 import '../api/lockers.dart';
 import '../api/orders.dart';
 import '../models/lockers.dart';
-import '../providers/order.dart';
 import '../widgets/button.dart';
 import '../widgets/dialog.dart';
 
@@ -198,7 +197,6 @@ class _ConfirmLockerScreenState extends State<ConfirmLockerScreen> {
               body: "На жаль, даний комплекс не на зв'язку :(",
             );
           });
-      Provider.of<OrdersNotifier>(context, listen: false).resetOrders();
       Provider.of<LockerNotifier>(context, listen: false).resetLocker();
       setState(() {
         isActiveChecking = false;
@@ -208,7 +206,6 @@ class _ConfirmLockerScreenState extends State<ConfirmLockerScreen> {
 
     Provider.of<LockerNotifier>(context, listen: false)
         .setExistingLocker(locker);
-    Provider.of<OrdersNotifier>(context, listen: false).resetOrders();
     Navigator.pushReplacementNamed(context, MenuScreen.routeName);
   }
 }

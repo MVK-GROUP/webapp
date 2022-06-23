@@ -3,6 +3,9 @@ import 'package:mvk_app/screens/auth/otp_page.dart';
 import 'package:mvk_app/screens/auth/phone_page.dart';
 import 'package:mvk_app/screens/auth/welcome_page.dart';
 import 'package:mvk_app/screens/global_menu.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/order.dart';
 
 enum PageType {
   welcome,
@@ -57,7 +60,7 @@ class _AuthScreenState extends State<AuthScreen> {
     ));
   }
 
-  void changePageTo(PageType page) {
+  void changePageTo(PageType page) async {
     switch (page) {
       case PageType.welcome:
         controller.jumpToPage(0);

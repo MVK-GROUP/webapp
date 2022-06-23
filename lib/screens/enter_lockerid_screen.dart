@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mvk_app/api/http_exceptions.dart';
 import 'package:mvk_app/models/lockers.dart';
-import 'package:mvk_app/providers/order.dart';
 import 'package:mvk_app/screens/global_menu.dart';
 import 'package:mvk_app/screens/qr_scanner_screen.dart';
 import 'package:mvk_app/style.dart';
@@ -253,7 +252,6 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
                 actions: [homeMenuButon],
               );
             });
-        Provider.of<OrdersNotifier>(context, listen: false).resetOrders();
         Provider.of<LockerNotifier>(context, listen: false).resetLocker();
         setState(() {
           isFetchingData = false;
@@ -266,8 +264,6 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
 
       await Provider.of<LockerNotifier>(context, listen: false)
           .setLocker(lockerId);
-
-      Provider.of<OrdersNotifier>(context, listen: false).resetOrders();
       setState(() {
         isFetchingData = false;
       });

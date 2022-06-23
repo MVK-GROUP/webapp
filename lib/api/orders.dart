@@ -10,7 +10,6 @@ class OrderApi {
   static const baseUrl = domain + "/api/v1";
 
   static Future<List<OrderData>> fetchOrders(String? token) async {
-    print("fetch orders");
     var apiUrl = "/orders/";
     try {
       var res = await http.get(
@@ -21,14 +20,12 @@ class OrderApi {
           "Authorization": "Token $token",
         },
       );
-
       if (res.statusCode == 200) {
         List<OrderData> orders = [];
         var data = json.decode(utf8.decode(res.bodyBytes)) as List<dynamic>;
         for (var element in data) {
           orders.add(OrderData.fromJson(element));
         }
-        print("orders: $orders");
         return orders;
       } else {
         throw HttpException(res.reasonPhrase.toString(),

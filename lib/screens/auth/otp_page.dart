@@ -8,6 +8,7 @@ import 'package:mvk_app/providers/auth.dart';
 import 'package:mvk_app/style.dart';
 import 'package:provider/provider.dart';
 import '../../api/auth.dart';
+import '../../providers/order.dart';
 import 'auth_screen.dart' show PageType;
 
 class OtpNewPage extends StatefulWidget {
@@ -37,11 +38,6 @@ class _OtpNewPageState extends State<OtpNewPage> {
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      FocusScopeNode currentFocus = FocusScope.of(context);
-      if (!currentFocus.hasPrimaryFocus) {
-        print("currentFocus.hasPrimaryFocus");
-        currentFocus.nextFocus();
-      }
       startTimer();
     });
   }
@@ -128,7 +124,7 @@ class _OtpNewPageState extends State<OtpNewPage> {
                             selectedColor:
                                 Theme.of(context).colorScheme.background,
                             selectedFillColor: Colors.white,
-                            inactiveFillColor: Colors.grey[100],
+                            inactiveFillColor: Colors.white,
                             inactiveColor: AppColors.secondaryColor,
                             shape: PinCodeFieldShape.box,
                             borderRadius: BorderRadius.circular(12),

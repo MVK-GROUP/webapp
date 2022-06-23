@@ -31,6 +31,7 @@ class ElevatedWaitingButton extends StatelessWidget {
             children: [
               const SizedBox(
                   width: 24, height: 24, child: CircularProgressIndicator()),
+              const SizedBox(width: 5),
               Expanded(
                   child: Text(text,
                       textAlign: TextAlign.center,
@@ -75,6 +76,7 @@ class ElevatedIconButton extends StatelessWidget {
         child: Row(
           children: [
             icon,
+            const SizedBox(width: 8),
             Expanded(
                 child: Text(text,
                     textAlign: TextAlign.center,

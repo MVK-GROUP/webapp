@@ -34,11 +34,6 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
   late Future _getFreeCellsFuture;
   var isInit = false;
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
   Future<List<CellStatus>?> _obtainGetFreeCellsFuture() async {
     token = Provider.of<Auth>(context, listen: false).token;
     currentService =

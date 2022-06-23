@@ -109,7 +109,6 @@ class OrderData with ChangeNotifier {
     String? place;
     var date = DateTime.fromMillisecondsSinceEpoch(
         json["created_at_timestamp"] * 1000);
-
     Map<String, Object> data = {};
     var jsonData = json["data"] as Map<String, dynamic>;
     var service = ServiceCategoryExt.fromString(jsonData["service"]);
@@ -210,11 +209,7 @@ class OrderData with ChangeNotifier {
 
   Future<bool> checkOrder(String? token) async {
     try {
-      print(
-          "before: ${status}, ${firstActionTimestamp} ${lastActionTimestamp}");
       var fetchedOrder = await OrderApi.fetchOrderById(id, token);
-      print(
-          "fetched: ${fetchedOrder.status}, ${fetchedOrder.firstActionTimestamp} ${fetchedOrder.lastActionTimestamp}");
       if (!isEqual(fetchedOrder)) {
         updateOrder(fetchedOrder);
         return true;

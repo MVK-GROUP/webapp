@@ -34,6 +34,7 @@ class OrdersNotifier with ChangeNotifier {
       _orders = await OrderApi.fetchOrders(authToken);
     } catch (e) {
       _orders = null;
+      rethrow;
     }
 
     notifyListeners();
@@ -44,7 +45,9 @@ class OrdersNotifier with ChangeNotifier {
       {Map<String, Object>? data}) async {
     try {
       var order = await OrderApi.addOrder(lockerId, title, data, authToken);
+      print("order length before: ${_orders!.length}");
       _orders?.insert(0, order);
+      print("order length after: ${_orders!.length}");
       notifyListeners();
       return order;
     } catch (e) {
