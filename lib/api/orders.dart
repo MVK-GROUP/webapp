@@ -157,7 +157,6 @@ class OrderApi {
       if (rawResponse.statusCode < 400) {
         final response = json.decode(utf8.decode(rawResponse.bodyBytes))
             as Map<String, dynamic>;
-        print(response);
         return response["task_num"];
       }
       throw HttpException(rawResponse.reasonPhrase ?? "error");
@@ -182,7 +181,6 @@ class OrderApi {
       if (rawResponse.statusCode < 400) {
         final response = json.decode(utf8.decode(rawResponse.bodyBytes))
             as Map<String, dynamic>;
-        print(response);
         if (response['status'] == 'success' &&
             response.containsKey('task_status')) {
           return response["task_status"];

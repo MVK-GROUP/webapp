@@ -149,21 +149,24 @@ class InformationDialog extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    onPressed: () => Navigator.pop(context, true),
-                    child: const Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                      child: Text(
-                        "Ок",
-                        style: TextStyle(fontSize: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      child: const Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        child: Text(
+                          "Ок",
+                          style: TextStyle(fontSize: 16),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               const SizedBox(
                 height: 20,

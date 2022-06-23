@@ -247,9 +247,9 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
       await showDialog(
           context: context,
           builder: (ctx) {
-            return SomethingWentWrongDialog(
+            return InformationDialog(
               title: "Інформація",
-              bodyMessage: message ?? "unknown",
+              text: message ?? "unknown",
             );
           });
     }
@@ -281,15 +281,13 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
     } catch (e) {
       await showDialog(
           context: context,
-          builder: (ctx) => const SomethingWentWrongDialog(
-                bodyMessage: "Наразі неможливо відчинити цю комірку",
+          builder: (ctx) => const InformationDialog(
+                title: "Щось пішло не так",
+                text: "Наразі неможливо відчинити цю комірку",
               ));
       setState(() {
-        if (isJustOpen) {
-          isJustCellOpening = false;
-        } else {
-          isCellOpening = false;
-        }
+        isJustCellOpening = false;
+        isCellOpening = false;
       });
 
       return;
@@ -335,6 +333,7 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
           timer.cancel();
           setState(() {
             isCellOpening = false;
+            isJustCellOpening = false;
           });
         });
       } else {
@@ -344,6 +343,7 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
         }
         setState(() {
           isCellOpening = false;
+          isJustCellOpening = false;
         });
       }
     } else {
@@ -357,6 +357,7 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
       }
       setState(() {
         isCellOpening = false;
+        isJustCellOpening = false;
       });
     }
   }

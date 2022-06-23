@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mvk_app/models/lockers.dart';
+import 'package:mvk_app/widgets/confirm_dialog.dart';
 import 'package:provider/provider.dart';
 import '../api/orders.dart';
 import '../models/order.dart';
@@ -166,6 +167,7 @@ class _PaymentCheckScreenState extends State<PaymentCheckScreen> {
                             _isOrderStatusChecking || _isCellOpening
                                 ? const ElevatedWaitingButton(
                                     text: "Відчинити комірку та покласти речі",
+                                    iconSize: 20,
                                   )
                                 : ElevatedIconButton(
                                     icon: const Icon(
@@ -264,9 +266,9 @@ class _PaymentCheckScreenState extends State<PaymentCheckScreen> {
       await showDialog(
           context: context,
           builder: (ctx) {
-            return SomethingWentWrongDialog(
+            return InformationDialog(
               title: "Інформація",
-              bodyMessage: message ?? "unknown",
+              text: message ?? "unknown",
             );
           });
     }

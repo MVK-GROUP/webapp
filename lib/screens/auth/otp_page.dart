@@ -108,6 +108,7 @@ class _OtpNewPageState extends State<OtpNewPage> {
                         child: PinCodeTextField(
                           appContext: context,
                           autoFocus: true,
+                          enablePinAutofill: false,
                           textStyle: const TextStyle(
                             color: AppColors.mainColor,
                             fontSize: 24,

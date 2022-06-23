@@ -7,12 +7,14 @@ class ElevatedWaitingButton extends StatelessWidget {
   final double maxWidth;
   final TextStyle? textStyle;
   final double borderRadius;
+  final double iconSize;
 
   const ElevatedWaitingButton({
     required this.text,
     this.textStyle,
     this.maxWidth = 310,
     this.borderRadius = 10.0,
+    this.iconSize = 24,
     Key? key,
   }) : super(key: key);
 
@@ -29,8 +31,10 @@ class ElevatedWaitingButton extends StatelessWidget {
           onPressed: null,
           child: Row(
             children: [
-              const SizedBox(
-                  width: 24, height: 24, child: CircularProgressIndicator()),
+              SizedBox(
+                  width: iconSize,
+                  height: iconSize,
+                  child: const CircularProgressIndicator()),
               const SizedBox(width: 5),
               Expanded(
                   child: Text(text,
