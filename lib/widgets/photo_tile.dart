@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mvk_app/style.dart';
 
 class PhotoTile extends StatelessWidget {
-  final String id;
   final String? imageUrl;
   final Color? backgroundColor;
   final String title;
@@ -10,8 +9,7 @@ class PhotoTile extends StatelessWidget {
   final VoidCallback onTap;
 
   const PhotoTile(
-      {required this.id,
-      required this.title,
+      {required this.title,
       required this.onTap,
       this.imageUrl,
       this.backgroundColor = AppColors.mainColor,

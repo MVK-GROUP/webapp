@@ -25,11 +25,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
   late Future _ordersFuture;
   var isInit = false;
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
   Future _obtainOrdersFuture() {
     var data = Provider.of<OrdersNotifier>(context, listen: false);
 
@@ -57,6 +52,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+          automaticallyImplyLeading: false,
           elevation: 0.0,
           backgroundColor: Colors.transparent,
           iconTheme: const IconThemeData(color: AppColors.mainColor, size: 32),

@@ -43,6 +43,7 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
       return null;
     }
     cellTypes = currentService?.data["cell_types"] as List<ACLCellType>;
+
     locker = Provider.of<LockerNotifier>(context, listen: false).locker;
 
     try {

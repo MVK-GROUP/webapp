@@ -23,11 +23,19 @@ class _PhoneWidgetState extends State<PhoneWidget> {
   String initialCountry = 'UA';
   PhoneNumber number = PhoneNumber(isoCode: 'UA');
   bool _isSendingPhone = false;
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void dispose() {
     controller.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(
+        (_) => FocusScope.of(context).requestFocus(_focusNode));
+    super.initState();
   }
 
   @override
@@ -53,6 +61,7 @@ class _PhoneWidgetState extends State<PhoneWidget> {
               margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
               child: InternationalPhoneNumberInput(
                 autoFocus: true,
+                focusNode: _focusNode,
                 inputDecoration: InputDecoration(
                     hintText: 'Номер телефону',
                     hintStyle: const TextStyle(

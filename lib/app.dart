@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mvk_app/models/lockers.dart';
 import 'package:mvk_app/providers/auth.dart';
 import 'package:mvk_app/providers/order.dart';
+import 'package:mvk_app/screens/acl/choose_order_screen.dart';
 import 'package:mvk_app/screens/acl/set_datetime.dart';
 import 'package:mvk_app/screens/auth/auth_screen.dart';
 import 'package:mvk_app/screens/confirm_locker_screen.dart';
@@ -50,8 +51,6 @@ class App extends StatelessWidget {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider.value(value: Auth()),
-          //ChangeNotifierProvider.value(value: LockerNotifier()),
-
           ChangeNotifierProxyProvider<Auth, LockerNotifier>(
             create: (context) => LockerNotifier(null, null),
             update: (context, auth, previousOrders) => LockerNotifier(

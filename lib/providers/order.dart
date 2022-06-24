@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:mvk_app/models/lockers.dart';
 import '../models/order.dart';
 import '../api/orders.dart';
 
@@ -29,16 +30,31 @@ class OrdersNotifier with ChangeNotifier {
     return _orders?.any((element) => statuses.contains(element.status));
   }
 
+  List<OrderData> getActiveAclsOrders() {
+    List<OrderData> orders = [];
+    var foundOrders = _orders?.where((order) =>
+        [OrderStatus.hold, OrderStatus.active].contains(order.status) &&
+        [
+          ServiceCategory.acl,
+          ServiceCategory.phoneCharging,
+          ServiceCategory.powerbank
+        ].contains(order.service));
+    if (foundOrders != null) {
+      orders.addAll(foundOrders);
+    }
+    return orders;
+  }
+
   Future<List<OrderData>?> fetchAndSetOrders() async {
     try {
       _orders = await OrderApi.fetchOrders(authToken);
+      notifyListeners();
+      return _orders;
     } catch (e) {
       _orders = null;
+      notifyListeners();
       rethrow;
     }
-
-    notifyListeners();
-    return _orders;
   }
 
   Future<OrderData> addOrder(int lockerId, String title,

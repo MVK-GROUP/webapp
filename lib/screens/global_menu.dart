@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:mvk_app/models/order.dart';
 import 'package:mvk_app/providers/order.dart';
+import 'package:mvk_app/screens/acl/choose_order_screen.dart';
 import 'package:mvk_app/screens/auth/auth_screen.dart';
 import 'package:mvk_app/widgets/confirm_dialog.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth.dart';
 import 'goods/goods_screen.dart';
+import 'history/detail_order_dialog.dart';
 import 'size_selection_screen.dart';
 import 'history/history_screen.dart';
 import 'enter_lockerid_screen.dart';
@@ -45,11 +48,16 @@ class _MenuScreenState extends State<MenuScreen> {
     super.didChangeDependencies();
   }
 
-  Future _obtainInitOrdersFuture() async {
+  Future<List<OrderData>?> _obtainInitOrdersFuture() async {
     final ordersNotifier = Provider.of<OrdersNotifier>(context, listen: false);
     if (ordersNotifier.orders == null) {
-      await ordersNotifier.fetchAndSetOrders();
+      try {
+        await ordersNotifier.fetchAndSetOrders();
+      } catch (e) {
+        return Future.error(e.toString());
+      }
     }
+    return ordersNotifier.getActiveAclsOrders();
   }
 
   @override
@@ -117,6 +125,7 @@ class _MenuScreenState extends State<MenuScreen> {
                           "Сталась невідома помилка. Спробуйте зайти пізніше"),
                     );
                   }
+                  print(snapshot.data);
                   return Column(
                     children: [
                       ScreenTitle(
@@ -134,7 +143,8 @@ class _MenuScreenState extends State<MenuScreen> {
                         MainBlock(
                           child: ListView(
                               shrinkWrap: true,
-                              children: menuItems(context, locker)),
+                              children: menuItems(context, locker,
+                                  snapshot.data as List<OrderData>?)),
                         ),
                     ],
                   );
@@ -165,11 +175,11 @@ class _MenuScreenState extends State<MenuScreen> {
     Navigator.pushNamed(context, routeName);
   }
 
-  List<PhotoTile> menuItems(BuildContext context, Locker? lckr) {
+  List<PhotoTile> menuItems(
+      BuildContext context, Locker? lckr, List<OrderData>? activeOrders) {
     List<PhotoTile> items = [];
     for (var element in lckr!.services) {
       items.add(PhotoTile(
-        id: element.serviceId,
         imageUrl: element.imageUrl,
         backgroundColor: element.color,
         title: element.action,
@@ -177,7 +187,39 @@ class _MenuScreenState extends State<MenuScreen> {
       ));
     }
 
+    if (lckr.services.isNotEmpty &&
+        activeOrders != null &&
+        activeOrders.isNotEmpty) {
+      items.add(PhotoTile(
+        backgroundColor: lckr.services.first.color,
+        title: "Забрати речі",
+        onTap: () {
+          if (activeOrders.length > 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ChooseOrderScreen(
+                        orders: activeOrders,
+                      )),
+            );
+          } else {
+            showOrderDetail(context, activeOrders.first);
+          }
+        },
+      ));
+    }
+
     return items;
+  }
+
+  void showOrderDetail(BuildContext context, OrderData order) async {
+    await showDialog(
+        barrierColor: Colors.transparent,
+        context: context,
+        builder: (ctx) => ChangeNotifierProvider.value(
+              value: order,
+              child: const DetailOrderNotifierDialog(),
+            ));
   }
 
   List<Widget> iconTiles(BuildContext context) {

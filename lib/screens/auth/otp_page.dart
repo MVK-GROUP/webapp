@@ -8,7 +8,6 @@ import 'package:mvk_app/providers/auth.dart';
 import 'package:mvk_app/style.dart';
 import 'package:provider/provider.dart';
 import '../../api/auth.dart';
-import '../../providers/order.dart';
 import 'auth_screen.dart' show PageType;
 
 class OtpNewPage extends StatefulWidget {
@@ -30,13 +29,15 @@ class _OtpNewPageState extends State<OtpNewPage> {
   bool _isResendLoading = false;
   Timer? _timer;
   int _start = 20;
-
+  final FocusNode _focusNode = FocusNode();
   String currentText = "";
   final formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+        (_) => FocusScope.of(context).requestFocus(_focusNode));
     Future.delayed(Duration.zero, () {
       startTimer();
     });
@@ -106,6 +107,7 @@ class _OtpNewPageState extends State<OtpNewPage> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 0, horizontal: 30),
                         child: PinCodeTextField(
+                          focusNode: _focusNode,
                           appContext: context,
                           autoFocus: true,
                           enablePinAutofill: false,
