@@ -45,6 +45,7 @@ class TemporaryOrderData {
 }
 
 enum OrderStatus {
+  beforeCreating,
   created,
   inProgress,
   hold,
@@ -57,7 +58,9 @@ enum OrderStatus {
 
 extension OrderStatusExt on OrderStatus {
   static OrderStatus fromString(String? value) {
-    if (value == "created") {
+    if (value == "before_creating") {
+      return OrderStatus.beforeCreating;
+    } else if (value == "created") {
       return OrderStatus.created;
     } else if (value == "in progress") {
       return OrderStatus.inProgress;
@@ -88,6 +91,8 @@ class OrderData with ChangeNotifier {
   final Map<String, Object>? data;
   final String? place;
   final DateTime date;
+  final String? payData;
+  final String? paySignature;
   int firstActionTimestamp;
   int lastActionTimestamp;
 
@@ -103,6 +108,8 @@ class OrderData with ChangeNotifier {
     this.place,
     this.firstActionTimestamp = 0,
     this.lastActionTimestamp = 0,
+    this.payData,
+    this.paySignature,
   });
 
   factory OrderData.fromJson(Map<String, dynamic> json) {
@@ -110,6 +117,10 @@ class OrderData with ChangeNotifier {
     var date = DateTime.fromMillisecondsSinceEpoch(
         json["created_at_timestamp"] * 1000);
     Map<String, Object> data = {};
+    int paid = 0;
+    String? payData;
+    String? paySignature;
+
     var jsonData = json["data"] as Map<String, dynamic>;
     var service = ServiceCategoryExt.fromString(jsonData["service"]);
     if (service == ServiceCategory.acl ||
@@ -122,6 +133,13 @@ class OrderData with ChangeNotifier {
       }
       if (jsonData.containsKey("cell_id")) {
         data["cell_id"] = jsonData["cell_id"];
+      }
+      if (jsonData.containsKey("paid")) {
+        paid = jsonData["paid"];
+      }
+      if (json.containsKey("pay_data")) {
+        payData = json["pay_data"];
+        paySignature = json["pay_signature"];
       }
     }
     if (json.containsKey("locker") && json["locker"] != null) {
@@ -142,12 +160,14 @@ class OrderData with ChangeNotifier {
       title: json["title"] ?? "Невідомо",
       service: service,
       status: OrderStatusExt.fromString(json["status"]),
-      priceInCoins: 0,
+      priceInCoins: paid,
       data: data.isEmpty ? null : data,
       place: place,
       date: date,
       firstActionTimestamp: firstActionTimestamp,
       lastActionTimestamp: lastActionTimestamp,
+      payData: payData,
+      paySignature: paySignature,
     );
   }
 

@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:mvk_app/api/http_exceptions.dart';
+import 'package:mvk_app/api/orders.dart';
 import 'package:mvk_app/screens/global_menu.dart';
+import 'package:mvk_app/screens/pay_screen.dart';
 import 'package:mvk_app/screens/payment_check_screen.dart';
 import 'package:mvk_app/widgets/confirm_dialog.dart';
 import 'package:mvk_app/widgets/sww_dialog.dart';
 import 'package:provider/provider.dart';
-import '../api/lockers.dart';
-import '../providers/auth.dart';
-import '../providers/order.dart';
-import '../style.dart';
-import '../models/lockers.dart';
-import '../widgets/main_block.dart';
-import '../widgets/screen_title.dart';
-import '../widgets/tariff_dialog.dart';
-import '../models/services.dart';
+import '../../api/lockers.dart';
+import '../../providers/auth.dart';
+import '../../providers/order.dart';
+import '../../style.dart';
+import '../../models/lockers.dart';
+import '../../widgets/main_block.dart';
+import '../../widgets/screen_title.dart';
+import '../../widgets/tariff_dialog.dart';
+import '../../models/services.dart';
 
 class SizeSelectionScreen extends StatefulWidget {
   static const routeName = '/size-selection';
@@ -39,7 +41,8 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
     currentService =
         Provider.of<ServiceNotifier>(context, listen: false).service;
     if (currentService == null) {
-      Navigator.pushReplacementNamed(context, MenuScreen.routeName);
+      Navigator.pushNamedAndRemoveUntil(
+          context, MenuScreen.routeName, (route) => false);
       return null;
     }
     cellTypes = currentService?.data["cell_types"] as List<ACLCellType>;
@@ -58,7 +61,8 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
                   bodyMessage:
                       "Нажаль немає вільних комірок. Спробуйте орендувати комірку пізніше",
                 ));
-        Navigator.pushReplacementNamed(context, MenuScreen.routeName);
+        Navigator.pushNamedAndRemoveUntil(
+            context, MenuScreen.routeName, (route) => false);
         return null;
       }
       return freeCells;
@@ -70,7 +74,8 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
                 bodyMessage:
                     "Сталась технічна помилка. Спробуйте орендувати комірку пізніше",
               ));
-      Navigator.pushReplacementNamed(context, MenuScreen.routeName);
+      Navigator.pushNamedAndRemoveUntil(
+          context, MenuScreen.routeName, (route) => false);
       return null;
     }
   }
@@ -164,29 +169,84 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
         ));
   }
 
-  void tariffSelection(
-      ACLCellType cellType, Color tileColor, BuildContext context) async {
+  void tariffSelection({
+    required ACLCellType cellType,
+    required Color tileColor,
+    required int? lockerId,
+    required String serviceCategoryType,
+    required AlgorithmType algorithmType,
+    required BuildContext context,
+  }) async {
     var chosenTariff = await showDialog<Tariff>(
-        context: context,
-        builder: (ctx) => TariffDialog(
-              cellType,
-              tileColor: tileColor,
-            ));
+      context: context,
+      builder: (ctx) => TariffDialog(
+        cellType,
+        tileColor: tileColor,
+      ),
+    );
     if (chosenTariff != null) {
-      //final newOrder = TemporaryOrderData(
-      //    amountInCoins: chosenTariff.priceInCoins,
-      //    helperText:
-      //        "Після сплати комплекс відчинить комірку і ви зможете покласти свої речі",
-      //    type: ServiceCategory.acl,
-      //    item: {"cell_type": cellType, "chosen_tariff": chosenTariff});
-      //Navigator.pushNamed(context, PayScreen.routeName,
-      //    arguments: {"order": newOrder});
-      showDialog(
-          context: context,
-          builder: (ctx) => const AlertDialog(
-                content:
-                    Text("Змінити створення тимчасового замовлення на повне"),
-              ));
+      String? orderedCell;
+      try {
+        final res = await LockerApi.getFreeCells(lockerId ?? 0,
+            service: serviceCategoryType, typeId: cellType.id, token: token);
+        if (res.isEmpty) {
+          await showDialog(
+              context: context,
+              builder: (ctx) => const SomethingWentWrongDialog(
+                    title: "Немає вільних комірок",
+                    bodyMessage:
+                        "Нажаль немає вільних комірок. Спробуйте орендувати комірку іншого розмірку або типу",
+                  ));
+          return;
+        } else {
+          orderedCell = res.first.cellId;
+        }
+      } catch (e) {
+        if (e is HttpException) {
+          if (e.statusCode == 400) {
+            await showDialog(
+                context: context,
+                builder: (ctx) => const SomethingWentWrongDialog(
+                      bodyMessage: "Не можемо зв'язатись з комплексом",
+                    ));
+            return;
+          }
+        }
+        await showDialog(
+            context: context,
+            builder: (ctx) => const SomethingWentWrongDialog());
+        return;
+      }
+
+      var helperText =
+          "Замовлення створено. Вам буде видана комірка #$orderedCell. Оплатіть будь ласка замовлення";
+
+      Map<String, Object> extraData = {};
+      extraData["type"] = "paid";
+      extraData["time"] = chosenTariff.minutes;
+      extraData["paid"] = chosenTariff.priceInCoins;
+      extraData["hourly_pay"] = chosenTariff.priceInCoins;
+      extraData["service"] = serviceCategoryType;
+      extraData["algorithm"] = AlgorithmTypeExt.toStr(algorithmType);
+      extraData["cell_id"] = orderedCell;
+
+      final item = {"cell_type": cellType, "chosen_tariff": chosenTariff};
+      try {
+        final orderData = await OrderApi.createOrder(
+            lockerId ?? 0, "Оренда комірки", extraData, token,
+            isTempBook: true);
+        Navigator.pushNamedAndRemoveUntil(
+            context, PayScreen.routeName, (route) => false,
+            arguments: {"order": orderData, "title": helperText, "item": item});
+      } catch (e) {
+        await showDialog(
+            context: context,
+            builder: (ctx) {
+              return AlertDialog(
+                content: Text("ERROR: $e"),
+              );
+            });
+      }
     }
   }
 
@@ -270,7 +330,8 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
         final orderData =
             await Provider.of<OrdersNotifier>(context, listen: false)
                 .addOrder(lockerId ?? 0, "Оренда комірки", data: extraData);
-        Navigator.pushReplacementNamed(context, PaymentCheckScreen.routeName,
+        Navigator.pushNamedAndRemoveUntil(
+            context, PaymentCheckScreen.routeName, (route) => false,
             arguments: {"order": orderData, "title": helperText});
       } catch (e) {
         await showDialog(
@@ -281,13 +342,6 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
               );
             });
       }
-
-      //final newOrder = TemporaryOrderData(
-      //    amountInCoins: 0,
-      //    type: ServiceCategory.acl,
-      //    helperText: helperText,
-      //    item: {"cell_type": cellType, "algorithm": algorithmType},
-      //    extraData: extraData);
     }
   }
 
@@ -320,7 +374,14 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
                     _orderCreating = false;
                   });
                 } else {
-                  tariffSelection(cellType, color, context);
+                  tariffSelection(
+                    cellType: cellType,
+                    lockerId: locker?.lockerId,
+                    serviceCategoryType: serviceCategoryType,
+                    algorithmType: algorithmType,
+                    tileColor: color,
+                    context: context,
+                  );
                 }
               }
             : null,

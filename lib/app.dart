@@ -3,10 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mvk_app/models/lockers.dart';
 import 'package:mvk_app/providers/auth.dart';
 import 'package:mvk_app/providers/order.dart';
-import 'package:mvk_app/screens/acl/choose_order_screen.dart';
 import 'package:mvk_app/screens/acl/set_datetime.dart';
 import 'package:mvk_app/screens/auth/auth_screen.dart';
 import 'package:mvk_app/screens/confirm_locker_screen.dart';
+import 'package:mvk_app/screens/information_screen.dart';
 import 'package:mvk_app/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +14,7 @@ import 'style.dart';
 
 import 'screens/qr_scanner_screen.dart';
 import 'screens/global_menu.dart';
-import 'screens/size_selection_screen.dart';
+import 'screens/acl/size_selection_screen.dart';
 import 'screens/pay_screen.dart';
 import 'screens/payment_check_screen.dart';
 import 'screens/history/history_screen.dart';
@@ -38,6 +38,26 @@ class RouteGenerator {
         },
         settings: settings,
       );
+    }
+    var parts = settings.name!.split('/');
+    parts.removeWhere((item) => ["", null, false, 0].contains(item));
+    if (parts.length == 2) {
+      if (parts[0] == 'success-payment' && int.tryParse(parts[1]) != null) {
+        return MaterialPageRoute(
+          builder: (context) {
+            return const SuccessPaymentScreen();
+          },
+          settings: settings,
+        );
+      } else if (parts[0] == 'error-payment' &&
+          int.tryParse(parts[1]) != null) {
+        return MaterialPageRoute(
+          builder: (context) {
+            return const ErrorPaymentScreen();
+          },
+          settings: settings,
+        );
+      }
     }
     return null;
   }

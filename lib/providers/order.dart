@@ -60,7 +60,7 @@ class OrdersNotifier with ChangeNotifier {
   Future<OrderData> addOrder(int lockerId, String title,
       {Map<String, Object>? data}) async {
     try {
-      var order = await OrderApi.addOrder(lockerId, title, data, authToken);
+      var order = await OrderApi.createOrder(lockerId, title, data, authToken);
       _orders?.insert(0, order);
       notifyListeners();
       return order;

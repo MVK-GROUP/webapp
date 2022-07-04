@@ -29,15 +29,15 @@ class _OtpNewPageState extends State<OtpNewPage> {
   bool _isResendLoading = false;
   Timer? _timer;
   int _start = 20;
-  final FocusNode _focusNode = FocusNode();
+  //final FocusNode _focusNode = FocusNode();
   String currentText = "";
   final formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(
-        (_) => FocusScope.of(context).requestFocus(_focusNode));
+    //WidgetsBinding.instance.addPostFrameCallback(
+    //    (_) => FocusScope.of(context).requestFocus(_focusNode));
     Future.delayed(Duration.zero, () {
       startTimer();
     });
@@ -102,14 +102,13 @@ class _OtpNewPageState extends State<OtpNewPage> {
                 Container(
                   constraints: const BoxConstraints(maxWidth: 350),
                   child: Form(
-                    key: formKey,
                     child: Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 0, horizontal: 30),
                         child: PinCodeTextField(
-                          focusNode: _focusNode,
+                          //focusNode: _focusNode,
                           appContext: context,
-                          autoFocus: true,
+                          autoFocus: false,
                           enablePinAutofill: false,
                           textStyle: const TextStyle(
                             color: AppColors.mainColor,

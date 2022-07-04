@@ -69,9 +69,10 @@ class OrderApi {
     }
   }
 
-  static Future<OrderData> addOrder(
-      int lockerId, String title, Object? data, String? token) async {
-    var apiUrl = "/orders/new";
+  static Future<OrderData> createOrder(
+      int lockerId, String title, Object? data, String? token,
+      {bool isTempBook = false}) async {
+    var apiUrl = isTempBook ? "/orders/create-temp-order/" : "/orders/new";
     try {
       final rawResponse = await http.post(
         Uri.parse(baseUrl + apiUrl),
@@ -111,7 +112,6 @@ class OrderApi {
       if (rawResponse.statusCode < 400) {
         final response = json.decode(utf8.decode(rawResponse.bodyBytes))
             as Map<String, dynamic>;
-        print(response);
         return response["task_num"];
       }
       throw HttpException(rawResponse.reasonPhrase ?? "error");
@@ -134,7 +134,6 @@ class OrderApi {
       if (rawResponse.statusCode < 400) {
         final response = json.decode(utf8.decode(rawResponse.bodyBytes))
             as Map<String, dynamic>;
-        print(response);
         return response["task_num"];
       }
       throw HttpException(rawResponse.reasonPhrase ?? "error");
