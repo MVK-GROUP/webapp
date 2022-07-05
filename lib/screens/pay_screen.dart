@@ -198,8 +198,9 @@ class _PayScreenState extends State<PayScreen> {
                             Navigator.pushNamedAndRemoveUntil(context,
                                 MenuScreen.routeName, (route) => false);
                           },
-                          child: Text(
-                              "Відмінити оплату та перейти до головного меню"))
+                          child: const Text(
+                              "Відмінити оплату та перейти до головного меню",
+                              textAlign: TextAlign.center))
                     ],
                   )))
       ]),

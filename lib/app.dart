@@ -41,6 +41,7 @@ class RouteGenerator {
     }
     var parts = settings.name!.split('/');
     parts.removeWhere((item) => ["", null, false, 0].contains(item));
+    print('parts: $parts');
     if (parts.length == 2) {
       if (parts[0] == 'success-payment' && int.tryParse(parts[1]) != null) {
         return MaterialPageRoute(
