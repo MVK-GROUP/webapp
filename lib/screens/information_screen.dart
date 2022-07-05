@@ -31,7 +31,7 @@ class ErrorPaymentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: InformationWidget(
-          title: orderId == null ? "Error" : "Success. OrderId: $orderId"),
+          title: orderId == null ? "Error" : "Error. OrderId: $orderId"),
     );
   }
 }

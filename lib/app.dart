@@ -24,7 +24,7 @@ import 'screens/enter_lockerid_screen.dart';
 
 class RouteGenerator {
   static Route<dynamic>? generateRoute(
-      RouteSettings settings, BuildContext context, bool isAuth) {
+      RouteSettings settings, BuildContext context, Auth auth) {
     Map? queryParameters;
     var uriData = Uri.parse(settings.name!);
     queryParameters = uriData.queryParameters;
@@ -32,7 +32,7 @@ class RouteGenerator {
         int.tryParse(queryParameters["locker_id"]) != null) {
       return MaterialPageRoute(
         builder: (context) {
-          return isAuth
+          return auth.isAuth
               ? ConfirmLockerScreen(queryParameters!["locker_id"])
               : AuthScreen(prevRouteName: uriData.toString());
         },
@@ -49,19 +49,30 @@ class RouteGenerator {
       if (queryParameters["payment-status"] == 'success') {
         return MaterialPageRoute(
           builder: (context) {
-            return isAuth
+            return auth.isAuth
                 ? SuccessPaymentScreen(orderId: orderId)
-                : AuthScreen(prevRouteName: uriData.toString());
-            ;
+                : FutureBuilder(
+                    future: auth.tryAutoLogin(),
+                    builder: (context, authResultSnapshot) =>
+                        authResultSnapshot.connectionState ==
+                                ConnectionState.waiting
+                            ? const SplashScreen()
+                            : const AuthScreen());
           },
           settings: settings,
         );
       } else if (queryParameters["payment-status"] == 'error') {
         return MaterialPageRoute(
           builder: (context) {
-            return isAuth
+            return auth.isAuth
                 ? ErrorPaymentScreen(orderId: orderId)
-                : AuthScreen(prevRouteName: uriData.toString());
+                : FutureBuilder(
+                    future: auth.tryAutoLogin(),
+                    builder: (context, authResultSnapshot) =>
+                        authResultSnapshot.connectionState ==
+                                ConnectionState.waiting
+                            ? const SplashScreen()
+                            : const AuthScreen());
           },
           settings: settings,
         );
@@ -69,7 +80,7 @@ class RouteGenerator {
     }
     return MaterialPageRoute(
       builder: (context) {
-        return isAuth
+        return auth.isAuth
             ? const MenuScreen()
             : AuthScreen(prevRouteName: uriData.toString());
       },
@@ -129,7 +140,7 @@ class App extends StatelessWidget {
                   const SetACLDateTimeScreen(),
             },
             onGenerateRoute: (RouteSettings settings) =>
-                RouteGenerator.generateRoute(settings, context, auth.isAuth),
+                RouteGenerator.generateRoute(settings, context, auth),
             theme: _theme(),
           );
         }));
