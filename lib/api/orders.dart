@@ -39,7 +39,7 @@ class OrderApi {
   }
 
   static Future<OrderData> fetchOrderById(int orderId, String? token) async {
-    var apiUrl = "/orders/$orderId";
+    var apiUrl = "/orders/$orderId/";
     try {
       var res = await http.get(
         Uri.parse(baseUrl + apiUrl),
@@ -72,7 +72,7 @@ class OrderApi {
   static Future<OrderData> createOrder(
       int lockerId, String title, Object? data, String? token,
       {bool isTempBook = false}) async {
-    var apiUrl = isTempBook ? "/orders/create-temp-order/" : "/orders/new";
+    var apiUrl = isTempBook ? "/orders/create-temp-order/" : "/orders/new/";
     try {
       final rawResponse = await http.post(
         Uri.parse(baseUrl + apiUrl),
@@ -99,7 +99,7 @@ class OrderApi {
   }
 
   static Future<String?> openCell(int orderId, String? token) async {
-    var apiUrl = "/orders/$orderId/open-cell";
+    var apiUrl = "/orders/$orderId/open-cell/";
     try {
       final rawResponse = await http.post(
         Uri.parse(baseUrl + apiUrl),
@@ -121,7 +121,7 @@ class OrderApi {
   }
 
   static Future<String?> putThings(int orderId, String? token) async {
-    var apiUrl = "/orders/$orderId/put-things";
+    var apiUrl = "/orders/$orderId/put-things/";
     try {
       final rawResponse = await http.post(
         Uri.parse(baseUrl + apiUrl),
@@ -143,7 +143,7 @@ class OrderApi {
   }
 
   static Future<String?> getThings(int orderId, String? token) async {
-    var apiUrl = "/orders/$orderId/get-things";
+    var apiUrl = "/orders/$orderId/get-things/";
     try {
       final rawResponse = await http.post(
         Uri.parse(baseUrl + apiUrl),
@@ -166,7 +166,7 @@ class OrderApi {
 
   static Future<int> checkOpenCellTask(
       int orderId, String numTask, String? token) async {
-    var apiUrl = "/orders/$orderId/check-task/$numTask";
+    var apiUrl = "/orders/$orderId/check-task/$numTask/";
     try {
       //await Future.delayed(Duration(seconds: 2));
       final rawResponse = await http.post(
@@ -192,7 +192,7 @@ class OrderApi {
   }
 
   static Future<bool> isExistActiveOrders(String? token) async {
-    var apiUrl = "/orders/active";
+    var apiUrl = "/orders/active/";
     try {
       final rawResponse = await http.post(
         Uri.parse(baseUrl + apiUrl),

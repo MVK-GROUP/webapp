@@ -9,7 +9,7 @@ class LockerApi {
   static const baseUrl = domain + "/api/v1";
 
   static Future<Locker> fetchLockerById(String lockerId, String? token) async {
-    var apiUrl = "/lockers/$lockerId";
+    var apiUrl = "/lockers/$lockerId/";
     try {
       var res = await http.get(
         Uri.parse(baseUrl + apiUrl),
@@ -40,7 +40,7 @@ class LockerApi {
     int? typeId,
     String? token,
   }) async {
-    var apiUrl = "/lockers/$lockerId/cells/free";
+    var apiUrl = "/lockers/$lockerId/cells/free/";
 
     try {
       Map<String, Object> bodyData = {};
@@ -87,7 +87,7 @@ class LockerApi {
   }
 
   static Future<bool> isActive(String lockerId) async {
-    var apiUrl = "/lockers/$lockerId/is-active";
+    var apiUrl = "/lockers/$lockerId/is-active/";
     try {
       var res = await http.get(Uri.parse(baseUrl + apiUrl));
       if (res.statusCode == 200) {
