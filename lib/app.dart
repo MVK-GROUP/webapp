@@ -39,41 +39,29 @@ class RouteGenerator {
         settings: settings,
       );
     }
-    if (queryParameters.containsKey("payment-status") &&
-        queryParameters["payment-status"] == 'success') {
-      return MaterialPageRoute(
-        builder: (context) {
-          return SuccessPaymentScreen();
-        },
-        settings: settings,
-      );
-    }
-    if (queryParameters.containsKey("payment-status") &&
-        queryParameters["payment-status"] == 'error') {
-      return MaterialPageRoute(
-        builder: (context) {
-          return ErrorPaymentScreen();
-        },
-        settings: settings,
-      );
-    }
-    print("settings.name ${settings.name}");
-    var parts = settings.name!.split('/');
-    parts.removeWhere((item) => ["", null, false, 0].contains(item));
-    print('parts: $parts');
-    if (parts.length == 2) {
-      if (parts[0] == 'success-payment' && int.tryParse(parts[1]) != null) {
+    if (queryParameters.containsKey("payment-status")) {
+      int? orderId;
+      if (queryParameters.containsKey("order_id") &&
+          int.tryParse(queryParameters["order_id"]) != null) {
+        orderId = int.parse(queryParameters["order_id"]);
+      }
+
+      if (queryParameters["payment-status"] == 'success') {
         return MaterialPageRoute(
           builder: (context) {
-            return const SuccessPaymentScreen();
+            return isAuth
+                ? SuccessPaymentScreen(orderId: orderId)
+                : AuthScreen(prevRouteName: uriData.toString());
+            ;
           },
           settings: settings,
         );
-      } else if (parts[0] == 'error-payment' &&
-          int.tryParse(parts[1]) != null) {
+      } else if (queryParameters["payment-status"] == 'error') {
         return MaterialPageRoute(
           builder: (context) {
-            return const ErrorPaymentScreen();
+            return isAuth
+                ? ErrorPaymentScreen(orderId: orderId)
+                : AuthScreen(prevRouteName: uriData.toString());
           },
           settings: settings,
         );

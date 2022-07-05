@@ -5,13 +5,16 @@ import '../style.dart';
 
 class SuccessPaymentScreen extends StatelessWidget {
   static const routeName = '/success-payment/';
-  const SuccessPaymentScreen({Key? key}) : super(key: key);
+
+  final int? orderId;
+
+  const SuccessPaymentScreen({this.orderId, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const InformationWidget(
-        title: "Success",
+      body: InformationWidget(
+        title: orderId == null ? "Success" : "Success. OrderId: $orderId",
       ),
     );
   }
@@ -19,17 +22,16 @@ class SuccessPaymentScreen extends StatelessWidget {
 
 class ErrorPaymentScreen extends StatelessWidget {
   static const routeName = '/error-payment/';
-  const ErrorPaymentScreen({Key? key}) : super(key: key);
+
+  final int? orderId;
+
+  const ErrorPaymentScreen({this.orderId, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        iconTheme: const IconThemeData(color: AppColors.mainColor, size: 32),
-      ),
-      body: const InformationWidget(title: "Error"),
+      body: InformationWidget(
+          title: orderId == null ? "Error" : "Success. OrderId: $orderId"),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mvk_app/api/http_exceptions.dart';
 import 'package:mvk_app/models/order.dart';
 import 'package:mvk_app/providers/order.dart';
 import 'package:mvk_app/screens/acl/choose_order_screen.dart';
@@ -54,6 +55,10 @@ class _MenuScreenState extends State<MenuScreen> {
       try {
         await ordersNotifier.fetchAndSetOrders();
       } catch (e) {
+        if (e is HttpException && e.statusCode == 401) {
+          Navigator.pushNamedAndRemoveUntil(
+              context, AuthScreen.routeName, (route) => false);
+        }
         return Future.error(e.toString());
       }
     }

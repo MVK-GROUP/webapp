@@ -28,6 +28,7 @@ class _PhoneWidgetState extends State<PhoneWidget> {
   @override
   void dispose() {
     controller.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
