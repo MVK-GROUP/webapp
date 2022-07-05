@@ -39,6 +39,24 @@ class RouteGenerator {
         settings: settings,
       );
     }
+    if (queryParameters.containsKey("payment-status") &&
+        queryParameters["payment-status"] == 'success') {
+      return MaterialPageRoute(
+        builder: (context) {
+          return SuccessPaymentScreen();
+        },
+        settings: settings,
+      );
+    }
+    if (queryParameters.containsKey("payment-status") &&
+        queryParameters["payment-status"] == 'error') {
+      return MaterialPageRoute(
+        builder: (context) {
+          return ErrorPaymentScreen();
+        },
+        settings: settings,
+      );
+    }
     print("settings.name ${settings.name}");
     var parts = settings.name!.split('/');
     parts.removeWhere((item) => ["", null, false, 0].contains(item));
