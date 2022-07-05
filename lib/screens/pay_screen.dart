@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:js' as js show context;
@@ -163,10 +164,11 @@ class _PayScreenState extends State<PayScreen> {
                                         borderRadius:
                                             BorderRadius.circular(10))),
                                 onPressed: () {
-                                  print("payData: ${order.payData}");
-                                  print("paySignature: ${order.paySignature}");
-                                  js.context.callMethod('openLiqpay',
-                                      [order.payData, order.paySignature]);
+                                  js.context.callMethod('openLiqpay', [
+                                    order.payData,
+                                    order.paySignature,
+                                    kDebugMode
+                                  ]);
 
                                   //Navigator.of(context).pushNamedAndRemoveUntil(
                                   //    PaymentCheckScreen.routeName,

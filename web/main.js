@@ -1,6 +1,8 @@
-function openLiqpay(data, signature) {
+function openLiqpay(data, signature, isBlank) {
     var mapForm = document.createElement("form");
-    mapForm.target = "_blank"
+    if (isBlank) {
+        mapForm.target = "_blank"
+    }
     mapForm.method = "POST";
     mapForm.action = "https://www.liqpay.ua/api/3/checkout";
 
