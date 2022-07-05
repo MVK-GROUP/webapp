@@ -39,6 +39,7 @@ class RouteGenerator {
         settings: settings,
       );
     }
+    print("settings.name ${settings.name}");
     var parts = settings.name!.split('/');
     parts.removeWhere((item) => ["", null, false, 0].contains(item));
     print('parts: $parts');
@@ -60,7 +61,14 @@ class RouteGenerator {
         );
       }
     }
-    return null;
+    return MaterialPageRoute(
+      builder: (context) {
+        return isAuth
+            ? const MenuScreen()
+            : AuthScreen(prevRouteName: uriData.toString());
+      },
+      settings: settings,
+    );
   }
 }
 
