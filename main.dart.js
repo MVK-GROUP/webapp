@@ -23281,7 +23281,7 @@ return A.D($async$Wu,r)},
 Jb(a,b){return A.aD4(a,b)},
 aD4(a,b){var s=0,r=A.E(t.BO),q,p=2,o,n=[],m,l,k,j,i,h
 var $async$Jb=A.F(function(c,d){if(c===1){o=d
-s=p}while(true)switch(s){case 0:i="/lockers/"+a
+s=p}while(true)switch(s){case 0:i="/lockers/"+a+"/"
 p=4
 k=t.N
 s=7
@@ -23307,7 +23307,7 @@ return A.D($async$Jb,r)},
 yM(a,b,c,d){return A.aD5(a,b,c,d)},
 aD5(a3,a4,a5,a6){var s=0,r=A.E(t.RK),q,p=2,o,n=[],m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2
 var $async$yM=A.F(function(a7,a8){if(a7===1){o=a8
-s=p}while(true)switch(s){case 0:a1="/lockers/"+a3+"/cells/free"
+s=p}while(true)switch(s){case 0:a1="/lockers/"+a3+"/cells/free/"
 p=4
 e=t.N
 m=A.J(e,t.K)
@@ -23349,7 +23349,7 @@ case 2:return A.B(o,r)}})
 return A.D($async$yM,r)},
 Jc(a){var s=0,r=A.E(t.y),q,p=2,o,n=[],m,l,k,j,i,h
 var $async$Jc=A.F(function(b,c){if(b===1){o=c
-s=p}while(true)switch(s){case 0:i="/lockers/"+a+"/is-active"
+s=p}while(true)switch(s){case 0:i="/lockers/"+a+"/is-active/"
 p=4
 s=7
 return A.y(A.anz(A.dz(B.b.Y("https://lockershub.online/api/v1",i),0,null),null),$async$Jc)
@@ -23404,7 +23404,7 @@ return A.D($async$a4c,r)},
 zr(a,b){return A.aDy(a,b)},
 aDy(a,b){var s=0,r=A.E(t.h),q,p=2,o,n=[],m,l,k,j,i,h
 var $async$zr=A.F(function(c,d){if(c===1){o=d
-s=p}while(true)switch(s){case 0:i="/orders/"+a
+s=p}while(true)switch(s){case 0:i="/orders/"+a+"/"
 p=4
 k=t.N
 s=7
@@ -23432,7 +23432,7 @@ return A.D($async$zr,r)},
 JM(a,b,c,d,e){return A.aDx(a,b,c,d,e)},
 aDx(a,b,c,d,e){var s=0,r=A.E(t.h),q,p=2,o,n=[],m,l,k,j,i,h,g
 var $async$JM=A.F(function(f,a0){if(f===1){o=a0
-s=p}while(true)switch(s){case 0:h=e?"/orders/create-temp-order/":"/orders/new"
+s=p}while(true)switch(s){case 0:h=e?"/orders/create-temp-order/":"/orders/new/"
 p=4
 j=t.N
 s=7
@@ -23463,7 +23463,7 @@ return A.D($async$JM,r)},
 a4f(a,b){return A.aDC(a,b)},
 aDC(a,b){var s=0,r=A.E(t.T),q,p=2,o,n=[],m,l,k,j,i,h,g
 var $async$a4f=A.F(function(c,d){if(c===1){o=d
-s=p}while(true)switch(s){case 0:h="/orders/"+a+"/open-cell"
+s=p}while(true)switch(s){case 0:h="/orders/"+a+"/open-cell/"
 p=4
 j=t.N
 s=7
@@ -23494,7 +23494,7 @@ return A.D($async$a4f,r)},
 JN(a,b){return A.aDD(a,b)},
 aDD(a,b){var s=0,r=A.E(t.T),q,p=2,o,n=[],m,l,k,j,i,h,g
 var $async$JN=A.F(function(c,d){if(c===1){o=d
-s=p}while(true)switch(s){case 0:h="/orders/"+a+"/put-things"
+s=p}while(true)switch(s){case 0:h="/orders/"+a+"/put-things/"
 p=4
 j=t.N
 s=7
@@ -23525,7 +23525,7 @@ return A.D($async$JN,r)},
 a4d(a,b){return A.aDA(a,b)},
 aDA(a,b){var s=0,r=A.E(t.T),q,p=2,o,n=[],m,l,k,j,i,h,g
 var $async$a4d=A.F(function(c,d){if(c===1){o=d
-s=p}while(true)switch(s){case 0:h="/orders/"+a+"/get-things"
+s=p}while(true)switch(s){case 0:h="/orders/"+a+"/get-things/"
 p=4
 j=t.N
 s=7
@@ -23556,7 +23556,7 @@ return A.D($async$a4d,r)},
 JL(a,b,c){return A.aDw(a,b,c)},
 aDw(a,b,c){var s=0,r=A.E(t.S),q,p=2,o,n=[],m,l,k,j,i,h,g
 var $async$JL=A.F(function(d,e){if(d===1){o=e
-s=p}while(true)switch(s){case 0:h="/orders/"+a+"/check-task/"+b
+s=p}while(true)switch(s){case 0:h="/orders/"+a+"/check-task/"+b+"/"
 p=4
 j=t.N
 s=7
@@ -23587,7 +23587,7 @@ return A.D($async$JL,r)},
 a4e(a){return A.aDB(a)},
 aDB(a){var s=0,r=A.E(t.y),q,p=2,o,n=[],m,l,k,j,i,h
 var $async$a4e=A.F(function(b,c){if(b===1){o=c
-s=p}while(true)switch(s){case 0:i="/orders/active"
+s=p}while(true)switch(s){case 0:i="/orders/active/"
 p=4
 k=t.N
 s=7
