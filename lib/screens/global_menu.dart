@@ -130,7 +130,6 @@ class _MenuScreenState extends State<MenuScreen> {
                           "Сталась невідома помилка. Спробуйте зайти пізніше"),
                     );
                   }
-                  print(snapshot.data);
                   return Column(
                     children: [
                       ScreenTitle(

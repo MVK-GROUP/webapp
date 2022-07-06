@@ -34,6 +34,32 @@ class LockerApi {
     }
   }
 
+  static Future<Locker> fetchLockerByOrderId(int orderId, String? token) async {
+    var apiUrl = "/orders/$orderId/get-locker/";
+    try {
+      var res = await http.get(
+        Uri.parse(baseUrl + apiUrl),
+        headers: {
+          "content-type": "application/json",
+          "accept": "application/json",
+          "Authorization": "Token $token",
+        },
+      );
+      if (res.statusCode == 200) {
+        var locker = Locker.fromJson(
+            json.decode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>);
+        return locker;
+      } else {
+        throw HttpException(res.reasonPhrase.toString(),
+            statusCode: res.statusCode);
+      }
+    } on SocketException {
+      throw HttpException("SocketException", statusCode: 500);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   static Future<List<CellStatus>> getFreeCells(
     int lockerId, {
     String? service,

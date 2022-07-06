@@ -3,7 +3,7 @@ import 'package:mvk_app/api/http_exceptions.dart';
 import 'package:mvk_app/api/orders.dart';
 import 'package:mvk_app/screens/global_menu.dart';
 import 'package:mvk_app/screens/pay_screen.dart';
-import 'package:mvk_app/screens/payment_check_screen.dart';
+import 'package:mvk_app/screens/success_order_screen.dart';
 import 'package:mvk_app/widgets/confirm_dialog.dart';
 import 'package:mvk_app/widgets/sww_dialog.dart';
 import 'package:provider/provider.dart';
@@ -331,7 +331,7 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
             await Provider.of<OrdersNotifier>(context, listen: false)
                 .addOrder(lockerId ?? 0, "Оренда комірки", data: extraData);
         Navigator.pushNamedAndRemoveUntil(
-            context, PaymentCheckScreen.routeName, (route) => false,
+            context, SuccessOrderScreen.routeName, (route) => false,
             arguments: {"order": orderData, "title": helperText});
       } catch (e) {
         await showDialog(

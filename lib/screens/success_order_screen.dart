@@ -7,23 +7,22 @@ import 'package:provider/provider.dart';
 import '../api/orders.dart';
 import '../models/order.dart';
 import '../providers/auth.dart';
-import '../providers/order.dart';
 import '../widgets/sww_dialog.dart';
 import 'history/history_screen.dart';
 import 'global_menu.dart';
 import '../style.dart';
 import '../widgets/button.dart';
 
-class PaymentCheckScreen extends StatefulWidget {
-  static const routeName = 'payment-check/';
+class SuccessOrderScreen extends StatefulWidget {
+  static const routeName = 'success-order/';
 
-  const PaymentCheckScreen({Key? key}) : super(key: key);
+  const SuccessOrderScreen({Key? key}) : super(key: key);
 
   @override
-  State<PaymentCheckScreen> createState() => _PaymentCheckScreenState();
+  State<SuccessOrderScreen> createState() => _SuccessOrderScreenState();
 }
 
-class _PaymentCheckScreenState extends State<PaymentCheckScreen> {
+class _SuccessOrderScreenState extends State<SuccessOrderScreen> {
   late OrderData order;
   String? token;
   late Locker? locker;
@@ -71,16 +70,15 @@ class _PaymentCheckScreenState extends State<PaymentCheckScreen> {
         timer = Timer.periodic(const Duration(seconds: 1, milliseconds: 500),
             (timer) async {
           try {
-            var checkedOrder =
-                await Provider.of<OrdersNotifier>(context, listen: false)
-                    .checkOrderWithoutNotify(order.id);
+            var checkedOrder = await OrderApi.fetchOrderById(order.id, token);
             if (![OrderStatus.created, OrderStatus.inProgress]
                 .contains(checkedOrder.status)) {
               timer.cancel();
               setState(() {
                 _isOrderStatusChecking = false;
               });
-              if (checkedOrder.status == OrderStatus.error) {
+              if (checkedOrder.status == OrderStatus.error ||
+                  checkedOrder.timeLeftInSeconds < 1) {
                 throw Exception("order error");
               }
             }

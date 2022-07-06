@@ -69,6 +69,43 @@ class OrderApi {
     }
   }
 
+  static Future<OrderData> checkPaymentByOrderId(
+      int orderId, String? token) async {
+    var apiUrl = "/orders/$orderId/check-payment/";
+    try {
+      var res = await http.get(
+        Uri.parse(baseUrl + apiUrl),
+        headers: {
+          "content-type": "application/json",
+          "accept": "application/json",
+          "Authorization": "Token $token",
+        },
+      );
+      var data =
+          json.decode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>;
+      if (res.statusCode == 200) {
+        return OrderData.fromJson(data);
+      } else if (res.statusCode == 404) {
+        if (data.containsKey('status')) {
+          if (data['status'] == 'no_payment' ||
+              data['status'] == 'not_successful') {
+            throw HttpException(data['msg'], statusCode: res.statusCode);
+          }
+        }
+        throw HttpException("Не коректний номер замовлення",
+            statusCode: res.statusCode);
+      } else {
+        throw HttpException("Вибачте, в нас технічні несправності...",
+            statusCode: res.statusCode);
+      }
+    } on SocketException {
+      throw HttpException("Вибачте, в нас технічні несправності...",
+          statusCode: 500);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   static Future<OrderData> createOrder(
       int lockerId, String title, Object? data, String? token,
       {bool isTempBook = false}) async {

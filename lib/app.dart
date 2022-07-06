@@ -16,7 +16,7 @@ import 'screens/qr_scanner_screen.dart';
 import 'screens/global_menu.dart';
 import 'screens/acl/size_selection_screen.dart';
 import 'screens/pay_screen.dart';
-import 'screens/payment_check_screen.dart';
+import 'screens/success_order_screen.dart';
 import 'screens/history/history_screen.dart';
 import 'screens/goods/goods_screen.dart';
 import 'screens/goods/all_goods_screen.dart';
@@ -46,11 +46,14 @@ class RouteGenerator {
         orderId = int.parse(queryParameters["order_id"]);
       }
 
-      if (queryParameters["payment-status"] == 'success') {
+      if (queryParameters["payment-status"] == 'success' && orderId != null) {
         return MaterialPageRoute(
           builder: (context) {
             return auth.isAuth
-                ? SuccessPaymentScreen(orderId: orderId)
+                ? SplashScreen(
+                    type: SplashScreenType.checkPayment,
+                    data: orderId ?? 0,
+                  )
                 : FutureBuilder(
                     future: auth.tryAutoLogin(),
                     builder: (context, authResultSnapshot) =>
@@ -65,7 +68,7 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (context) {
             return auth.isAuth
-                ? ErrorPaymentScreen(orderId: orderId)
+                ? ErrorPaymentScreen()
                 : FutureBuilder(
                     future: auth.tryAutoLogin(),
                     builder: (context, authResultSnapshot) =>
@@ -132,7 +135,7 @@ class App extends StatelessWidget {
               QrScannerScreen.routeName: (ctx) => QrScannerScreen(),
               MenuScreen.routeName: (ctx) => const MenuScreen(),
               PayScreen.routeName: (ctx) => const PayScreen(),
-              PaymentCheckScreen.routeName: (ctx) => const PaymentCheckScreen(),
+              SuccessOrderScreen.routeName: (ctx) => const SuccessOrderScreen(),
               HistoryScreen.routeName: (ctx) => const HistoryScreen(),
               GoodsScreen.routeName: (ctx) => const GoodsScreen(),
               AllGoodsScreen.routeName: (ctx) => const AllGoodsScreen(),

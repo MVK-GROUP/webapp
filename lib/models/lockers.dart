@@ -329,6 +329,19 @@ class LockerNotifier with ChangeNotifier {
     }
   }
 
+  Future<Locker?> setLockerByOrderId(int orderId) async {
+    try {
+      _currenctLocker =
+          await LockerApi.fetchLockerByOrderId(orderId, authToken);
+      notifyListeners();
+      return _currenctLocker;
+    } catch (e) {
+      _currenctLocker = null;
+      notifyListeners();
+      rethrow;
+    }
+  }
+
   void resetLocker() {
     _currenctLocker = null;
     notifyListeners();
