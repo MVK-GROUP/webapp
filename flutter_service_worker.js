@@ -8,8 +8,8 @@ const RESOURCES = {
 "canvaskit/profiling/canvaskit.js": "ae2949af4efc61d28a4a80fffa1db900",
 "canvaskit/profiling/canvaskit.wasm": "95e736ab31147d1b2c7b25f11d4c32cd",
 "canvaskit/canvaskit.wasm": "4b83d89d9fecbea8ca46f2f760c5a9ba",
-"index.html": "6b78d2802b5c97e61052f6e95cb57c0d",
-"/": "6b78d2802b5c97e61052f6e95cb57c0d",
+"index.html": "6d835b760a43b61310451a316333dff7",
+"/": "6d835b760a43b61310451a316333dff7",
 "flutter.js": "eb2682e33f25cd8f1fc59011497c35f8",
 "icons/Icon-maskable-192.png": "3b04175c6495f4788d10c50f623fabec",
 "icons/Icon-maskable-512.png": "42bab81f1e23cd1ce49a011399731f03",
@@ -19,7 +19,7 @@ const RESOURCES = {
 "version.json": "e371efac991124ece08a5445aa24b5d8",
 "assets/FontManifest.json": "7b2a36307916a9721811788013e65289",
 "assets/fonts/MaterialIcons-Regular.otf": "95db9098c58fd6db106f1116bae85a0b",
-"assets/AssetManifest.json": "82055b3f0d3893e162a0a48b3027f09b",
+"assets/AssetManifest.json": "72fb4a1a77d3939f3d0aed92d498816e",
 "assets/assets/data/tariffs.json": "b5830fcc968643ab1c8e539952cdb88a",
 "assets/assets/data/lockers.json": "f20a7193194b2dd52234abddd9d8bef7",
 "assets/assets/data/orders.json": "4eba4a8639062815cd0d3e8c4a0fa312",
@@ -33,6 +33,7 @@ const RESOURCES = {
 "assets/assets/images/uploads/chips1.png": "7ff520dc1fb6d194888770e56a55c35e",
 "assets/assets/images/no-image-2.png": "71364f1bd1a51bb9eb202af37b7bf6b5",
 "assets/assets/images/scan_qr.png": "256f684f3806030fcbe6dfaff84b80ea",
+"assets/assets/images/error.png": "ba3ec0df3abb3343d6c0cfd5e8420308",
 "assets/assets/images/hero.png": "39cd00910a3a13d7514c22932c8c7775",
 "assets/assets/images/no-image.png": "fedf42235cc9d88a11e3fb59932970a0",
 "assets/assets/logo/liqpay_logo.svg": "63f084da9e7ecc88a072f0395043324c",
@@ -298,7 +299,7 @@ const RESOURCES = {
 "assets/packages/intl_phone_number_input/assets/flags/mp.png": "87351c30a529071ee9a4bb67765fea4f",
 "assets/packages/intl_phone_number_input/assets/flags/mc.png": "90c2ad7f144d73d4650cbea9dd621275",
 "assets/NOTICES": "03dd26b018edcf493a88648104c1ec32",
-"main.dart.js": "802f26ad3f22b9c774db3c360a90b67d",
+"main.dart.js": "f9da69f7e92167d63724d3de5767165c",
 "main.js": "0e964ed4d492ae3f4f65368db87fd005"
 };
 
