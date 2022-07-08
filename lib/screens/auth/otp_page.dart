@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:mvk_app/providers/auth.dart';
 import 'package:mvk_app/style.dart';
 import 'package:provider/provider.dart';
 import '../../api/auth.dart';
+import 'package:pinput/pinput.dart';
 import 'auth_screen.dart' show PageType;
 
 class OtpNewPage extends StatefulWidget {
@@ -23,30 +23,84 @@ class OtpNewPage extends StatefulWidget {
 }
 
 class _OtpNewPageState extends State<OtpNewPage> {
+  bool _isInit = false;
   bool _isWrongCode = false;
   bool _isLoading = false;
   bool _isCanResend = false;
   bool _isResendLoading = false;
   Timer? _timer;
   int _start = 20;
-  //final FocusNode _focusNode = FocusNode();
-  String currentText = "";
-  final formKey = GlobalKey<FormState>();
+  late FocusNode _focusNode;
+  late double screenWidth;
 
   @override
   void initState() {
     super.initState();
-    //WidgetsBinding.instance.addPostFrameCallback(
-    //    (_) => FocusScope.of(context).requestFocus(_focusNode));
-    Future.delayed(Duration.zero, () {
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (!_isInit) {
       startTimer();
-    });
+      _focusNode = FocusNode();
+      screenWidth = MediaQuery.of(context).size.width;
+      _isInit = true;
+      WidgetsBinding.instance.addPostFrameCallback(
+          (_) => FocusScope.of(context).requestFocus(_focusNode));
+    }
+    super.didChangeDependencies();
   }
 
   @override
   void dispose() {
     _timer!.cancel();
+    _focusNode.dispose();
     super.dispose();
+  }
+
+  Widget buildOtpInputWidget() {
+    final defaultPinTheme = PinTheme(
+      width: 60,
+      height: 60,
+      textStyle: const TextStyle(
+          fontSize: 24,
+          color: AppColors.mainColor,
+          fontWeight: FontWeight.w600),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [AppShadows.getShadow200()],
+        borderRadius: BorderRadius.circular(12),
+      ),
+    );
+    final focusedPinTheme = defaultPinTheme.copyDecorationWith(
+      border:
+          Border.all(color: Theme.of(context).colorScheme.background, width: 2),
+    );
+    return Pinput(
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      keyboardType:
+          const TextInputType.numberWithOptions(signed: true, decimal: true),
+      autofocus: true,
+      focusNode: _focusNode,
+      length: 4,
+      onCompleted: (otpCode) async {
+        setState(() {
+          _isLoading = true;
+        });
+        try {
+          await Provider.of<Auth>(context, listen: false)
+              .confirmOtp(widget.phoneNumber, otpCode);
+          widget.changePage(PageType.nextScreen);
+        } catch (e) {
+          setState(() {
+            _isWrongCode = true;
+            _isLoading = false;
+          });
+        }
+      },
+      defaultPinTheme: defaultPinTheme,
+      focusedPinTheme: focusedPinTheme,
+    );
   }
 
   @override
@@ -88,90 +142,17 @@ class _OtpNewPageState extends State<OtpNewPage> {
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
                                   widget.changePage(PageType.enterPhone);
-                                  //Navigator.pushReplacementNamed(
-                                  //    context, AuthScreen.routeName);
                                 }),
                         ]),
                   ),
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
+                  margin: EdgeInsets.symmetric(
+                      horizontal: screenWidth > 385 ? 30 : 10, vertical: 5),
                 ),
                 const SizedBox(
                   height: 30,
                 ),
-                Container(
-                  constraints: const BoxConstraints(maxWidth: 350),
-                  child: Form(
-                    child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 0, horizontal: 30),
-                        child: PinCodeTextField(
-                          //focusNode: _focusNode,
-                          appContext: context,
-                          autoFocus: true,
-                          enablePinAutofill: true,
-                          textStyle: const TextStyle(
-                            color: AppColors.mainColor,
-                            fontSize: 24,
-                          ),
-                          pastedTextStyle: const TextStyle(
-                            color: AppColors.secondaryColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          length: 4,
-                          blinkWhenObscuring: true,
-                          animationType: AnimationType.fade,
-                          pinTheme: PinTheme(
-                            activeColor: AppColors.secondaryColor,
-                            selectedColor:
-                                Theme.of(context).colorScheme.background,
-                            selectedFillColor: Colors.white,
-                            inactiveFillColor: Colors.white,
-                            inactiveColor: AppColors.secondaryColor,
-                            shape: PinCodeFieldShape.box,
-                            borderRadius: BorderRadius.circular(12),
-                            fieldHeight: 60,
-                            fieldWidth: 60,
-                            activeFillColor: Colors.white,
-                          ),
-                          cursorColor: AppColors.mainColor,
-                          animationDuration: const Duration(milliseconds: 300),
-                          enableActiveFill: true,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
-                          keyboardType: const TextInputType.numberWithOptions(
-                              signed: true, decimal: true),
-                          boxShadows: [AppShadows.getShadow200()],
-                          onCompleted: (v) async {
-                            setState(() {
-                              _isLoading = true;
-                            });
-                            try {
-                              await Provider.of<Auth>(context, listen: false)
-                                  .confirmOtp(widget.phoneNumber, currentText);
-                              widget.changePage(PageType.nextScreen);
-                            } catch (e) {
-                              setState(() {
-                                _isWrongCode = true;
-                                _isLoading = false;
-                              });
-                            }
-                          },
-                          onChanged: (value) {
-                            setState(() {
-                              currentText = value;
-                            });
-                          },
-                          beforeTextPaste: (text) {
-                            debugPrint("Allowing to paste $text");
-                            //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
-                            //but you can show anything you want here, like your pop up saying wrong paste format or etc
-                            return true;
-                          },
-                        )),
-                  ),
-                ),
+                buildOtpInputWidget(),
+                const SizedBox(height: 10),
                 if (_isWrongCode)
                   const Text(
                     'Ви ввели не правильний код або час для введення коду закінчився',

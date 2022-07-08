@@ -6,7 +6,7 @@ import 'package:mvk_app/screens/global_menu.dart';
 import 'package:mvk_app/screens/qr_scanner_screen.dart';
 import 'package:mvk_app/style.dart';
 import 'package:mvk_app/widgets/dialog.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -159,65 +159,52 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
                         child: Form(
                           key: formKey,
                           child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 0, horizontal: 30),
-                              child: PinCodeTextField(
-                                appContext: context,
-                                autoFocus: false,
-                                textStyle: const TextStyle(
-                                  color: AppColors.mainColor,
-                                  fontSize: 24,
-                                ),
-                                pastedTextStyle: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                length: 4,
-                                blinkWhenObscuring: true,
-                                animationType: AnimationType.fade,
-                                pinTheme: PinTheme(
-                                  activeColor: Colors.white,
-                                  selectedColor:
-                                      Theme.of(context).colorScheme.background,
-                                  selectedFillColor: Colors.white,
-                                  inactiveFillColor: Colors.white,
-                                  inactiveColor: Colors.white,
-                                  shape: PinCodeFieldShape.box,
-                                  borderRadius: BorderRadius.circular(12),
-                                  fieldHeight: 60,
-                                  fieldWidth: 60,
-                                  activeFillColor: Colors.white,
-                                ),
-                                cursorColor: AppColors.mainColor,
-                                animationDuration:
-                                    const Duration(milliseconds: 300),
-                                enableActiveFill: true,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly
-                                ],
-                                keyboardType:
-                                    const TextInputType.numberWithOptions(
-                                        signed: true, decimal: true),
-                                boxShadows: [AppShadows.getShadow100()],
-                                onCompleted: (v) async {
-                                  await enteredLockerId();
-                                },
-                                onChanged: (value) {
-                                  setState(() {
-                                    lockerId = value;
-                                  });
-                                },
-                                beforeTextPaste: (text) {
-                                  debugPrint("Allowing to paste $text");
-                                  return true;
-                                },
-                              )),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 0, horizontal: 30),
+                            child: buildLockerIdInputWidget(),
+                          ),
                         ),
                       ),
                       const Spacer(),
                     ]),
               ),
       ),
+    );
+  }
+
+  Widget buildLockerIdInputWidget() {
+    final defaultPinTheme = PinTheme(
+      width: 60,
+      height: 60,
+      textStyle: const TextStyle(
+          fontSize: 24,
+          color: AppColors.mainColor,
+          fontWeight: FontWeight.w600),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [AppShadows.getShadow200()],
+        borderRadius: BorderRadius.circular(12),
+      ),
+    );
+    final focusedPinTheme = defaultPinTheme.copyDecorationWith(
+      border:
+          Border.all(color: Theme.of(context).colorScheme.background, width: 2),
+    );
+    return Pinput(
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      keyboardType:
+          const TextInputType.numberWithOptions(signed: true, decimal: true),
+      length: 4,
+      onCompleted: (otpCode) async {
+        await enteredLockerId();
+      },
+      onChanged: (value) {
+        setState(() {
+          lockerId = value;
+        });
+      },
+      defaultPinTheme: defaultPinTheme,
+      focusedPinTheme: focusedPinTheme,
     );
   }
 
