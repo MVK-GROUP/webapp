@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mvk_app/models/lockers.dart';
+import 'package:mvk_app/providers/order.dart';
 import 'package:mvk_app/widgets/confirm_dialog.dart';
 import 'package:provider/provider.dart';
 import '../api/orders.dart';
@@ -33,6 +34,7 @@ class _SuccessOrderScreenState extends State<SuccessOrderScreen> {
   var _isUseOpenCellButton = false;
   var _isOrderStatusChecking = false;
   var _isCellOpening = false;
+  int maxAttempts = 14;
 
   @override
   void dispose() {
@@ -67,10 +69,15 @@ class _SuccessOrderScreenState extends State<SuccessOrderScreen> {
           _isUseOpenCellButton = true;
           _isOrderStatusChecking = true;
         });
+        int attempt = 0;
+        attempt++;
         timer = Timer.periodic(const Duration(seconds: 1, milliseconds: 500),
             (timer) async {
           try {
-            var checkedOrder = await OrderApi.fetchOrderById(order.id, token);
+            attempt++;
+            var checkedOrder =
+                await Provider.of<OrdersNotifier>(context, listen: false)
+                    .checkOrder(order.id);
             if (![OrderStatus.created, OrderStatus.inProgress]
                 .contains(checkedOrder.status)) {
               timer.cancel();
@@ -81,6 +88,13 @@ class _SuccessOrderScreenState extends State<SuccessOrderScreen> {
                   checkedOrder.timeLeftInSeconds < 1) {
                 throw Exception("order error");
               }
+            }
+            if (attempt > maxAttempts) {
+              timer.cancel();
+              setState(() {
+                _isOrderStatusChecking = false;
+              });
+              throw Exception("order error");
             }
           } catch (e) {
             timer.cancel();
@@ -114,10 +128,12 @@ class _SuccessOrderScreenState extends State<SuccessOrderScreen> {
               IconButton(
                 iconSize: 36,
                 color: AppColors.mainColor,
-                onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, MenuScreen.routeName, (route) => false);
-                },
+                onPressed: _isOrderStatusChecking
+                    ? null
+                    : () {
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, MenuScreen.routeName, (route) => false);
+                      },
                 icon: const Icon(Icons.home),
               ),
               const SizedBox(width: 10)
@@ -153,12 +169,12 @@ class _SuccessOrderScreenState extends State<SuccessOrderScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 10),
                       SizedBox(
                         height: 200,
                         child: Image.asset("assets/images/hero.png"),
                       ),
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 10),
                       Column(
                         children: [
                           if (_isUseOpenCellButton)
@@ -177,18 +193,19 @@ class _SuccessOrderScreenState extends State<SuccessOrderScreen> {
                                       openCell();
                                     },
                                   ),
-                          const SizedBox(height: 15),
-                          ElevatedIconButton(
-                            icon: const Icon(Icons.history),
-                            text: "Перейти до замовлення",
-                            onPressed: _isCellOpening
-                                ? null
-                                : () {
-                                    Navigator.pushReplacementNamed(
-                                        context, HistoryScreen.routeName,
-                                        arguments: order);
-                                  },
-                          ),
+                          const SizedBox(height: 10),
+                          if (!_isUseOpenCellButton || !_isOrderStatusChecking)
+                            ElevatedIconButton(
+                              icon: const Icon(Icons.history),
+                              text: "Перейти до замовлення",
+                              onPressed: _isCellOpening
+                                  ? null
+                                  : () {
+                                      Navigator.pushReplacementNamed(
+                                          context, HistoryScreen.routeName,
+                                          arguments: order);
+                                    },
+                            ),
                           const SizedBox(height: 15)
                         ],
                       ),

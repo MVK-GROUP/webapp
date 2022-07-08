@@ -61,14 +61,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
               iconSize: 36,
               color: AppColors.mainColor,
               onPressed: () {
-                //if (Navigator.canPop(context)) {
-                //  Navigator.pop(context);
-                //} else {
-                //  Navigator.pushReplacementNamed(context, MenuScreen.routeName);
-                //}
                 Navigator.pushNamedAndRemoveUntil(
                     context, MenuScreen.routeName, (route) => false);
-                //Navigator.pushReplacementNamed(context, MenuScreen.routeName);
               },
               icon: const Icon(Icons.home),
             ),
