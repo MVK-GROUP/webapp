@@ -38,7 +38,8 @@ class OrdersNotifier with ChangeNotifier {
           ServiceCategory.acl,
           ServiceCategory.phoneCharging,
           ServiceCategory.powerbank
-        ].contains(order.service));
+        ].contains(order.service) &&
+        order.timeLeftInSeconds > -3600);
     if (foundOrders != null) {
       orders.addAll(foundOrders);
     }

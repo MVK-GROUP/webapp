@@ -4,12 +4,14 @@ import '../style.dart';
 class ConfirmDialog extends StatelessWidget {
   final String title;
   final Color titleColor;
-  final String text;
+  final String? text;
+  final Widget? content;
   final double maxHeight;
 
   const ConfirmDialog({
     required this.title,
-    required this.text,
+    this.text,
+    this.content,
     this.titleColor = AppColors.secondaryColor,
     this.maxHeight = 360,
     Key? key,
@@ -49,12 +51,14 @@ class ConfirmDialog extends StatelessWidget {
               const SizedBox(height: 6),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Text(
-                  text,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 18),
-                ),
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                child: text != null
+                    ? Text(
+                        text ?? "",
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 18),
+                      )
+                    : content,
               ),
               const SizedBox(height: 20),
               Row(

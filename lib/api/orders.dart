@@ -69,9 +69,10 @@ class OrderApi {
     }
   }
 
-  static Future<OrderData> checkPaymentByOrderId(
-      int orderId, String? token) async {
-    var apiUrl = "/orders/$orderId/check-payment/";
+  static Future<OrderData> checkPaymentByOrderId(int orderId, String? token,
+      {isDebt = false}) async {
+    var apiUrl = "/orders/$orderId/" +
+        (isDebt ? "check-debt-payment/" : "check-payment/");
     try {
       var res = await http.get(
         Uri.parse(baseUrl + apiUrl),
@@ -205,7 +206,6 @@ class OrderApi {
       int orderId, String numTask, String? token) async {
     var apiUrl = "/orders/$orderId/check-task/$numTask/";
     try {
-      //await Future.delayed(Duration(seconds: 2));
       final rawResponse = await http.post(
         Uri.parse(baseUrl + apiUrl),
         headers: {
@@ -247,6 +247,33 @@ class OrderApi {
       return false;
     } catch (e) {
       return false;
+    }
+  }
+
+  static Future<Map<String, dynamic>> payDebt(
+      int orderId, String? token) async {
+    var apiUrl = "/orders/$orderId/pay-debt/";
+    try {
+      final rawResponse = await http.post(
+        Uri.parse(baseUrl + apiUrl),
+        headers: {
+          "content-type": "application/json",
+          "accept": "application/json",
+          "Authorization": "Token $token",
+        },
+      );
+      if (rawResponse.statusCode < 400) {
+        final response = json.decode(utf8.decode(rawResponse.bodyBytes))
+            as Map<String, dynamic>;
+        var data = {
+          "data": response['pay_data'],
+          "signature": response['pay_signature']
+        };
+        return data;
+      }
+      throw HttpException("unknown error");
+    } catch (e) {
+      rethrow;
     }
   }
 

@@ -223,12 +223,18 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
 
       Map<String, Object> extraData = {};
       extraData["type"] = "paid";
-      extraData["time"] = chosenTariff.minutes;
+      extraData["time"] = chosenTariff.seconds;
       extraData["paid"] = chosenTariff.priceInCoins;
       extraData["hourly_pay"] = chosenTariff.priceInCoins;
       extraData["service"] = serviceCategoryType;
       extraData["algorithm"] = AlgorithmTypeExt.toStr(algorithmType);
       extraData["cell_id"] = orderedCell;
+      if (cellType.overduePayment != null) {
+        extraData["overdue_payment"] = {
+          "time": cellType.overduePayment!.seconds,
+          "price": cellType.overduePayment!.priceInCoins,
+        };
+      }
 
       final item = {"cell_type": cellType, "chosen_tariff": chosenTariff};
       try {
@@ -259,14 +265,50 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
     var confirmDialog = await showDialog(
         context: context,
         builder: (ctx) {
-          String message = "";
+          List<TextSpan> texts = [];
+
           if (cellType.tariff.isNotEmpty) {
-            message +=
-                "Максимальний час безкоштовного використання комірки становить ${cellType.tariff[0].humanHours}. ";
+            texts.add(const TextSpan(
+                text:
+                    'Максимальний час безкоштовного використання комірки становить '));
+            texts.add(TextSpan(
+                text: '${cellType.tariff[0].humanEqualHours}. ',
+                style: const TextStyle(fontWeight: FontWeight.bold)));
+            texts.add(
+                const TextSpan(text: "Підтвердіть або скасуйте замовлення"));
+          } else {
+            texts.add(const TextSpan(
+                text:
+                    "Після підтвердження замовлення Вам відкриється комірка. Підтвердіть або скасуйте замовлення"));
           }
-          message +=
-              "Після підтвердження замовлення Вам відкриється комірка. Підтвердіть або скасуйте замовлення";
-          return ConfirmDialog(title: "Увага", text: message);
+          if (cellType.overduePayment != null) {
+            texts.add(TextSpan(
+                text:
+                    '\n\nУ разі перевищення цього часу Вам потрібно буде заплатити суму заборгованості. ',
+                style: TextStyle(
+                    fontSize: 14,
+                    color: AppColors.mainColor.withOpacity(0.6))));
+            texts.add(
+              TextSpan(
+                text:
+                    '${cellType.overduePayment!.humanEqualHours} заборгованості - +${cellType.overduePayment!.priceWithCurrency("UAH")}',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                    color: AppColors.mainColor.withOpacity(0.6)),
+              ),
+            );
+          }
+
+          return ConfirmDialog(
+            title: "Увага",
+            content: RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                  style: const TextStyle(fontSize: 18, color: Colors.black45),
+                  children: texts),
+            ),
+          );
         });
 
     if (confirmDialog != null) {
@@ -318,13 +360,19 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
 
       Map<String, Object> extraData = {};
       extraData["type"] = "free";
-      extraData["time"] = cellType.tariff.first.minutes;
+      extraData["time"] = cellType.tariff.first.seconds;
       extraData["paid"] = 0;
       extraData["hourly_pay"] = cellType.tariff.first.priceInCoins;
       extraData["service"] =
           ServiceCategoryExt.typeToString(ServiceCategory.acl);
       extraData["algorithm"] = AlgorithmTypeExt.toStr(algorithmType);
       extraData["cell_id"] = orderedCell;
+      if (cellType.overduePayment != null) {
+        extraData["overdue_payment"] = {
+          "time": cellType.overduePayment!.seconds,
+          "price": cellType.overduePayment!.priceInCoins,
+        };
+      }
 
       try {
         final orderData =

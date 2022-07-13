@@ -8,6 +8,10 @@ class Tariff {
   final int _time;
   const Tariff(this._time, this.priceInCoins);
 
+  factory Tariff.fromJson(Map<String, dynamic> json) {
+    return Tariff(json['time'], json['price']);
+  }
+
   String get hours {
     var d = Duration(minutes: _time);
     List<String> parts = d.toString().split(':');
@@ -15,6 +19,10 @@ class Tariff {
   }
 
   int get minutes {
+    return _time ~/ 60;
+  }
+
+  int get seconds {
     return _time;
   }
 
@@ -28,6 +36,18 @@ class Tariff {
       ending = "години";
     }
     return "<${d.inHours} $ending";
+  }
+
+  String get humanEqualHours {
+    var d = Duration(seconds: _time);
+    if (d.inHours < 1) {
+      return "${d.inMinutes} хвилин";
+    }
+    var ending = "годин";
+    if (d.inHours < 2) {
+      ending = "година";
+    }
+    return "${d.inHours} $ending";
   }
 
   String get price {
@@ -45,6 +65,7 @@ class ACLCellType {
   final String? symbol;
   final List<Tariff> _tariffs = [];
   String _currency = "UAH";
+  Tariff? _overduePayment;
 
   ACLCellType(
     this.id,
@@ -60,11 +81,20 @@ class ACLCellType {
         cellType.addTariff(Tariff(element["time"], element["price"]));
       }
     }
+    if (json.containsKey("overdue_payment") &&
+        json["overdue_payment"] != null) {
+      cellType.setOverduePayment(Tariff(
+          json["overdue_payment"]["time"], json["overdue_payment"]["price"]));
+    }
     return cellType;
   }
 
   List<Tariff> get tariff {
     return _tariffs;
+  }
+
+  Tariff? get overduePayment {
+    return _overduePayment;
   }
 
   String get onelineTitle {
@@ -81,6 +111,10 @@ class ACLCellType {
 
   void addTariff(Tariff tariff) {
     _tariffs.add(tariff);
+  }
+
+  void setOverduePayment(Tariff tariff) {
+    _overduePayment = tariff;
   }
 }
 

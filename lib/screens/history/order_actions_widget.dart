@@ -1,5 +1,6 @@
 import 'dart:async';
-
+import 'dart:js' as js show context;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mvk_app/providers/auth.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +13,6 @@ import '../../style.dart';
 import '../../widgets/button.dart';
 import '../../widgets/confirm_dialog.dart';
 import '../../widgets/order_element_widget.dart';
-import '../../widgets/sww_dialog.dart';
 
 enum OpenCellType {
   firstOpenCell,
@@ -161,6 +161,36 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
     );
   }
 
+  ElevatedDefaultButton payDebtButton() {
+    return ElevatedDefaultButton(
+      buttonColor: AppColors.dangerousColor,
+      child: isCellOpening
+          ? const SizedBox(
+              width: 25,
+              height: 25,
+              child: CircularProgressIndicator(
+                color: Colors.white,
+                strokeWidth: 2,
+              ),
+            )
+          : const Text(
+              "Сплатити борг та забрати речі",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+            ),
+      onPressed: () async {
+        try {
+          final res = await OrderApi.payDebt(order.id, token);
+          js.context.callMethod(
+              'openLiqpay', [res['data'], res['signature'], kDebugMode]);
+        } catch (e) {
+          print("order_actions_widget error: ${e}");
+          return;
+        }
+      },
+    );
+  }
+
   ElevatedDefaultButton putThingsButton(BuildContext context) {
     return ElevatedDefaultButton(
       buttonColor: AppColors.mainColor,
@@ -187,7 +217,7 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
                     return ConfirmDialog(
                         title: "Увага",
                         text:
-                            "Після підтвердження цієї дії відчиниться комірка ${order.data!["cell_id"]} та ви зможете покласти свої речі. Не забудьте зачин комірку!");
+                            "Після підтвердження цієї дії відчиниться комірка ${order.data!["cell_id"]} та ви зможете покласти свої речі. Не забудьте зачинити комірку!");
                   });
               if (confirmDialog != null) {
                 openCell();
@@ -414,13 +444,17 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
       );
     } else if (order.status == OrderStatus.expired ||
         order.timeLeftInSeconds < 1) {
-      // MAY ADD "Extend Order" action
-      content.addAll(
-        actionsSection(
-            actionButtons: [],
-            message:
-                "Час замовлення вийшов, якщо Ваші речі ще залишились в комірці, повідомте про це нам"),
+      content.add(
+        Padding(
+          padding: const EdgeInsets.only(top: 20, bottom: 10),
+          child: Text(
+            "Час замовлення вийшов ${order.humanTimePassed} назад. Вам потрібно доплатити ${order.needToPayExtra} аби мати змогу забрати свої речі",
+            textAlign: TextAlign.center,
+            style: AppStyles.bodySmallText,
+          ),
+        ),
       );
+      content.add(payDebtButton());
     } else if (order.status == OrderStatus.created ||
         order.status == OrderStatus.inProgress) {
       content.addAll(

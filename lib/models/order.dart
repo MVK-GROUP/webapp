@@ -141,6 +141,10 @@ class OrderData with ChangeNotifier {
         payData = json["pay_data"];
         paySignature = json["pay_signature"];
       }
+      if (jsonData.containsKey("overdue_payment") &&
+          jsonData["overdue_payment"] != null) {
+        data["overdue_payment"] = jsonData["overdue_payment"];
+      }
     }
     if (json.containsKey("locker") && json["locker"] != null) {
       place = '${json["locker"]["name"]}, ${json["locker"]["address"]}';
@@ -207,6 +211,45 @@ class OrderData with ChangeNotifier {
       return humanDate;
     } else {
       return "Невідомо";
+    }
+  }
+
+  String get humanTimePassed {
+    if (data != null && data!.containsKey("end_date")) {
+      var endDate = data!["end_date"] as DateTime;
+      final duration = DateTime.now().difference(endDate);
+      if (duration.inSeconds < 0) {
+        return "невідомо";
+      }
+      final diffInDays = duration.inDays;
+      var diffInHours = duration.inHours - duration.inDays * 24;
+      var diffInMinutes = duration.inMinutes - duration.inHours * 60;
+
+      String humanDate = "";
+      if (diffInDays >= 1) {
+        humanDate += "$diffInDays д. ";
+      }
+      if (diffInHours >= 1) {
+        humanDate += "$diffInHours год. ";
+      }
+      if (diffInMinutes >= 0) {
+        humanDate += "$diffInMinutes хв.";
+      }
+      return humanDate;
+    } else {
+      return "Невідомо";
+    }
+  }
+
+  String get needToPayExtra {
+    final endDate = data!["end_date"] as DateTime;
+    final diff = DateTime.now().difference(endDate).inSeconds;
+    try {
+      final overdueTariff = data!['overdue_payment'] as Map<String, dynamic>;
+      var res = (diff / overdueTariff['time']).ceil() * overdueTariff['price'];
+      return "${(res / 100).toStringAsFixed(2)} $currency";
+    } catch (e) {
+      return "--- $currency";
     }
   }
 

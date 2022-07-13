@@ -5,8 +5,8 @@ import 'package:mvk_app/providers/auth.dart';
 import 'package:mvk_app/providers/order.dart';
 import 'package:mvk_app/screens/acl/set_datetime.dart';
 import 'package:mvk_app/screens/auth/auth_screen.dart';
+import 'package:mvk_app/screens/check_payment_screen.dart';
 import 'package:mvk_app/screens/confirm_locker_screen.dart';
-import 'package:mvk_app/screens/information_screen.dart';
 import 'package:mvk_app/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -39,20 +39,35 @@ class RouteGenerator {
         settings: settings,
       );
     }
-    if (queryParameters.containsKey("payment-status")) {
-      int? orderId;
-      if (queryParameters.containsKey("order_id") &&
-          int.tryParse(queryParameters["order_id"]) != null) {
-        orderId = int.parse(queryParameters["order_id"]);
+    if (queryParameters.containsKey("payment-status") &&
+        queryParameters.containsKey("order_id") &&
+        int.tryParse(queryParameters["order_id"]) != null) {
+      int orderId = int.parse(queryParameters["order_id"]);
+
+      var paymentType = PaymentType.unknown;
+      var isDebt = false;
+      if (queryParameters.containsKey("type") &&
+          queryParameters['type'] == 'debt') {
+        isDebt = true;
       }
 
-      if (queryParameters["payment-status"] == 'success' && orderId != null) {
+      if (queryParameters["payment-status"] == 'success') {
+        paymentType = isDebt
+            ? PaymentType.successDebtPayment
+            : PaymentType.successPayment;
+      }
+      if (queryParameters["payment-status"] == 'error') {
+        paymentType =
+            isDebt ? PaymentType.errorDebtPayment : PaymentType.errorPayment;
+      }
+
+      if (paymentType != PaymentType.unknown) {
         return MaterialPageRoute(
           builder: (context) {
             return auth.isAuth
-                ? SplashScreen(
-                    type: SplashScreenType.checkPayment,
-                    data: orderId ?? 0,
+                ? CheckPaymentScreen(
+                    type: paymentType,
+                    orderId: orderId,
                   )
                 : FutureBuilder(
                     future: auth.tryAutoLogin(),
@@ -60,22 +75,8 @@ class RouteGenerator {
                         authResultSnapshot.connectionState ==
                                 ConnectionState.waiting
                             ? const SplashScreen()
-                            : const AuthScreen());
-          },
-          settings: settings,
-        );
-      } else if (queryParameters["payment-status"] == 'error') {
-        return MaterialPageRoute(
-          builder: (context) {
-            return auth.isAuth
-                ? ErrorPaymentScreen()
-                : FutureBuilder(
-                    future: auth.tryAutoLogin(),
-                    builder: (context, authResultSnapshot) =>
-                        authResultSnapshot.connectionState ==
-                                ConnectionState.waiting
-                            ? const SplashScreen()
-                            : const AuthScreen());
+                            : const AuthScreen(),
+                  );
           },
           settings: settings,
         );

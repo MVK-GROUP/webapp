@@ -1,32 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:mvk_app/screens/global_menu.dart';
+import 'package:mvk_app/screens/history/history_screen.dart';
 
 import '../style.dart';
 import '../widgets/button.dart';
 
-class SuccessPaymentScreen extends StatelessWidget {
-  static const routeName = '/success-payment/';
-
-  final int? orderId;
-
-  const SuccessPaymentScreen({this.orderId, Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: InformationWidget(
-        title: orderId == null ? "Success" : "Success. OrderId: $orderId",
-      ),
-    );
-  }
+enum ErrorNextPage {
+  historyScreen,
+  mainScreen,
 }
 
 class ErrorPaymentScreen extends StatelessWidget {
   static const routeName = '/error-payment/';
 
   final String? title;
-
-  const ErrorPaymentScreen({this.title, Key? key}) : super(key: key);
+  final ErrorNextPage nextPage;
+  const ErrorPaymentScreen(
+      {this.title, this.nextPage = ErrorNextPage.mainScreen, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,13 +48,24 @@ class ErrorPaymentScreen extends StatelessWidget {
                 style: Theme.of(context).textTheme.bodyText1,
               ),
               const SizedBox(height: 40),
-              ElevatedIconButton(
-                icon: const Icon(Icons.home),
-                text: "До головного меню",
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, MenuScreen.routeName);
-                },
-              ),
+              if (nextPage == ErrorNextPage.mainScreen)
+                ElevatedIconButton(
+                  icon: const Icon(Icons.home),
+                  text: "До головного меню",
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(
+                        context, MenuScreen.routeName);
+                  },
+                ),
+              if (nextPage == ErrorNextPage.historyScreen)
+                ElevatedIconButton(
+                  icon: const Icon(Icons.history),
+                  text: "Повернутись назад",
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(
+                        context, HistoryScreen.routeName);
+                  },
+                ),
             ],
           ),
         ),
