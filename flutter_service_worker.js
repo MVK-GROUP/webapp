@@ -4,6 +4,7 @@ const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
   "manifest.json": "79ce60b012acc2aac72fa8a985f06fa5",
+"assets/assets/logo/mvk_logo.png": "9e0632ec6a51d541d7d13cb99178f744",
 "assets/assets/logo/liqpay_logo.svg": "63f084da9e7ecc88a072f0395043324c",
 "assets/assets/logo/liqpay_logo.png": "ed744736fc35909e9d50253964d024de",
 "assets/assets/data/orders.json": "4eba4a8639062815cd0d3e8c4a0fa312",
@@ -283,24 +284,24 @@ const RESOURCES = {
 "assets/packages/libphonenumber_plugin/js/stringbuffer.js": "5d8ac81dc841740b2a94e8daa7be8027",
 "assets/packages/libphonenumber_plugin/js/libphonenumber.js": "8578efe7b5232496cd05944ae9ae8ce8",
 "assets/NOTICES": "82616c4f97058f4a33f016dca5f62074",
-"assets/AssetManifest.json": "72fb4a1a77d3939f3d0aed92d498816e",
+"assets/AssetManifest.json": "706301d5ebfe6578789629fec37afc50",
 "assets/FontManifest.json": "7b2a36307916a9721811788013e65289",
 "assets/fonts/MaterialIcons-Regular.otf": "95db9098c58fd6db106f1116bae85a0b",
 "version.json": "e371efac991124ece08a5445aa24b5d8",
 "flutter.js": "eb2682e33f25cd8f1fc59011497c35f8",
 "main.js": "0e964ed4d492ae3f4f65368db87fd005",
-"icons/Icon-512.png": "42bab81f1e23cd1ce49a011399731f03",
-"icons/Icon-maskable-512.png": "42bab81f1e23cd1ce49a011399731f03",
-"icons/Icon-192.png": "3b04175c6495f4788d10c50f623fabec",
-"icons/Icon-maskable-192.png": "3b04175c6495f4788d10c50f623fabec",
+"icons/Icon-512.png": "f18fc548de963ee96a2ad57274a614c0",
+"icons/Icon-maskable-512.png": "f18fc548de963ee96a2ad57274a614c0",
+"icons/Icon-192.png": "3ef730d75e37892d470100cf0c42eb45",
+"icons/Icon-maskable-192.png": "3ef730d75e37892d470100cf0c42eb45",
 "canvaskit/canvaskit.wasm": "4b83d89d9fecbea8ca46f2f760c5a9ba",
 "canvaskit/canvaskit.js": "c2b4e5f3d7a3d82aed024e7249a78487",
 "canvaskit/profiling/canvaskit.wasm": "95e736ab31147d1b2c7b25f11d4c32cd",
 "canvaskit/profiling/canvaskit.js": "ae2949af4efc61d28a4a80fffa1db900",
-"index.html": "69e6737920e62ef8940bea872b89c832",
-"/": "69e6737920e62ef8940bea872b89c832",
-"favicon.png": "b1652c1cf80c663c0d41c0d417095b74",
-"main.dart.js": "d04e07de03b412972d95184c4039832e"
+"index.html": "7acba702192efcd1318bb2bd8646ee93",
+"/": "7acba702192efcd1318bb2bd8646ee93",
+"favicon.png": "92792c7b1b53e6aec1e9df4a72065fb1",
+"main.dart.js": "c03b8ff4ccc0927e897c4e57f53ae9b3"
 };
 
 // The application shell files that are downloaded before a service worker can
