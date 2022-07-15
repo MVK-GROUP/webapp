@@ -223,7 +223,6 @@ class _SuccessOrderScreenState extends State<SuccessOrderScreen> {
       setState(() {
         _isCellOpening = true;
       });
-      //numTask = await OrderApi.openCell(order.id);
       numTask = await OrderApi.putThings(order.id, token);
       if (numTask == null) {
         throw Exception();

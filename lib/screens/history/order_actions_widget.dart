@@ -306,7 +306,17 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
       }
 
       if (numTask == null) {
-        throw Exception();
+        await showDialog(
+            context: context,
+            builder: (ctx) => const InformationDialog(
+                  title: "Щось пішло не так",
+                  text: "Наразі неможливо відчинити цю комірку",
+                ));
+        setState(() {
+          isJustCellOpening = false;
+          isCellOpening = false;
+        });
+        return;
       }
     } catch (e) {
       await showDialog(
