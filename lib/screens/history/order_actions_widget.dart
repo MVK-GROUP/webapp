@@ -3,6 +3,7 @@ import 'dart:js' as js show context;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mvk_app/providers/auth.dart';
+import 'package:mvk_app/providers/order.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -395,6 +396,8 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
         showDialogByOpenCellTaskStatus(
             context, order.status == OrderStatus.completed ? 1 : 2);
       }
+      await Provider.of<OrdersNotifier>(context, listen: false)
+          .checkOrder(order.id);
       setState(() {
         isCellOpening = false;
         isJustCellOpening = false;

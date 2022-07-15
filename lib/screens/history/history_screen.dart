@@ -25,9 +25,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
   late Future _ordersFuture;
   var isInit = false;
 
-  Future _obtainOrdersFuture() {
-    var data = Provider.of<OrdersNotifier>(context, listen: false);
-
+  Future _obtainOrdersFuture() async {
+    var data = Provider.of<OrdersNotifier>(context, listen: true);
     if (data.orders == null) {
       return data.fetchAndSetOrders();
     } else {
@@ -42,10 +41,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   @override
-  void initState() {
-    _ordersFuture = _obtainOrdersFuture();
-    showOrderDetailFromArgs();
-    super.initState();
+  void didChangeDependencies() {
+    if (!isInit) {
+      _ordersFuture = _obtainOrdersFuture();
+      showOrderDetailFromArgs();
+      isInit = true;
+    }
+    super.didChangeDependencies();
   }
 
   @override

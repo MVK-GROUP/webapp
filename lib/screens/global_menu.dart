@@ -133,7 +133,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   return Column(
                     children: [
                       Container(
-                        padding: EdgeInsets.only(top: 40),
+                        padding: const EdgeInsets.only(top: 40),
                         width: 220,
                         child: Image.asset(
                           "assets/logo/mvk_logo.png",
