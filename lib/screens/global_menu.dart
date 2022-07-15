@@ -132,11 +132,24 @@ class _MenuScreenState extends State<MenuScreen> {
                   }
                   return Column(
                     children: [
-                      ScreenTitle(
-                        'Головне меню',
-                        subTitle: locker == null
-                            ? "Для нових замовлень потрібно знайти Locker"
-                            : locker?.fullLockerName,
+                      Container(
+                        padding: EdgeInsets.only(top: 40),
+                        width: 220,
+                        child: Image.asset(
+                          "assets/logo/mvk_logo.png",
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 20),
+                        child: Text(
+                          locker == null
+                              ? "Для нових замовлень потрібно знайти Locker"
+                              : locker?.fullLockerName ?? "",
+                          textAlign: TextAlign.center,
+                          style: AppStyles.subtitleTextStyle,
+                        ),
                       ),
                       if (locker == null)
                         MainBlock(
