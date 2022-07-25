@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mvk_app/models/lockers.dart';
@@ -8,6 +9,7 @@ import 'package:mvk_app/screens/auth/auth_screen.dart';
 import 'package:mvk_app/screens/check_payment_screen.dart';
 import 'package:mvk_app/screens/confirm_locker_screen.dart';
 import 'package:mvk_app/screens/splash_screen.dart';
+import 'package:mvk_app/utilities/locales.dart';
 import 'package:provider/provider.dart';
 
 import 'style.dart';
@@ -96,6 +98,11 @@ class RouteGenerator {
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
 
+  Future<LocaleObject> _initializedLocale() async {
+    var locale = SupportedLocales.defaultLocale;
+    return locale;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -116,37 +123,59 @@ class App extends StatelessWidget {
           ),
         ],
         child: Consumer<Auth>(builder: (ctx, auth, _) {
-          return MaterialApp(
-            title: 'MVK APP',
-            home: auth.isAuth
-                ? const MenuScreen()
-                : FutureBuilder(
-                    future: auth.tryAutoLogin(),
-                    builder: (context, authResultSnapshot) =>
-                        authResultSnapshot.connectionState ==
-                                ConnectionState.waiting
-                            ? const SplashScreen()
-                            : const AuthScreen()),
-            routes: {
-              EnterLockerIdScreen.routeName: (ctx) =>
-                  const EnterLockerIdScreen(),
-              SizeSelectionScreen.routeName: (ctx) =>
-                  const SizeSelectionScreen(),
-              AuthScreen.routeName: (ctx) => const AuthScreen(),
-              QrScannerScreen.routeName: (ctx) => QrScannerScreen(),
-              MenuScreen.routeName: (ctx) => const MenuScreen(),
-              PayScreen.routeName: (ctx) => const PayScreen(),
-              SuccessOrderScreen.routeName: (ctx) => const SuccessOrderScreen(),
-              HistoryScreen.routeName: (ctx) => const HistoryScreen(),
-              GoodsScreen.routeName: (ctx) => const GoodsScreen(),
-              AllGoodsScreen.routeName: (ctx) => const AllGoodsScreen(),
-              SetACLDateTimeScreen.routeName: (ctx) =>
-                  const SetACLDateTimeScreen(),
-            },
-            onGenerateRoute: (RouteSettings settings) =>
-                RouteGenerator.generateRoute(settings, context, auth),
-            theme: _theme(),
-          );
+          return FutureBuilder(
+              future: _initializedLocale(),
+              builder: (ctx, snapshot) {
+                if (snapshot.hasData) {
+                  print(
+                      "snapshot data: ${(snapshot.data as LocaleObject).locale}");
+                  return MaterialApp(
+                    title: 'MVK APP',
+                    localizationsDelegates: context.localizationDelegates,
+                    supportedLocales: context.supportedLocales,
+                    locale: SupportedLocales.defaultLocale.locale,
+                    home: auth.isAuth
+                        ? const MenuScreen()
+                        : FutureBuilder(
+                            future: auth.tryAutoLogin(),
+                            builder: (context, authResultSnapshot) =>
+                                authResultSnapshot.connectionState ==
+                                        ConnectionState.waiting
+                                    ? const SplashScreen()
+                                    : const AuthScreen()),
+                    routes: {
+                      EnterLockerIdScreen.routeName: (ctx) =>
+                          const EnterLockerIdScreen(),
+                      SizeSelectionScreen.routeName: (ctx) =>
+                          const SizeSelectionScreen(),
+                      AuthScreen.routeName: (ctx) => const AuthScreen(),
+                      QrScannerScreen.routeName: (ctx) => QrScannerScreen(),
+                      MenuScreen.routeName: (ctx) => const MenuScreen(),
+                      PayScreen.routeName: (ctx) => const PayScreen(),
+                      SuccessOrderScreen.routeName: (ctx) =>
+                          const SuccessOrderScreen(),
+                      HistoryScreen.routeName: (ctx) => const HistoryScreen(),
+                      GoodsScreen.routeName: (ctx) => const GoodsScreen(),
+                      AllGoodsScreen.routeName: (ctx) => const AllGoodsScreen(),
+                      SetACLDateTimeScreen.routeName: (ctx) =>
+                          const SetACLDateTimeScreen(),
+                    },
+                    onGenerateRoute: (RouteSettings settings) =>
+                        RouteGenerator.generateRoute(settings, context, auth),
+                    theme: _theme(),
+                  );
+                } else {
+                  return const MaterialApp(
+                    home: Center(
+                      child: SizedBox(
+                        height: 150,
+                        width: 150,
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  );
+                }
+              });
         }));
   }
 

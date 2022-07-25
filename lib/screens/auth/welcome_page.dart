@@ -1,15 +1,27 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:mvk_app/screens/auth/auth_screen.dart';
+import 'package:mvk_app/style.dart';
+import 'package:mvk_app/utilities/locales.dart';
 import '../../widgets/image_banner.dart';
 import '../../widgets/main_button.dart';
 
 class WelcomePage extends StatelessWidget {
   final Function(PageType) changePage;
+  final Function(LocaleObject?) selectedLocale;
+  final LocaleObject currentLocale;
 
-  const WelcomePage({required this.changePage, Key? key}) : super(key: key);
+  const WelcomePage(
+      {required this.changePage,
+      required this.currentLocale,
+      required this.selectedLocale,
+      Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    print("text: ${'welcome_title'.tr()}");
+    print(context.locale.languageCode);
     return CustomScrollView(slivers: [
       SliverFillRemaining(
         hasScrollBody: false,
@@ -27,12 +39,26 @@ class WelcomePage extends StatelessWidget {
                 ),
                 Container(
                   child: Text(
-                    'Ми надаємо послуги автоматичних камер зберігання, видачі товарів та багато іншого.',
+                    'welcome_title'.tr(),
                     style: Theme.of(context).textTheme.headline6,
                     textAlign: TextAlign.center,
                   ),
                   margin: const EdgeInsets.fromLTRB(10, 20, 10, 0),
                   padding: const EdgeInsets.all(6.0),
+                ),
+                const Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.public,
+                      color: AppColors.mainColor,
+                      size: 32,
+                    ),
+                    const SizedBox(width: 20),
+                    LanguageDropDownWidget(
+                        locale: currentLocale, selectedLocale: selectedLocale),
+                  ],
                 ),
                 const Spacer(),
                 Container(
@@ -52,5 +78,37 @@ class WelcomePage extends StatelessWidget {
             )),
       )
     ]);
+  }
+}
+
+class LanguageDropDownWidget extends StatelessWidget {
+  final LocaleObject locale;
+  final Function selectedLocale;
+
+  const LanguageDropDownWidget(
+      {required this.locale, required this.selectedLocale, Key? key})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton<LocaleObject>(
+      value: locale,
+      icon: const Icon(Icons.keyboard_arrow_down),
+      elevation: 4,
+      underline: null,
+      style: const TextStyle(
+          color: AppColors.mainColor,
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 1.8),
+      focusColor: Colors.white,
+      onChanged: (LocaleObject? newValue) => selectedLocale(newValue),
+      items: SupportedLocales.lockaleObjects.map((LocaleObject value) {
+        return DropdownMenuItem(
+          value: value,
+          child: Text(value.title),
+        );
+      }).toList(),
+    );
   }
 }
