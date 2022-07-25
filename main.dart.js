@@ -75456,21 +75456,21 @@ q=A.a([$.asu()],t.VS)
 return A.ayI(!0,p,A.b(this.z,"_focusNode"),s,q,B.os,4,r,new A.amE(this))},
 D(a,b){var s,r,q,p,o,n=this,m=null
 if(n.f)s=B.fB
-else{s=A.az(A.cO("phone_verification",m),m,m,m,m,A.a9(b).R8.e,m,m)
-r=A.dA(m,m,m,A.cO("otp_enter_code",m))
+else{s=A.az(A.cO("auth.phone_verification",m),m,m,m,m,A.a9(b).R8.e,m,m)
+r=A.dA(m,m,m,A.cO("auth.otp_enter_code",m))
 q=A.dA(m,m,B.iy,n.a.d)
-p=A.cO("otp_change_number",m)
+p=A.cO("auth.otp_change_number",m)
 o=A.afw(m)
 o.bj=new A.amH(n)
 p=A.Pb(m,m,B.bd,!0,m,A.dA(A.a([r,q,A.dA(m,o,B.a7N," "+p)],t.VO),m,B.ou,m),B.C,m,m,1,B.aJ)
 r=A.b(n.Q,"screenWidth")>385?30:10
 r=A.a([B.EE,s,B.aU,A.aL(m,p,B.j,m,m,m,m,m,new A.aa(r,5,r,5),m,m,m,m),B.on,n.a8k(),B.aU],t.p)
-if(n.e)r.push(A.az(A.cO("otp_invalid_code",m),m,m,m,m,B.a7a,B.C,m))
+if(n.e)r.push(A.az(A.cO("auth.otp_invalid_code",m),m,m,m,m,B.a7a,B.C,m))
 r.push(B.a5S)
 r.push(B.aV)
 if(!n.r&&!n.w){s=t.N
-r.push(A.az(A.cO("otp_repeat",A.d(["time",B.f.j(n.y)],s,s)),m,m,m,m,B.aaj,m,m))}if(n.w)r.push(B.a5O)
-if(n.r&&!n.w)r.push(A.Qs(!1,A.az(A.cO("otp_send_new_code",m),m,m,m,m,A.fJ(m,m,A.a9(b).as.f,m,m,m,m,m,m,m,m,18,m,B.at,m,m,!0,m,m,m,m,m,m,m,m),m,m),B.j,m,m,m,m,m,new A.amI(n),m))
+r.push(A.az(A.cO("auth.otp_repeat",A.d(["time",B.f.j(n.y)],s,s)),m,m,m,m,B.aaj,m,m))}if(n.w)r.push(B.a5O)
+if(n.r&&!n.w)r.push(A.Qs(!1,A.az(A.cO("auth.otp_send_new_code",m),m,m,m,m,A.fJ(m,m,A.a9(b).as.f,m,m,m,m,m,m,m,m,18,m,B.at,m,m,!0,m,m,m,m,m,m,m,m),m,m),B.j,m,m,m,m,m,new A.amI(n),m))
 r.push(B.aP)
 s=A.bD(r,B.w,B.D,B.A)}return new A.aw(B.Km,s,m)},
 G_(){this.x=A.lh(B.ds,new A.amM(this))},
@@ -75531,13 +75531,13 @@ q=3
 s=6
 return A.v(A.GD(k.a.d),$async$$0)
 case 6:m=b
-if(!m)k.FV(A.cO("otp_sending_error",null))
+if(!m)k.FV(A.cO("auth.otp_sending_error",null))
 q=1
 s=5
 break
 case 3:q=2
 j=p
-k.FV(A.cO("otp_sending_error",null))
+k.FV(A.cO("auth.otp_sending_error",null))
 s=5
 break
 case 2:s=1
@@ -75583,11 +75583,11 @@ this.x.l(0)
 this.aP(0)},
 aI(){$.K.as$.push(new A.an8(this))
 this.aV()},
-D(a,b){var s,r=this,q=null,p=A.az(A.cO("phone_verification",q),q,q,q,q,A.a9(b).R8.e,q,q),o=A.cO("phone_number",q)
+D(a,b){var s,r=this,q=null,p=A.az(A.cO("auth.phone_verification",q),q,q,q,q,A.a9(b).R8.e,q,q),o=A.cO("auth.phone_number",q)
 o=A.ats(q,B.a3v,q,q,q,q,q,q,!0,new A.hb(4,A.cq(8),new A.d3(A.a9(b).as.f,3,B.bh)),q,q,q,q,q,q,q,q,q,q,new A.hb(4,A.cq(8),new A.d3(A.a9(b).as.CW,3,B.bh)),q,q,q,q,q,B.a8d,o,q,q,q,q,!1,q,q,q,q,q,q,q,q,q,q,q,q,q,q,q,q,q)
 o=A.aL(q,new A.yx(B.a4w,new A.an5(r),new A.an6(),r.e,B.os,r.r,!1,!0,B.fu,!1,B.a7S,B.iz,o,r.x,q),B.j,q,q,q,q,q,B.Ki,q,q,q,q)
-s=A.aL(q,A.az(A.cO("phone_help_text",q),q,q,q,q,B.ou,q,q),B.j,q,q,q,q,q,B.Kk,q,q,q,q)
-return new A.aw(B.qd,A.axB(A.bD(A.a([B.EE,p,B.aU,o,s,B.aP,B.aV,r.w?B.a_w:A.ay6(q,B.jM,30,new A.an7(r,b),A.cO("phone_get_code",q)),B.aP],t.p),B.w,B.bl,B.A),r.d),q)}}
+s=A.aL(q,A.az(A.cO("auth.phone_help_text",q),q,q,q,q,B.ou,q,q),B.j,q,q,q,q,q,B.Kk,q,q,q,q)
+return new A.aw(B.qd,A.axB(A.bD(A.a([B.EE,p,B.aU,o,s,B.aP,B.aV,r.w?B.a_w:A.ay6(q,B.jM,30,new A.an7(r,b),A.cO("auth.phone_get_code",q)),B.aP],t.p),B.w,B.bl,B.A),r.d),q)}}
 A.an8.prototype={
 $1(a){var s=this.a,r=s.c
 r.toString
@@ -75600,7 +75600,7 @@ A.an6.prototype={
 $1(a){var s
 if(a!=null){s=a.length
 s=s===0||s<6}else s=!0
-if(s)return A.cO("phone_invalid_number",null)
+if(s)return A.cO("auth.phone_invalid_number",null)
 return null},
 $S:508}
 A.an7.prototype={
@@ -75643,11 +75643,11 @@ $0(){this.a.w=!0},
 $S:0}
 A.an2.prototype={
 $1(a){var s=null
-return A.lR(s,s,s,B.G,s,A.az(A.cO("phone_not_sent",s),s,s,s,s,s,s,s),s)},
+return A.lR(s,s,s,B.G,s,A.az(A.cO("auth.phone_not_sent",s),s,s,s,s,s,s,s),s)},
 $S:17}
 A.an3.prototype={
 $1(a){var s=null
-return A.lR(s,s,s,B.G,s,A.az(A.cO("phone_not_sent",s),s,s,s,s,s,s,s),s)},
+return A.lR(s,s,s,B.G,s,A.az(A.cO("auth.phone_not_sent",s),s,s,s,s,s,s,s),s)},
 $S:17}
 A.an4.prototype={
 $0(){this.a.w=!1},
@@ -76159,7 +76159,7 @@ r.aC()
 A.bn(a,!1).oN(s,null,t.X)},
 ad1(a,b,c){var s,r,q,p,o,n=null,m=A.a([],t.UT)
 for(s=b.y,r=s.length,q=0;p=s.length,q<p;s.length===r||(0,A.T)(s),++q){o=s[q]
-m.push(new A.ti(n,o.e,o.f,new A.alS(this,a,o),n))}if(p!==0&&c!=null&&J.nK(c))m.push(A.aIU(B.c.gL(s).e,n,new A.alT(this,c,a),A.cO("pick_up_stuff",n)))
+m.push(new A.ti(n,o.e,o.f,new A.alS(this,a,o),n))}if(p!==0&&c!=null&&J.nK(c))m.push(A.aIU(B.c.gL(s).e,n,new A.alT(this,c,a),A.cO("home.pick_up_stuff",n)))
 return m},
 jx(a,b){return this.ST(a,b)},
 ST(a,b){var s=0,r=A.B(t.z)
@@ -76169,7 +76169,7 @@ return A.v(A.c1(B.N,!0,new A.alV(b),a,t.z),$async$jx)
 case 2:return A.z(null,r)}})
 return A.A($async$jx,r)},
 ac3(a){var s=null
-return A.a([B.aP,new A.yn(new A.alP(a),B.qJ,A.cO("find_locker",s),s),B.aP,new A.yn(new A.alQ(a),B.qH,A.cO("history",s),s)],t.p)}}
+return A.a([B.aP,new A.yn(new A.alP(a),B.qJ,A.cO("home.find_locker",s),s),B.aP,new A.yn(new A.alQ(a),B.qH,A.cO("home.history",s),s)],t.p)}}
 A.alI.prototype={
 $1(a){return!1},
 $S:5}
@@ -76190,8 +76190,8 @@ o.aC()}return A.z(null,r)}})
 return A.A($async$$0,r)},
 $S:12}
 A.alJ.prototype={
-$1(a){var s=A.cO("logout",null)
-return A.a0v(null,A.cO("logout_confirm",null),s)},
+$1(a){var s=A.cO("home.logout",null)
+return A.a0v(null,A.cO("home.logout_confirm",null),s)},
 $S:77}
 A.alK.prototype={
 $1(a){return!1},
@@ -76207,10 +76207,10 @@ $2(a,b){var s,r,q,p=null
 if(b.a===B.ck)return B.ei
 else{s=b.c
 if(s!=null){A.eo("Error: "+A.e(J.bC(s)))
-return A.dU(A.az(A.cO("unknown_error",p),p,p,p,p,p,p,p),p,p)}s=A.aL(p,A.ml("assets/logo/mvk_logo.png",p,B.dm,p,p,p),B.j,p,p,p,p,p,p,B.K2,p,p,220)
+return A.dU(A.az(A.cO("home.unknown_error",p),p,p,p,p,p,p,p),p,p)}s=A.aL(p,A.ml("assets/logo/mvk_logo.png",p,B.dm,p,p,p),B.j,p,p,p,p,p,p,B.K2,p,p,220)
 r=this.a
 q=r.d
-if(q==null)q=A.cO("no_locker",p)
+if(q==null)q=A.cO("home.no_locker",p)
 else q=q.gOs()
 q=A.a([s,new A.aw(B.c_,A.az(q,p,p,p,p,B.iv,B.C,p),p)],t.p)
 if(r.d==null)q.push(new A.jF(A.a6D(r.ac3(a),p,!1),30,400,p))
@@ -76219,8 +76219,8 @@ if(s!=null)q.push(new A.jF(A.a6D(r.ad1(a,s,t.wd.a(b.b)),p,!0),30,500,p))
 return A.bD(q,B.w,B.D,B.A)}},
 $S:160}
 A.alU.prototype={
-$1(a){var s=null,r=A.az(A.cO("not_implemented_title",s),s,s,s,s,s,s,s)
-return A.lR(s,s,s,B.G,s,A.az(A.cO("not_implemented_text",s),s,s,s,s,s,s,s),r)},
+$1(a){var s=null,r=A.az(A.cO("home.not_implemented_title",s),s,s,s,s,s,s,s)
+return A.lR(s,s,s,B.G,s,A.az(A.cO("home.not_implemented_text",s),s,s,s,s,s,s,s),r)},
 $S:17}
 A.alS.prototype={
 $0(){return this.a.adF(this.b,this.c)},
