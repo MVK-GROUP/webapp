@@ -80,7 +80,8 @@ class _MenuScreenState extends State<MenuScreen> {
               var isConfirmed = await showDialog(
                   context: context,
                   builder: (context) => ConfirmDialog(
-                      title: "logout".tr(), text: "logout_confirm".tr()));
+                      title: "home.logout".tr(),
+                      text: "home.logout_confirm".tr()));
               if (isConfirmed != null) {
                 Navigator.pushNamedAndRemoveUntil(
                     context, AuthScreen.routeName, (route) => false);
@@ -125,7 +126,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   if (snapshot.error != null) {
                     print("Error: ${snapshot.error.toString()}");
                     return Center(
-                      child: Text("unknown_error".tr()),
+                      child: Text("home.unknown_error".tr()),
                     );
                   }
                   return Column(
@@ -143,7 +144,7 @@ class _MenuScreenState extends State<MenuScreen> {
                             horizontal: 20, vertical: 20),
                         child: Text(
                           locker == null
-                              ? "no_locker".tr()
+                              ? "home.no_locker".tr()
                               : locker?.fullLockerName ?? "",
                           textAlign: TextAlign.center,
                           style: AppStyles.subtitleTextStyle,
@@ -181,8 +182,8 @@ class _MenuScreenState extends State<MenuScreen> {
         showDialog(
             context: context,
             builder: (context) => AlertDialog(
-                  title: Text("not_implemented_title".tr()),
-                  content: Text("not_implemented_text".tr()),
+                  title: Text("home.not_implemented_title".tr()),
+                  content: Text("home.not_implemented_text".tr()),
                 ));
         return;
     }
@@ -207,7 +208,7 @@ class _MenuScreenState extends State<MenuScreen> {
         activeOrders.isNotEmpty) {
       items.add(PhotoTile(
         backgroundColor: lckr.services.first.color,
-        title: "pick_up_stuff".tr(),
+        title: "home.pick_up_stuff".tr(),
         onTap: () {
           if (activeOrders.length > 1) {
             Navigator.push(
@@ -241,7 +242,7 @@ class _MenuScreenState extends State<MenuScreen> {
     return [
       const SizedBox(height: 20),
       IconTile(
-        text: "find_locker".tr(),
+        text: "home.find_locker".tr(),
         icon: Icons.qr_code_scanner_outlined,
         onTap: () {
           Navigator.pushNamed(context, EnterLockerIdScreen.routeName);
@@ -249,7 +250,7 @@ class _MenuScreenState extends State<MenuScreen> {
       ),
       const SizedBox(height: 20),
       IconTile(
-        text: "history".tr(),
+        text: "home.history".tr(),
         icon: Icons.history,
         onTap: () {
           Navigator.pushNamed(context, HistoryScreen.routeName);

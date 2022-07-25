@@ -53,7 +53,7 @@ class _PhoneWidgetState extends State<PhoneWidget> {
               height: 50,
             ),
             Text(
-              'phone_verification'.tr(),
+              'auth.phone_verification'.tr(),
               style: Theme.of(context).textTheme.headline4,
             ),
             const SizedBox(
@@ -65,7 +65,7 @@ class _PhoneWidgetState extends State<PhoneWidget> {
                 autoFocus: true,
                 focusNode: _focusNode,
                 inputDecoration: InputDecoration(
-                    hintText: 'phone_number'.tr(),
+                    hintText: 'auth.phone_number'.tr(),
                     hintStyle: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -87,7 +87,7 @@ class _PhoneWidgetState extends State<PhoneWidget> {
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty || value.length < 6) {
-                    return 'phone_invalid_number'.tr();
+                    return 'auth.phone_invalid_number'.tr();
                   }
                   return null;
                 },
@@ -109,7 +109,7 @@ class _PhoneWidgetState extends State<PhoneWidget> {
             ),
             Container(
               child: Text(
-                'phone_help_text'.tr(),
+                'auth.phone_help_text'.tr(),
                 style: const TextStyle(fontSize: 18, color: Colors.black45),
               ),
               margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
@@ -121,7 +121,7 @@ class _PhoneWidgetState extends State<PhoneWidget> {
             _isSendingPhone
                 ? const MainButton(isWaitingButton: true, mHorizontalInset: 30)
                 : MainButton(
-                    text: 'phone_get_code'.tr(),
+                    text: 'auth.phone_get_code'.tr(),
                     onButtonPress: () async {
                       if (!formKey.currentState!.validate()) {
                         return;
@@ -143,18 +143,17 @@ class _PhoneWidgetState extends State<PhoneWidget> {
                             showDialog(
                                 context: context,
                                 builder: (context) => AlertDialog(
-                                      content: Text("phone_not_sent".tr()),
+                                      content: Text("auth.phone_not_sent".tr()),
                                     ));
                           }
                         } catch (e) {
                           showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
-                                    content: Text("phone_not_sent".tr()),
+                                    content: Text("auth.phone_not_sent".tr()),
                                   ));
                         }
                       }
-
                       setState(() {
                         _isSendingPhone = false;
                       });

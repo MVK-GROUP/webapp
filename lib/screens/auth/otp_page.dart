@@ -116,7 +116,7 @@ class _OtpNewPageState extends State<OtpNewPage> {
                   height: 50,
                 ),
                 Text(
-                  'phone_verification'.tr(),
+                  'auth.phone_verification'.tr(),
                   style: Theme.of(context).textTheme.headline4,
                 ),
                 const SizedBox(
@@ -129,13 +129,13 @@ class _OtpNewPageState extends State<OtpNewPage> {
                         style: const TextStyle(
                             fontSize: 18, color: Colors.black45),
                         children: [
-                          TextSpan(text: 'otp_enter_code'.tr()),
+                          TextSpan(text: 'auth.otp_enter_code'.tr()),
                           TextSpan(
                             text: widget.phoneNumber,
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           TextSpan(
-                              text: ' ' + 'otp_change_number'.tr(),
+                              text: ' ' + 'auth.otp_change_number'.tr(),
                               style: const TextStyle(
                                   color: AppColors.secondaryColor),
                               recognizer: TapGestureRecognizer()
@@ -154,7 +154,7 @@ class _OtpNewPageState extends State<OtpNewPage> {
                 const SizedBox(height: 10),
                 if (_isWrongCode)
                   Text(
-                    'otp_invalid_code'.tr(),
+                    'auth.otp_invalid_code'.tr(),
                     style: const TextStyle(
                       color: Colors.red,
                       fontSize: 14,
@@ -168,7 +168,8 @@ class _OtpNewPageState extends State<OtpNewPage> {
                 const Spacer(),
                 if (!_isCanResend && !_isResendLoading)
                   Text(
-                    'otp_repeat'.tr(namedArgs: {'time': _start.toString()}),
+                    'auth.otp_repeat'
+                        .tr(namedArgs: {'time': _start.toString()}),
                     style: const TextStyle(fontSize: 16, color: Colors.black45),
                   ),
                 if (_isResendLoading)
@@ -191,10 +192,10 @@ class _OtpNewPageState extends State<OtpNewPage> {
                         final wasSent =
                             await AuthApi.createOtp(widget.phoneNumber);
                         if (!wasSent) {
-                          showSnackbarMessage("otp_sending_error".tr());
+                          showSnackbarMessage("auth.otp_sending_error".tr());
                         }
                       } catch (e) {
-                        showSnackbarMessage("otp_sending_error".tr());
+                        showSnackbarMessage("auth.otp_sending_error".tr());
                       }
 
                       setState(() {
@@ -205,7 +206,7 @@ class _OtpNewPageState extends State<OtpNewPage> {
                       });
                     },
                     child: Text(
-                      'otp_send_new_code'.tr(),
+                      'auth.otp_send_new_code'.tr(),
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.secondary,
                           fontWeight: FontWeight.bold,
