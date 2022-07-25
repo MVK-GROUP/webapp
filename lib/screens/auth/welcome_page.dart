@@ -20,8 +20,6 @@ class WelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("text: ${'welcome_title'.tr()}");
-    print(context.locale.languageCode);
     return CustomScrollView(slivers: [
       SliverFillRemaining(
         hasScrollBody: false,
@@ -39,7 +37,7 @@ class WelcomePage extends StatelessWidget {
                 ),
                 Container(
                   child: Text(
-                    'welcome_title'.tr(),
+                    'auth.welcome_title'.tr(),
                     style: Theme.of(context).textTheme.headline6,
                     textAlign: TextAlign.center,
                   ),
@@ -65,7 +63,7 @@ class WelcomePage extends StatelessWidget {
                   margin:
                       const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
                   child: MainButton(
-                    text: 'Почати',
+                    text: 'auth.welcome_start'.tr(),
                     icon: Icons.arrow_right_alt,
                     iconLocation: IconLocation.right,
                     onButtonPress: () => changePage(PageType.enterPhone),

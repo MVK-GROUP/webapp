@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:mvk_app/api/http_exceptions.dart';
 import 'package:mvk_app/models/order.dart';
@@ -17,7 +18,6 @@ import '../style.dart';
 import '../models/lockers.dart';
 import '../widgets/photo_tile.dart';
 import '../widgets/icon_tile.dart';
-import '../widgets/screen_title.dart';
 import '../widgets/main_block.dart';
 
 class MenuScreen extends StatefulWidget {
@@ -79,9 +79,8 @@ class _MenuScreenState extends State<MenuScreen> {
             onPressed: () async {
               var isConfirmed = await showDialog(
                   context: context,
-                  builder: (context) => const ConfirmDialog(
-                      title: "Вихід",
-                      text: "Ви впевнені що хочете вийти з цього акаунту?"));
+                  builder: (context) => ConfirmDialog(
+                      title: "logout".tr(), text: "logout_confirm".tr()));
               if (isConfirmed != null) {
                 Navigator.pushNamedAndRemoveUntil(
                     context, AuthScreen.routeName, (route) => false);
@@ -125,9 +124,8 @@ class _MenuScreenState extends State<MenuScreen> {
                 } else {
                   if (snapshot.error != null) {
                     print("Error: ${snapshot.error.toString()}");
-                    return const Center(
-                      child: Text(
-                          "Сталась невідома помилка. Спробуйте зайти пізніше"),
+                    return Center(
+                      child: Text("unknown_error".tr()),
                     );
                   }
                   return Column(
@@ -145,7 +143,7 @@ class _MenuScreenState extends State<MenuScreen> {
                             horizontal: 20, vertical: 20),
                         child: Text(
                           locker == null
-                              ? "Для нових замовлень потрібно знайти Locker"
+                              ? "no_locker".tr()
                               : locker?.fullLockerName ?? "",
                           textAlign: TextAlign.center,
                           style: AppStyles.subtitleTextStyle,
@@ -182,9 +180,9 @@ class _MenuScreenState extends State<MenuScreen> {
       default:
         showDialog(
             context: context,
-            builder: (context) => const AlertDialog(
-                  title: Text("Ще не реалізовано"),
-                  content: Text("Даний функціонал буде реалізовано пізніше"),
+            builder: (context) => AlertDialog(
+                  title: Text("not_implemented_title".tr()),
+                  content: Text("not_implemented_text".tr()),
                 ));
         return;
     }
@@ -209,7 +207,7 @@ class _MenuScreenState extends State<MenuScreen> {
         activeOrders.isNotEmpty) {
       items.add(PhotoTile(
         backgroundColor: lckr.services.first.color,
-        title: "Забрати речі",
+        title: "pick_up_stuff".tr(),
         onTap: () {
           if (activeOrders.length > 1) {
             Navigator.push(
@@ -243,7 +241,7 @@ class _MenuScreenState extends State<MenuScreen> {
     return [
       const SizedBox(height: 20),
       IconTile(
-        text: "Знайти комплекс",
+        text: "find_locker".tr(),
         icon: Icons.qr_code_scanner_outlined,
         onTap: () {
           Navigator.pushNamed(context, EnterLockerIdScreen.routeName);
@@ -251,7 +249,7 @@ class _MenuScreenState extends State<MenuScreen> {
       ),
       const SizedBox(height: 20),
       IconTile(
-        text: "Історія замовлень",
+        text: "history".tr(),
         icon: Icons.history,
         onTap: () {
           Navigator.pushNamed(context, HistoryScreen.routeName);

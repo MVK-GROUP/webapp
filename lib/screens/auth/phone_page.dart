@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:mvk_app/api/auth.dart';
@@ -52,7 +53,7 @@ class _PhoneWidgetState extends State<PhoneWidget> {
               height: 50,
             ),
             Text(
-              'Верифікація',
+              'phone_verification'.tr(),
               style: Theme.of(context).textTheme.headline4,
             ),
             const SizedBox(
@@ -64,7 +65,7 @@ class _PhoneWidgetState extends State<PhoneWidget> {
                 autoFocus: true,
                 focusNode: _focusNode,
                 inputDecoration: InputDecoration(
-                    hintText: 'Номер телефону',
+                    hintText: 'phone_number'.tr(),
                     hintStyle: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -86,7 +87,7 @@ class _PhoneWidgetState extends State<PhoneWidget> {
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty || value.length < 6) {
-                    return 'Некоректний номер телефону';
+                    return 'phone_invalid_number'.tr();
                   }
                   return null;
                 },
@@ -107,9 +108,9 @@ class _PhoneWidgetState extends State<PhoneWidget> {
               ),
             ),
             Container(
-              child: const Text(
-                'Ми відправимо SMS-код для підтвердження номеру телефону',
-                style: TextStyle(fontSize: 18, color: Colors.black45),
+              child: Text(
+                'phone_help_text'.tr(),
+                style: const TextStyle(fontSize: 18, color: Colors.black45),
               ),
               margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
             ),
@@ -120,7 +121,7 @@ class _PhoneWidgetState extends State<PhoneWidget> {
             _isSendingPhone
                 ? const MainButton(isWaitingButton: true, mHorizontalInset: 30)
                 : MainButton(
-                    text: 'Отримати код',
+                    text: 'phone_get_code'.tr(),
                     onButtonPress: () async {
                       if (!formKey.currentState!.validate()) {
                         return;
@@ -141,15 +142,15 @@ class _PhoneWidgetState extends State<PhoneWidget> {
                           } else {
                             showDialog(
                                 context: context,
-                                builder: (context) => const AlertDialog(
-                                      content: Text("some error"),
+                                builder: (context) => AlertDialog(
+                                      content: Text("phone_not_sent".tr()),
                                     ));
                           }
                         } catch (e) {
                           showDialog(
                               context: context,
-                              builder: (context) => const AlertDialog(
-                                    content: Text("some error"),
+                              builder: (context) => AlertDialog(
+                                    content: Text("phone_not_sent".tr()),
                                   ));
                         }
                       }

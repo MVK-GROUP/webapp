@@ -25,15 +25,20 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   late LocaleObject currentLocale;
+  bool isInit = false;
   final controller = PageController(
     initialPage: 0,
   );
   String? phoneNumber;
 
   @override
-  void initState() {
-    currentLocale = SupportedLocales.defaultLocale;
-    super.initState();
+  void didChangeDependencies() {
+    if (!isInit) {
+      currentLocale =
+          SupportedLocales.getLocaleByCode(context.locale.languageCode);
+      isInit = true;
+    }
+    super.didChangeDependencies();
   }
 
   @override
@@ -53,7 +58,7 @@ class _AuthScreenState extends State<AuthScreen> {
           WelcomePage(
             changePage: changePageTo,
             selectedLocale: changeLocale,
-            currentLocale: SupportedLocales.defaultLocale,
+            currentLocale: currentLocale,
           ),
           PhoneWidget(
             changePage: changePageTo,
@@ -68,12 +73,12 @@ class _AuthScreenState extends State<AuthScreen> {
     ));
   }
 
-  void changeLocale(LocaleObject? localeObject) {
+  void changeLocale(LocaleObject? localeObject) async {
     if (localeObject != null) {
-      print("change locale on: ${localeObject.code}");
       setState(() {
-        context.setLocale(localeObject.locale);
+        currentLocale = localeObject;
       });
+      await context.setLocale(localeObject.locale);
     }
   }
 

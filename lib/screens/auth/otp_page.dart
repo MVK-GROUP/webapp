@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -115,7 +116,7 @@ class _OtpNewPageState extends State<OtpNewPage> {
                   height: 50,
                 ),
                 Text(
-                  'Верифікація',
+                  'phone_verification'.tr(),
                   style: Theme.of(context).textTheme.headline4,
                 ),
                 const SizedBox(
@@ -128,15 +129,13 @@ class _OtpNewPageState extends State<OtpNewPage> {
                         style: const TextStyle(
                             fontSize: 18, color: Colors.black45),
                         children: [
-                          const TextSpan(
-                              text:
-                                  'Введіть код, який був відправлений на номер '),
+                          TextSpan(text: 'otp_enter_code'.tr()),
                           TextSpan(
                             text: widget.phoneNumber,
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           TextSpan(
-                              text: ' (змінити)',
+                              text: ' ' + 'otp_change_number'.tr(),
                               style: const TextStyle(
                                   color: AppColors.secondaryColor),
                               recognizer: TapGestureRecognizer()
@@ -154,9 +153,9 @@ class _OtpNewPageState extends State<OtpNewPage> {
                 buildOtpInputWidget(),
                 const SizedBox(height: 10),
                 if (_isWrongCode)
-                  const Text(
-                    'Ви ввели не правильний код або час для введення коду закінчився',
-                    style: TextStyle(
+                  Text(
+                    'otp_invalid_code'.tr(),
+                    style: const TextStyle(
                       color: Colors.red,
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
@@ -169,7 +168,7 @@ class _OtpNewPageState extends State<OtpNewPage> {
                 const Spacer(),
                 if (!_isCanResend && !_isResendLoading)
                   Text(
-                    'Повторно відправити код через $_start',
+                    'otp_repeat'.tr(namedArgs: {'time': _start.toString()}),
                     style: const TextStyle(fontSize: 16, color: Colors.black45),
                   ),
                 if (_isResendLoading)
@@ -192,12 +191,10 @@ class _OtpNewPageState extends State<OtpNewPage> {
                         final wasSent =
                             await AuthApi.createOtp(widget.phoneNumber);
                         if (!wasSent) {
-                          showSnackbarMessage(
-                              "Не вдалось повторно відправити код");
+                          showSnackbarMessage("otp_sending_error".tr());
                         }
                       } catch (e) {
-                        showSnackbarMessage(
-                            "Не вдалось повторно відправити код");
+                        showSnackbarMessage("otp_sending_error".tr());
                       }
 
                       setState(() {
@@ -208,7 +205,7 @@ class _OtpNewPageState extends State<OtpNewPage> {
                       });
                     },
                     child: Text(
-                      'Відправити новий код',
+                      'otp_send_new_code'.tr(),
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.secondary,
                           fontWeight: FontWeight.bold,
