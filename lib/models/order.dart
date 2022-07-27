@@ -93,6 +93,7 @@ class OrderData with ChangeNotifier {
   final DateTime date;
   final String? payData;
   final String? paySignature;
+  final int lockerId;
   int firstActionTimestamp;
   int lastActionTimestamp;
 
@@ -103,6 +104,7 @@ class OrderData with ChangeNotifier {
     required this.service,
     required this.priceInCoins,
     required this.date,
+    required this.lockerId,
     this.currency = "UAH",
     this.data,
     this.place,
@@ -114,6 +116,7 @@ class OrderData with ChangeNotifier {
 
   factory OrderData.fromJson(Map<String, dynamic> json) {
     String? place;
+    int lockerId = 0;
     var date = DateTime.fromMillisecondsSinceEpoch(
         json["created_at_timestamp"] * 1000);
     Map<String, Object> data = {};
@@ -148,6 +151,7 @@ class OrderData with ChangeNotifier {
     }
     if (json.containsKey("locker") && json["locker"] != null) {
       place = '${json["locker"]["name"]}, ${json["locker"]["address"]}';
+      lockerId = json["locker"]["lockerID"];
     }
     int firstActionTimestamp = 0;
     int lastActionTimestamp = 0;
@@ -165,6 +169,7 @@ class OrderData with ChangeNotifier {
       service: service,
       status: OrderStatusExt.fromString(json["status"]),
       priceInCoins: paid,
+      lockerId: lockerId,
       data: data.isEmpty ? null : data,
       place: place,
       date: date,

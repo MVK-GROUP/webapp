@@ -42,7 +42,6 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   void didChangeDependencies() {
     if (!_isInit) {
-      locker = Provider.of<LockerNotifier>(context, listen: false).locker;
       _initOrdersFuture = _obtainInitOrdersFuture();
       _isInit = true;
     }
@@ -50,6 +49,7 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   Future<List<OrderData>?> _obtainInitOrdersFuture() async {
+    locker = Provider.of<LockerNotifier>(context, listen: false).locker;
     final ordersNotifier = Provider.of<OrdersNotifier>(context, listen: false);
     if (ordersNotifier.orders == null) {
       try {
@@ -62,7 +62,11 @@ class _MenuScreenState extends State<MenuScreen> {
         return Future.error(e.toString());
       }
     }
-    return ordersNotifier.getActiveAclsOrders();
+    if (locker == null) {
+      return ordersNotifier.getActiveAclsOrders();
+    } else {
+      return ordersNotifier.getActiveAclsOrdersByLockerId(locker!.lockerId);
+    }
   }
 
   @override

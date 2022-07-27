@@ -118,7 +118,7 @@ class _PayScreenState extends State<PayScreen> {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: Text(
-                              "order_creating".tr(),
+                              "create_order.order_creating".tr(),
                               textAlign: TextAlign.center,
                               style: const TextStyle(fontSize: 20),
                             ),
@@ -214,7 +214,9 @@ class _PayScreenState extends State<PayScreen> {
     switch (order.service) {
       case ServiceCategory.acl:
         final tariff = item!["chosen_tariff"] as Tariff;
-        return TableRow(children: payInfoTile("Тариф", tariff.humanHours));
+        return TableRow(
+            children:
+                payInfoTile("create_order.tariff".tr(), tariff.humanHours));
       case ServiceCategory.vendingMachine:
         return TableRow(
             children: payInfoTile(

@@ -46,6 +46,23 @@ class OrdersNotifier with ChangeNotifier {
     return orders;
   }
 
+  List<OrderData> getActiveAclsOrdersByLockerId(int lockerId) {
+    List<OrderData> orders = [];
+    var foundOrders = _orders?.where((order) =>
+        [OrderStatus.hold, OrderStatus.active].contains(order.status) &&
+        [
+          ServiceCategory.acl,
+          ServiceCategory.phoneCharging,
+          ServiceCategory.powerbank
+        ].contains(order.service) &&
+        order.timeLeftInSeconds > -3600 &&
+        order.lockerId == lockerId);
+    if (foundOrders != null) {
+      orders.addAll(foundOrders);
+    }
+    return orders;
+  }
+
   Future<List<OrderData>?> fetchAndSetOrders() async {
     try {
       _orders = await OrderApi.fetchOrders(authToken);
