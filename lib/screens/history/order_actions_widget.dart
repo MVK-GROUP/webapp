@@ -135,7 +135,7 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
 
   ElevatedDefaultButton justOpenCellButton(
       BuildContext context, OrderData order) {
-    String buttonText = "open_cell_and_add_stuff".tr();
+    String buttonText = "acl.open_cell_and_add_stuff".tr();
     String confirmText = "acl.after_confirm_open_cell_and_dont_forget_to_close"
         .tr(namedArgs: {'cell': order.data!["cell_id"].toString()});
     var openCellType = OpenCellType.openCell;
@@ -586,7 +586,7 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
                     builder: (context) => AlertDialog(
                       alignment: Alignment.center,
                       title: Text(
-                        "bring_code_to_reader".tr(),
+                        "history.bring_code_to_reader".tr(),
                         textAlign: TextAlign.center,
                       ),
                       content: Column(
@@ -618,14 +618,14 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
     } else if (order.status == OrderStatus.completed) {
       content.addAll(
         actionsSection(
-            actionButtons: [], message: "order_complete_message".tr()),
+            actionButtons: [], message: "history.order_complete_message".tr()),
       );
     } else {
       content.add(Center(
         child: Padding(
           padding: const EdgeInsets.only(top: 20, bottom: 10),
           child: Text(
-            "technical_problems__operation_was_canceled".tr(),
+            "history.technical_problems__operation_was_cancelled".tr(),
             textAlign: TextAlign.center,
           ),
         ),

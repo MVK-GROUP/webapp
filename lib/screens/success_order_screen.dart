@@ -198,7 +198,7 @@ class _SuccessOrderScreenState extends State<SuccessOrderScreen> {
                           if (!_isUseOpenCellButton || !_isOrderStatusChecking)
                             ElevatedIconButton(
                               icon: const Icon(Icons.history),
-                              text: "go_to_detail".tr(),
+                              text: "create_order.go_to_detail".tr(),
                               onPressed: _isCellOpening
                                   ? null
                                   : () {
