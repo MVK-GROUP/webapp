@@ -93,9 +93,9 @@
         "pay_debt_and_pick_up_stuff": "@:pay_debt та забрати речі",
         "no_free_cells": "Немає вільних комірок",
         "try_to_rent_later": "Спробуйте орендувати комірку пізніше",
-        "no_free_cells_detail": "Нажаль немає вільних комірок. @:try_to_rent_later",
+        "no_free_cells_detail": "Нажаль немає вільних комірок. @:acl.try_to_rent_later",
         "no_free_cells__select_another_size": "Нажаль немає вільних комірок. Спробуйте орендувати комірку іншого розмірку або типу",
-        "technical_error": "Сталась технічна помилка. @:try_to_rent_later",
+        "technical_error": "Сталась технічна помилка. @:acl.try_to_rent_later",
         "select_size": "Оберіть розмір комірки",
         "service": "Послуга {service}",
         "service_acl": "Оренда комірки"
@@ -115,6 +115,7 @@
     },
     "create_order": {
         "select_tariff": "Оберіть тариф",
+        "tariff": "Тариф",
         "technical_problem": "Сталась технічна проблема при створенні замовлення",
         "cant_check_status": "Не вдалось перевірити статус замовлення. Спробуйте створити нове замовлення",
         "cant_check_status__go_to_detail": "Не вдалось перевірити статус замовлення. Перейдіть до замовлення, щоб дізнатись подробиці",
@@ -133,13 +134,13 @@
         "cant_open_cell": "Наразі неможливо відчинити цю комірку. Перейдіть до замовлення та спробуйте ще раз",
         "cant_check_cell_opened__go_to_detail": "@:cant_check_cell_opened. Почекайте ще декілька секунд. Якщо комірка не відчиниться - перейдіть до замовлення та спробуйте ще раз",
         "order_created_with_cell_N": "Замовлення створено. Вам буде видана комірка #{cell}",
-        "order_created_with_cell_N__pay": "@:order_created_with_cell_N. Оплатіть будь ласка замовлення",
+        "order_created_with_cell_N__pay": "@:create_order.order_created_with_cell_N. Оплатіть будь ласка замовлення",
         "contain_qr_code_info": "В замовленні буде міститись QR-код, який ви можете використати для відкриття комірки.",
         "contain_pin_code_info": "В замовленні буде міститись ПІН-код, який ви можете використати для відкриття комірки.",
         "contain_all_needed_info": "В замовленні буде міститись вся потрібна інформація для користування цією коміркою.\nПочекайте декілька секунд поки ми зв’язуємось з комплексом та відчиніть комірку або зробіть це в історії замовлень",
         "max_free_time": "Максимальний час безкоштовного використання комірки становить ",
         "confirm_or_cancel_order": "Підтвердіть або скасуйте замовлення",
-        "after_confirmation_open_cell__confirm_it": "Після підтвердження замовлення Вам відкриється комірка. @:confirm_or_cancel_order",
+        "after_confirmation_open_cell__confirm_it": "Після підтвердження замовлення Вам відкриється комірка. @:create_order.confirm_or_cancel_order",
         "debt_information": "У разі перевищення цього часу Вам потрібно буде заплатити суму заборгованості. ",
         "debt_time_price": "{time} заборгованості - +{price}"
     }
