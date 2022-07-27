@@ -76533,7 +76533,7 @@ l=A.Q("acl.pick_up_stuff_and_complete",q)
 m.a=b.gmD()<300?A.Q(p,A.d(["cell",J.bp(k.h(0,o))],j,j))+A.Q(n,q):A.Q("history.you_still_have",A.d(["time",b.gac9()],j,j))+A.Q("acl.pick_up_stuff_q",q)}k=this.d
 j=k?B.on:A.af(l,q,q,q,q,B.ov,B.B,q)
 return A.JJ(B.S,j,this.e||k?q:new A.amw(m,this,a))},
-acJ(a,b){var s,r=null,q=A.Q("open_cell_and_add_stuff",r),p=t.N,o=A.Q("acl.after_confirm_open_cell_and_dont_forget_to_close",A.d(["cell",J.bp(b.r.h(0,"cell_id"))],p,p))
+acJ(a,b){var s,r=null,q=A.Q("acl.open_cell_and_add_stuff",r),p=t.N,o=A.Q("acl.after_confirm_open_cell_and_dont_forget_to_close",A.d(["cell",J.bp(b.r.h(0,"cell_id"))],p,p))
 p=this.e
 s=p?B.on:A.af(q,r,r,r,r,B.ov,B.B,r)
 return A.JJ(B.S,s,p||this.d?r:new A.amu(this,a,o,B.ii))},
@@ -76714,27 +76714,27 @@ break
 case 6:case 1:return A.z(q,r)
 case 2:return A.y(o,r)}})
 return A.A($async$iQ,r)},
-a8q(a,b){var s,r,q,p,o,n=this,m=null,l=b.r
-if(l.a1(0,"cell_id")){s=t.N
-r=new A.ax(B.du,new A.iN(B.KR,A.Q("cell_number",A.d(["cell",J.bp(l.h(0,"cell_id"))],s,s)),26,B.di,m),m)}else r=m
+a8q(a,b){var s,r,q,p,o,n=this,m=null,l="history.order_complete_message",k=b.r
+if(k.a1(0,"cell_id")){s=t.N
+r=new A.ax(B.du,new A.iN(B.KR,A.Q("cell_number",A.d(["cell",J.bp(k.h(0,"cell_id"))],s,s)),26,B.di,m),m)}else r=m
 s=t.p
 q=A.a([],s)
 if(r!=null)q.push(r)
 p=b.a
-if(p===B.d4)B.c.S(q,n.vz(A.a([],t.g8),A.Q("history.order_complete_message",m)))
-else if(p===B.eY||b.gmD()<1){l=t.N
-q.push(new A.ax(B.jA,A.af(A.Q("history.order_timed_out_N_ago",A.d(["time",b.gaca()],l,l))+A.Q("history.you_need_to_pay_extra_N",A.d(["amount",b.gadg()],l,l)),m,m,m,m,B.ix,B.B,m),m))
+if(p===B.d4)B.c.S(q,n.vz(A.a([],t.g8),A.Q(l,m)))
+else if(p===B.eY||b.gmD()<1){k=t.N
+q.push(new A.ax(B.jA,A.af(A.Q("history.order_timed_out_N_ago",A.d(["time",b.gaca()],k,k))+A.Q("history.you_need_to_pay_extra_N",A.d(["amount",b.gadg()],k,k)),m,m,m,m,B.ix,B.B,m),m))
 q.push(n.ae7())}else{p=b.a
 if(p===B.bF||p===B.bR)B.c.S(q,n.vz(A.a([],t.g8),A.Q("history.wait_few_seconds",m)))
 else if(p===B.cb||p===B.bG){p=t.N
-q.push(new A.ax(B.JY,A.af(A.Q("history.rent_to",A.d(["time",b.wc(t.W7.a(l.h(0,"end_date")))],p,p)),m,m,m,m,B.eb,m,m),m))
-switch(t.ji.a(l.h(0,"algorithm")).a){case 0:o=A.aH(l.h(0,"pin"))
+q.push(new A.ax(B.JY,A.af(A.Q("history.rent_to",A.d(["time",b.wc(t.W7.a(k.h(0,"end_date")))],p,p)),m,m,m,m,B.eb,m,m),m))
+switch(t.ji.a(k.h(0,"algorithm")).a){case 0:o=A.aH(k.h(0,"pin"))
 q.push(new A.ax(B.JP,A.bF(A.a([A.az1(o==null?"000000":o,200),A.af(A.Q("history.bring_code_to_reader",m),m,m,m,m,m,B.B,m)],s),B.w,B.D,B.A),m))
 B.c.S(q,n.My(A.a([],t.g8)))
 break
-case 1:o=A.aH(l.h(0,"pin"))
-l=A.af(A.Q("history.pincode_to_open",m),m,m,m,m,m,m,m)
-q.push(new A.ax(B.JQ,A.bF(A.a([l,A.af(o==null?"ERROR":o,m,m,m,m,B.a9w,m,m)],s),B.w,B.D,B.A),m))
+case 1:o=A.aH(k.h(0,"pin"))
+k=A.af(A.Q("history.pincode_to_open",m),m,m,m,m,m,m,m)
+q.push(new A.ax(B.JQ,A.bF(A.a([k,A.af(o==null?"ERROR":o,m,m,m,m,B.a9w,m,m)],s),B.w,B.D,B.A),m))
 B.c.S(q,n.My(A.a([],t.g8)))
 break
 case 2:if(b.a===B.bG)q.push(new A.ax(B.ew,n.acJ(a,b),m))
@@ -76748,8 +76748,8 @@ q.push(new A.ax(B.ex,A.JJ(B.S,A.af(A.Q("history.read_qr",m),m,m,m,m,B.ov,B.B,m),
 q.push(B.aP)
 break
 default:q.push(B.Ig)
-break}}else if(p===B.d4)B.c.S(q,n.vz(A.a([],t.g8),A.Q("order_complete_message",m)))
-else q.push(A.dh(new A.ax(B.jA,A.af(A.Q("technical_problems__operation_was_canceled",m),m,m,m,m,m,B.B,m),m),m,m))}return A.bF(q,B.w,B.D,B.A)}}
+break}}else if(p===B.d4)B.c.S(q,n.vz(A.a([],t.g8),A.Q(l,m)))
+else q.push(A.dh(new A.ax(B.jA,A.af(A.Q("history.technical_problems__operation_was_cancelled",m),m,m,m,m,m,B.B,m),m),m,m))}return A.bF(q,B.w,B.D,B.A)}}
 A.amw.prototype={
 $0(){var s=0,r=A.B(t.H),q=this,p
 var $async$$0=A.C(function(a,b){if(a===1)return A.y(b,r)
@@ -76893,7 +76893,7 @@ A.ams.prototype={
 $0(){A.c2(B.t,!0,new A.amr(this.a,A.aH(this.b.r.h(0,"pin"))),this.c,t.z)},
 $S:0}
 A.amr.prototype={
-$1(a){var s=null,r=A.af(A.Q("bring_code_to_reader",s),s,s,s,s,s,B.B,s),q=this.b
+$1(a){var s=null,r=A.af(A.Q("history.bring_code_to_reader",s),s,s,s,s,s,B.B,s),q=this.b
 return A.io(s,s,s,B.G,B.K,A.bF(A.a([new A.aX(200,200,A.az1(q==null?"000000":q,s),s),B.aU,this.a.Rc(a)],t.p),B.w,B.D,B.ba),r)},
 $S:19}
 A.xQ.prototype={
@@ -77271,7 +77271,7 @@ m=A.mk("assets/images/hero.png",o,o,o,o,o)
 q=A.a([],r)
 if(l.z)q.push(l.Q||l.as?new A.JL(A.Q(n,o),20,o):A.xK(B.Lc,new A.apb(l),A.Q(n,o),o))
 q.push(B.aU)
-if(!l.z||!l.Q){p=A.Q("go_to_detail",o)
+if(!l.z||!l.Q){p=A.Q("create_order.go_to_detail",o)
 q.push(A.xK(B.jQ,l.as?o:new A.apc(l,a),p,o))}q.push(B.oo)
 return A.acZ(A.aM(o,A.bF(A.a([s,B.aU,new A.aX(o,200,m,o),B.aU,A.bF(q,B.w,B.D,B.A),B.oo],r),B.w,B.eR,B.A),B.j,o,new A.a8(b.b,1/0,b.d,1/0),o,o,o,o,B.Kh,o,o,o))},
 $S:521}
