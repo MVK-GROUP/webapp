@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../models/services.dart';
 import '../style.dart';
@@ -32,7 +33,7 @@ class TariffDialog extends StatelessWidget {
                         icon: const Icon(Icons.close))),
               ),
               Text(
-                "Оберіть тариф",
+                "create_order.select_tariff".tr(),
                 style: AppStyles.titleSecondaryTextStyle
                     .copyWith(color: AppColors.secondaryColor),
               ),

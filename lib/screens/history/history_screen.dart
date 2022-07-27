@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:mvk_app/models/order.dart';
 import 'package:provider/provider.dart';
@@ -73,9 +74,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            const ScreenTitle(
-              'Історія',
-              subTitle: "Активні та виконані замовлення",
+            ScreenTitle(
+              'history.title'.tr(),
+              subTitle: "history.active_orders".tr(),
               height: 120,
             ),
             MainBlock(
@@ -87,11 +88,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   } else {
                     if (dataSnapshot.error != null) {
                       print("Error: ${dataSnapshot.error.toString()}");
-                      return const Center(
+                      return Center(
                         child: Padding(
-                          padding: EdgeInsets.all(10.0),
+                          padding: const EdgeInsets.all(10.0),
                           child: Text(
-                            "На жаль не можемо відобразити Ваші замовлення через технічні проблеми",
+                            "history.technical_problems".tr(),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -122,10 +123,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               return Padding(
                                 padding: const EdgeInsets.only(bottom: 20),
                                 child: OrderTile(
-                                  title:
-                                      "Замовлення #${ordersData.orders![i].id}",
-                                  place:
-                                      ordersData.orders![i].place ?? "Невідомо",
+                                  title: "history.order_number".tr(namedArgs: {
+                                    "id": ordersData.orders![i].id.toString()
+                                  }),
+                                  place: ordersData.orders![i].place ??
+                                      "unknown".tr(),
                                   containerColor: containerColor,
                                   pointColor: pointColor,
                                   date: ordersData.orders![i].humanDate,

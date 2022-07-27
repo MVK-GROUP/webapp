@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../style.dart';
 
@@ -66,23 +67,23 @@ class ConfirmDialog extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 8),
                       child: Text(
-                        "Відмінити",
-                        style: TextStyle(fontSize: 16),
+                        "cancel".tr(),
+                        style: const TextStyle(fontSize: 16),
                       ),
                     ),
                   ),
                   ElevatedButton(
                     onPressed: () => Navigator.pop(context, true),
-                    child: const Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 8),
                       child: Text(
-                        "Підтвердити",
-                        style: TextStyle(fontSize: 16),
+                        "confirm".tr(),
+                        style: const TextStyle(fontSize: 16),
                       ),
                     ),
                   ),

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mvk_app/providers/auth.dart';
@@ -76,7 +77,6 @@ class _ConfirmLockerScreenState extends State<ConfirmLockerScreen> {
                   return const Center();
                 } else {
                   if (snapshot.error != null) {
-                    // TODO: notify user OR/AND go to menu screen
                     print("Error: ${snapshot.error.toString()}");
                     return Center(
                       child: Text("Error: ${snapshot.error.toString()}"),
@@ -89,8 +89,8 @@ class _ConfirmLockerScreenState extends State<ConfirmLockerScreen> {
                             horizontal: 20, vertical: 20),
                         child: Column(
                           children: [
-                            const Text(
-                              "Комплекс перед Вами має такий вигляд та адрес?",
+                            Text(
+                              "set_locker.complex_looks_like".tr(),
                               textAlign: TextAlign.center,
                               style: AppStyles.titleSecondaryTextStyle,
                             ),
@@ -130,10 +130,10 @@ class _ConfirmLockerScreenState extends State<ConfirmLockerScreen> {
                                           strokeWidth: 2,
                                         ),
                                       )
-                                    : const Text(
-                                        "ТАК",
+                                    : Text(
+                                        "set_locker.yes".tr(),
                                         textAlign: TextAlign.center,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.w700,
                                             letterSpacing: 4),
@@ -146,7 +146,7 @@ class _ConfirmLockerScreenState extends State<ConfirmLockerScreen> {
                               icon: const Icon(Icons.qr_code_scanner_outlined),
                               textStyle: GoogleFonts.openSans(
                                   fontSize: 18, fontWeight: FontWeight.w600),
-                              text: "Ні, сканувати комплекс",
+                              text: "set_locker.not_this_complex".tr(),
                               onPressed: () {
                                 Navigator.pushReplacementNamed(
                                     context, EnterLockerIdScreen.routeName);
@@ -155,7 +155,7 @@ class _ConfirmLockerScreenState extends State<ConfirmLockerScreen> {
                             const SizedBox(height: 15),
                             ElevatedIconButton(
                               icon: const Icon(Icons.home),
-                              text: "До головного меню",
+                              text: "to_main_menu".tr(),
                               textStyle: GoogleFonts.openSans(
                                   fontSize: 18, fontWeight: FontWeight.w600),
                               onPressed: () {
@@ -192,9 +192,9 @@ class _ConfirmLockerScreenState extends State<ConfirmLockerScreen> {
       await showDialog(
           context: context,
           builder: (ctx) {
-            return const DefaultAlertDialog(
-              title: "Технічні несправності",
-              body: "На жаль, даний комплекс не на зв'язку :(",
+            return DefaultAlertDialog(
+              title: "information".tr(),
+              body: "complex_offline".tr(),
             );
           });
       Provider.of<LockerNotifier>(context, listen: false).resetLocker();

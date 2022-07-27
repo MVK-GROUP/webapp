@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mvk_app/api/http_exceptions.dart';
@@ -60,7 +61,7 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
                     children: [
                       const Spacer(),
                       Text(
-                        'Проскануйте QR-код',
+                        'set_locker.scan_qr'.tr(),
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.headline4,
                       ),
@@ -81,10 +82,10 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
                           } else {
                             showDialog(
                               context: context,
-                              builder: (context) => const AlertDialog(
-                                title: Text("Інформація"),
-                                content: Text(
-                                    "Даний функціонал не доступний на цьому типі пристрою"),
+                              builder: (context) => AlertDialog(
+                                title: Text("information".tr()),
+                                content:
+                                    Text("functionality_is_not_available".tr()),
                               ),
                             );
                           }
@@ -106,9 +107,9 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
                               ),
                             ),
                             const SizedBox(height: 10),
-                            const Text(
-                              "СКАНУВАТИ QR",
-                              style: TextStyle(
+                            Text(
+                              "set_locker.scan_qr_action".tr(),
+                              style: const TextStyle(
                                   fontSize: 16,
                                   color: AppColors.mainColor,
                                   fontWeight: FontWeight.w600),
@@ -129,10 +130,10 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
                               color: AppColors.mainColor.withOpacity(0.5),
                             ),
                           ),
-                          const Text(
-                            "АБО",
+                          Text(
+                            "set_locker.or".tr(),
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 20),
+                            style: const TextStyle(fontSize: 20),
                           ),
                           Expanded(
                             child: Divider(
@@ -147,7 +148,7 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
                       const SizedBox(height: 10),
                       const Spacer(),
                       Text(
-                        'Введіть LockerId',
+                        'set_locker.enter_locker_id'.tr(),
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.headline4,
                       ),
@@ -222,7 +223,7 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
 
     final homeMenuButon = TextButton.icon(
       icon: const Icon(Icons.home),
-      label: const Text('Головне меню'),
+      label: Text('main_menu'.tr()),
       onPressed: () {
         Navigator.of(context).pop(true);
       },
@@ -234,8 +235,8 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
             context: context,
             builder: (ctx) {
               return DefaultAlertDialog(
-                title: "Технічні несправності",
-                body: "На жаль, даний комплекс не на зв'язку :(",
+                title: "attention_title".tr(),
+                body: "complex_offline".tr(),
                 actions: [homeMenuButon],
               );
             });
@@ -257,14 +258,13 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
       Navigator.pushNamedAndRemoveUntil(
           context, MenuScreen.routeName, (route) => false);
     } catch (onError) {
-      String titleMessage = "Щось пішло не так...";
-      String bodyMessage = "Вибачте, в нас технічні неспровності :(";
+      String titleMessage = "something_went_wrong_with_dots".tr();
+      String bodyMessage = "we_have_technical_problems".tr();
 
       if (onError is HttpException) {
         if (onError.statusCode == 404) {
-          titleMessage = "Комлпекс не знайдено";
-          bodyMessage =
-              "Спробуйте відсканувати QR-код на комплексі або введіть коректний LockerID";
+          titleMessage = "set_locker.complex_not_found".tr();
+          bodyMessage = "set_locker.try_scan_qr_or_enter_id".tr();
         }
       }
       setState(() {
@@ -284,9 +284,9 @@ class _EnterLockerIdScreenState extends State<EnterLockerIdScreen> {
                       padding: const EdgeInsets.symmetric(
                           vertical: 16, horizontal: 16)),
                   icon: const Icon(Icons.qr_code),
-                  label: const Text(
-                    'Сканувати ще',
-                    style: TextStyle(fontSize: 16),
+                  label: Text(
+                    'set_locker.scan_again'.tr(),
+                    style: const TextStyle(fontSize: 16),
                   ),
                   onPressed: () {
                     Navigator.of(context).pop();

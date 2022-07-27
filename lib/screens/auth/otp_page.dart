@@ -78,6 +78,8 @@ class _OtpNewPageState extends State<OtpNewPage> {
           Border.all(color: Theme.of(context).colorScheme.background, width: 2),
     );
     return Pinput(
+      autofillHints: const [AutofillHints.oneTimeCode],
+      androidSmsAutofillMethod: AndroidSmsAutofillMethod.smsRetrieverApi,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       keyboardType:
           const TextInputType.numberWithOptions(signed: true, decimal: true),

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -69,16 +70,14 @@ class _PayScreenState extends State<PayScreen> {
               _isCheckingOrderStatus = false;
             });
           } else if (checkedOrder.status == OrderStatus.error) {
-            throw Exception(
-                "Сталась технічна проблема при створенні замовлення");
+            throw Exception("create_order.technical_problem".tr());
           }
         } catch (e) {
           timer.cancel();
           showDialog(
               context: context,
-              builder: (ctx) => const AlertDialog(
-                    content: Text(
-                        "Не вдалось перевірити статус замовлення. Спробуйте створити нове замовлення"),
+              builder: (ctx) => AlertDialog(
+                    content: Text("create_order.cant_check_status".tr()),
                   ));
           setState(() {
             _isCheckingOrderStatus = false;
@@ -103,7 +102,7 @@ class _PayScreenState extends State<PayScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: ScreenTitle(
-            "Оплата замовлення",
+            "create_order.order_payment_text".tr(),
             subTitle: helperText,
           ),
         ),
@@ -113,17 +112,15 @@ class _PayScreenState extends State<PayScreen> {
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: const [
-                          CircularProgressIndicator(),
-                          SizedBox(height: 20),
+                        children: [
+                          const CircularProgressIndicator(),
+                          const SizedBox(height: 20),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: Text(
-                              "Почекайте, створюється замовлення...",
+                              "order_creating".tr(),
                               textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 20,
-                              ),
+                              style: const TextStyle(fontSize: 20),
                             ),
                           ),
                         ]),
@@ -147,12 +144,14 @@ class _PayScreenState extends State<PayScreen> {
                           Table(
                             children: [
                               TableRow(
-                                  children:
-                                      payInfoTile("Послуга", order.title)),
+                                  children: payInfoTile(
+                                      "create_order.service".tr(),
+                                      order.title)),
                               getAdditionalInfo(order)!,
                               TableRow(
                                   children: payInfoTile(
-                                      "До сплати", order.humanPrice)),
+                                      "create_order.payable".tr(),
+                                      order.humanPrice)),
                             ],
                           ),
                           const SizedBox(height: 20),
@@ -184,12 +183,14 @@ class _PayScreenState extends State<PayScreen> {
                                     child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceEvenly,
-                                        children: const [
+                                        children: [
                                           Text(
-                                            "Перейти до оплати",
-                                            style: TextStyle(fontSize: 18),
+                                            "create_order.move_to_payment".tr(),
+                                            style:
+                                                const TextStyle(fontSize: 18),
                                           ),
-                                          Icon(Icons.keyboard_arrow_right),
+                                          const Icon(
+                                              Icons.keyboard_arrow_right),
                                         ]))),
                           ),
                         ]),
@@ -200,8 +201,8 @@ class _PayScreenState extends State<PayScreen> {
                             Navigator.pushNamedAndRemoveUntil(context,
                                 MenuScreen.routeName, (route) => false);
                           },
-                          child: const Text(
-                              "Відмінити оплату та перейти до головного меню",
+                          child: Text(
+                              "create_order.cancel_payment_and_go_to_menu".tr(),
                               textAlign: TextAlign.center))
                     ],
                   )))
@@ -216,9 +217,11 @@ class _PayScreenState extends State<PayScreen> {
         return TableRow(children: payInfoTile("Тариф", tariff.humanHours));
       case ServiceCategory.vendingMachine:
         return TableRow(
-            children: payInfoTile("Товар", item!["title"] as String));
+            children: payInfoTile(
+                "create_order.product".tr(), item!["title"] as String));
       case ServiceCategory.laundry:
-        return TableRow(children: payInfoTile("Категорія", "10kg"));
+        return TableRow(
+            children: payInfoTile("create_order.category".tr(), "10kg"));
       default:
         return null;
     }

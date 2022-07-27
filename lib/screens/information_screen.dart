@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:mvk_app/screens/global_menu.dart';
 import 'package:mvk_app/screens/history/history_screen.dart';
@@ -29,7 +30,7 @@ class ErrorPaymentScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "Нажаль, сталася помилка",
+                "there_was_error".tr(),
                 textAlign: TextAlign.center,
                 style: Theme.of(context)
                     .textTheme
@@ -51,7 +52,7 @@ class ErrorPaymentScreen extends StatelessWidget {
               if (nextPage == ErrorNextPage.mainScreen)
                 ElevatedIconButton(
                   icon: const Icon(Icons.home),
-                  text: "До головного меню",
+                  text: "to_main_menu".tr(),
                   onPressed: () {
                     Navigator.pushReplacementNamed(
                         context, MenuScreen.routeName);
@@ -60,7 +61,7 @@ class ErrorPaymentScreen extends StatelessWidget {
               if (nextPage == ErrorNextPage.historyScreen)
                 ElevatedIconButton(
                   icon: const Icon(Icons.history),
-                  text: "Повернутись назад",
+                  text: "go_back".tr(),
                   onPressed: () {
                     Navigator.pushReplacementNamed(
                         context, HistoryScreen.routeName);
@@ -91,7 +92,7 @@ class InformationWidget extends StatelessWidget {
                 onPressed: () {
                   Navigator.pushReplacementNamed(context, MenuScreen.routeName);
                 },
-                child: const Text("До головного меню"))
+                child: Text("to_main_menu".tr()))
           ]),
     );
   }

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:mvk_app/models/order.dart';
 import 'package:provider/provider.dart';
@@ -45,9 +46,9 @@ class ChooseOrderScreen extends StatelessWidget {
           ]),
       body: SafeArea(
         child: Column(children: [
-          const ScreenTitle(
-            'Оберіть замовлення',
-            subTitle: "Ви маєте декілька активних замовлень. Оберіть потрібний",
+          ScreenTitle(
+            'history.select_order'.tr(),
+            subTitle: "history.several_orders_select_you_want".tr(),
             height: 120,
           ),
           MainBlock(
@@ -56,8 +57,9 @@ class ChooseOrderScreen extends StatelessWidget {
               itemBuilder: (ctx, i) => Padding(
                 padding: const EdgeInsets.only(bottom: 20),
                 child: OrderTile(
-                  title: "Замовлення #${orders[i].id}",
-                  place: orders[i].place ?? "Невідомо",
+                  title: "history.order_number"
+                      .tr(namedArgs: {"id": orders[i].id.toString()}),
+                  place: orders[i].place ?? "unknown",
                   //pointColor: pointColor,
                   date: orders[i].humanDate,
                   onPressed: () => showOrderDetail(context, orders[i]),

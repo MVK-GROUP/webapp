@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:js' as js show context;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mvk_app/providers/auth.dart';
@@ -68,30 +69,37 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
 
   ElevatedDefaultButton openCellButton(BuildContext context, OrderData order,
       {justOpen = false}) {
-    String buttonText = "Відчинити комірку";
-    String confirmText =
-        "Після підтвердження цієї дії відчиниться комірка ${order.data!["cell_id"]}. Ви впевнені що хочете це зробити?";
+    String buttonText = "open_cell".tr();
+    String confirmText = "acl.after_confirm_open_cell"
+            .tr(namedArgs: {"cell": order.data!["cell_id"].toString()}) +
+        "confirm_text".tr();
     var openCellType = OpenCellType.openCell;
     final algorithm = order.data!["algorithm"] as AlgorithmType;
     if (justOpen) {
-      buttonText = "Відчинити комірку та докласти речі";
-      confirmText =
-          "Після підтвердження цієї дії відчиниться комірка ${order.data!["cell_id"]}. Не забудьте зачинити комірку!";
+      buttonText = "acl.open_cell_and_add_stuff".tr();
+      confirmText = "acl.after_confirm_open_cell"
+              .tr(namedArgs: {"cell": order.data!["cell_id"].toString()}) +
+          "dont_forget_to_close".tr();
       openCellType = OpenCellType.openCell;
     } else if (order.status == OrderStatus.hold &&
         order.firstActionTimestamp == 0 &&
         algorithm == AlgorithmType.selfService) {
       openCellType = OpenCellType.firstOpenCell;
-      buttonText = "Відчинити комірку та покласти речі";
-      confirmText =
-          "Після підтвердження цієї дії відчиниться комірка ${order.data!["cell_id"]}. Не забудьте зачинити комірку!";
+      buttonText = "acl.open_cell_and_put_stuff".tr();
+      confirmText = "acl.after_confirm_open_cell"
+              .tr(namedArgs: {"cell": order.data!["cell_id"].toString()}) +
+          "dont_forget_to_close".tr();
     } else if (order.status == OrderStatus.active &&
         algorithm == AlgorithmType.selfService) {
       openCellType = OpenCellType.lastOpenCell;
-      buttonText = "Забрати речі та завершити замовлення";
+      buttonText = "acl.pick_up_stuff_and_complete".tr();
       confirmText = order.timeLeftInSeconds < 300
-          ? "Після підтвердження цієї дії відчиниться комірка ${order.data!["cell_id"]}. Ви впевнені що хочете це зробити?"
-          : "У вас ще залишилось ${order.humanTimeLeft} оренди. Забрати свої речі?";
+          ? "acl.after_confirm_open_cell"
+                  .tr(namedArgs: {"cell": order.data!["cell_id"].toString()}) +
+              "confirm_text".tr()
+          : "history.you_still_have"
+                  .tr(namedArgs: {'time': order.humanTimeLeft}) +
+              "acl.pick_up_stuff_q".tr();
     }
     return ElevatedDefaultButton(
       buttonColor: AppColors.mainColor,
@@ -115,7 +123,8 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
               var confirmDialog = await showDialog(
                   context: context,
                   builder: (ctx) {
-                    return ConfirmDialog(title: "Увага", text: confirmText);
+                    return ConfirmDialog(
+                        title: "attention_title".tr(), text: confirmText);
                   });
               if (confirmDialog != null) {
                 openCell(openCellType: openCellType);
@@ -126,9 +135,9 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
 
   ElevatedDefaultButton justOpenCellButton(
       BuildContext context, OrderData order) {
-    String buttonText = "Відчинити комірку та докласти речі";
-    String confirmText =
-        "Після підтвердження цієї дії відчиниться комірка ${order.data!["cell_id"]}. Не забудьте зачинити комірку!";
+    String buttonText = "open_cell_and_add_stuff".tr();
+    String confirmText = "acl.after_confirm_open_cell_and_dont_forget_to_close"
+        .tr(namedArgs: {'cell': order.data!["cell_id"].toString()});
     var openCellType = OpenCellType.openCell;
 
     return ElevatedDefaultButton(
@@ -153,7 +162,8 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
               var confirmDialog = await showDialog(
                   context: context,
                   builder: (ctx) {
-                    return ConfirmDialog(title: "Увага", text: confirmText);
+                    return ConfirmDialog(
+                        title: "attention_title".tr(), text: confirmText);
                   });
               if (confirmDialog != null) {
                 openCell(openCellType: openCellType, isJustOpen: true);
@@ -174,10 +184,10 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
                 strokeWidth: 2,
               ),
             )
-          : const Text(
-              "Сплатити борг та забрати речі",
+          : Text(
+              "acl.pay_debt_and_pick_up_stuff".tr(),
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
             ),
       onPressed: () async {
         try {
@@ -204,10 +214,10 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
                 strokeWidth: 2,
               ),
             )
-          : const Text(
-              "Відчинити комірку та покласти речі",
+          : Text(
+              "acl.open_cell_and_put_stuff".tr(),
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
             ),
       onPressed: isJustCellOpening || isCellOpening
           ? null
@@ -216,9 +226,12 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
                   context: context,
                   builder: (ctx) {
                     return ConfirmDialog(
-                        title: "Увага",
+                        title: "attention_title".tr(),
                         text:
-                            "Після підтвердження цієї дії відчиниться комірка ${order.data!["cell_id"]} та ви зможете покласти свої речі. Не забудьте зачинити комірку!");
+                            "acl.after_confirm_open_cell_and_dont_forget_to_close"
+                                .tr(namedArgs: {
+                          'cell': order.data!["cell_id"].toString()
+                        }));
                   });
               if (confirmDialog != null) {
                 openCell();
@@ -252,8 +265,7 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(style: DefaultTextStyle.of(context).style, children: [
-        const TextSpan(
-            text: "Для відкриття комірки також можна використати PIN код "),
+        TextSpan(text: "history.you_can_use_pin".tr()),
         TextSpan(
           text: pinCode,
           style: const TextStyle(fontWeight: FontWeight.bold),
@@ -265,21 +277,18 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
   void showDialogByOpenCellTaskStatus(BuildContext context, int status) async {
     String? message;
     if (status == 1) {
-      message =
-          "Комірка відчинилась. Не забудьте зачинити комірку після її використання, дякуємо!";
+      message = "history.cell_opened_and_dont_forget".tr();
     } else if (status == 2) {
-      message =
-          "На жаль зараз не є можливим відчинити цю комірку. Скористайтесь пін або qr-кодом";
+      message = "history.cell_didnt_open_and__use_pin".tr();
     } else if (status == 3) {
-      message =
-          "Не можемо перевірити статус відкриття. Почекайте ще декілька секунд. Якщо комірка не відчиниться - скористайтесь пін-кодом, або повідомте нам про проблему";
+      message = "history.cant_check_cell_opened__use_pin".tr();
     }
     if (message != null) {
       await showDialog(
           context: context,
           builder: (ctx) {
             return InformationDialog(
-              title: "Інформація",
+              title: "information".tr(),
               text: message ?? "unknown",
             );
           });
@@ -309,10 +318,9 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
       if (numTask == null) {
         await showDialog(
             context: context,
-            builder: (ctx) => const InformationDialog(
-                  title: "Щось пішло не так",
-                  text: "Наразі неможливо відчинити цю комірку",
-                ));
+            builder: (ctx) => InformationDialog(
+                title: "something_went_wrong".tr(),
+                text: "cell_didnt_open".tr()));
         setState(() {
           isJustCellOpening = false;
           isCellOpening = false;
@@ -322,10 +330,9 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
     } catch (e) {
       await showDialog(
           context: context,
-          builder: (ctx) => const InformationDialog(
-                title: "Щось пішло не так",
-                text: "Наразі неможливо відчинити цю комірку",
-              ));
+          builder: (ctx) => InformationDialog(
+              title: "something_went_wrong".tr(),
+              text: "cell_didnt_open".tr()));
       setState(() {
         isJustCellOpening = false;
         isCellOpening = false;
@@ -437,7 +444,8 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
             padding: const EdgeInsets.symmetric(vertical: 5.0),
             child: OrderElementWidget(
                 iconData: Icons.clear_all,
-                text: "Комірка №${order.data!["cell_id"]}",
+                text: "cell_number"
+                    .tr(namedArgs: {"cell": order.data!["cell_id"].toString()}),
                 iconSize: 26,
                 textStyle: AppStyles.bodyText2),
           )
@@ -451,9 +459,7 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
     if (order.status == OrderStatus.completed) {
       content.addAll(
         actionsSection(
-            actionButtons: [],
-            message:
-                "Замовлення виконано. Дякуємо що скористались нашим сервісом!"),
+            actionButtons: [], message: "history.order_complete_message".tr()),
       );
     } else if (order.status == OrderStatus.expired ||
         order.timeLeftInSeconds < 1) {
@@ -461,7 +467,10 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
         Padding(
           padding: const EdgeInsets.only(top: 20, bottom: 10),
           child: Text(
-            "Час замовлення вийшов ${order.humanTimePassed} назад. Вам потрібно доплатити ${order.needToPayExtra} аби мати змогу забрати свої речі",
+            "history.order_timed_out_N_ago"
+                    .tr(namedArgs: {"time": order.humanTimePassed}) +
+                "history.you_need_to_pay_extra_N"
+                    .tr(namedArgs: {"amount": order.needToPayExtra}),
             textAlign: TextAlign.center,
             style: AppStyles.bodySmallText,
           ),
@@ -472,9 +481,7 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
         order.status == OrderStatus.inProgress) {
       content.addAll(
         actionsSection(
-            actionButtons: [],
-            message:
-                "Замовлення виконується, почекайте декілька секунд. Якщо статус замовлення не зміниться через деякий час - повідомте про це нам"),
+            actionButtons: [], message: "history.wait_few_seconds".tr()),
       );
     } else if (order.status == OrderStatus.hold ||
         order.status == OrderStatus.active) {
@@ -482,7 +489,8 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
       content.add(Padding(
         padding: const EdgeInsets.only(top: 5, bottom: 10),
         child: Text(
-          "Оренда до: ${order.datetimeToHumanDate(endDate)}",
+          "history.rent_to"
+              .tr(namedArgs: {"time": order.datetimeToHumanDate(endDate)}),
           style: const TextStyle(fontSize: 16),
         ),
       ));
@@ -502,12 +510,9 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Column(
               children: [
-                QrImage(
-                  data: pinCode ?? "000000",
-                  size: 200.0,
-                ),
-                const Text(
-                  "Для відкриття комірки наведіть цей QR-код на зчитувач QR-кодів",
+                QrImage(data: pinCode ?? "000000", size: 200.0),
+                Text(
+                  "history.bring_code_to_reader".tr(),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -521,9 +526,9 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
             padding: const EdgeInsets.only(top: 10, bottom: 20),
             child: Column(
               children: [
-                const Text("Пінкод для відкриття комірки"),
+                Text("history.pincode_to_open".tr()),
                 Text(
-                  pinCode ?? "ПОМИЛКА",
+                  pinCode ?? "ERROR",
                   style: const TextStyle(
                       fontSize: 40, fontWeight: FontWeight.w700),
                 ),
@@ -568,10 +573,11 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
               padding: const EdgeInsets.only(bottom: 20.0),
               child: ElevatedDefaultButton(
                 buttonColor: AppColors.mainColor,
-                child: const Text(
-                  "Зчитати QR-код",
+                child: Text(
+                  "history.read_qr".tr(),
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.w700),
                 ),
                 onPressed: () {
                   var pinCode = order.data!["pin"] as String?;
@@ -579,8 +585,8 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
                     context: context,
                     builder: (context) => AlertDialog(
                       alignment: Alignment.center,
-                      title: const Text(
-                        "Для відкриття комірки наведіть цей QR-код на зчитувач QR-кодів",
+                      title: Text(
+                        "bring_code_to_reader".tr(),
                         textAlign: TextAlign.center,
                       ),
                       content: Column(
@@ -605,23 +611,21 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
           break;
         default:
           content.add(const Center(
-            child: Text("Невідомий алгоритм"),
+            child: Text("Unknown algorithm"),
           ));
           break;
       }
     } else if (order.status == OrderStatus.completed) {
       content.addAll(
         actionsSection(
-            actionButtons: [],
-            message:
-                "Замовлення виконано. Дякуємо що скористались нашими послугами, чекаємо ще ;)"),
+            actionButtons: [], message: "order_complete_message".tr()),
       );
     } else {
-      content.add(const Center(
+      content.add(Center(
         child: Padding(
-          padding: EdgeInsets.only(top: 20, bottom: 10),
+          padding: const EdgeInsets.only(top: 20, bottom: 10),
           child: Text(
-            "Щось пішло не так... Через технічні проблеми операцію було скасовано.",
+            "technical_problems__operation_was_canceled".tr(),
             textAlign: TextAlign.center,
           ),
         ),

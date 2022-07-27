@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:mvk_app/models/lockers.dart';
 import 'package:mvk_app/providers/order.dart';
@@ -100,9 +101,9 @@ class _SuccessOrderScreenState extends State<SuccessOrderScreen> {
             timer.cancel();
             showDialog(
                 context: context,
-                builder: (ctx) => const AlertDialog(
+                builder: (ctx) => AlertDialog(
                       content: Text(
-                          "Не вдалось перевірити статус замовлення. Перейдіть до замовлення, щоб дізнатись подробиці"),
+                          "create_order.cant_check_status__go_to_detail".tr()),
                     ));
             setState(() {
               _isUseOpenCellButton = false;
@@ -154,7 +155,7 @@ class _SuccessOrderScreenState extends State<SuccessOrderScreen> {
                       Column(
                         children: [
                           Text(
-                            "Чудово!",
+                            "great".tr(),
                             textAlign: TextAlign.center,
                             style: Theme.of(context)
                                 .textTheme
@@ -179,8 +180,8 @@ class _SuccessOrderScreenState extends State<SuccessOrderScreen> {
                         children: [
                           if (_isUseOpenCellButton)
                             _isOrderStatusChecking || _isCellOpening
-                                ? const ElevatedWaitingButton(
-                                    text: "Відчинити комірку та покласти речі",
+                                ? ElevatedWaitingButton(
+                                    text: "acl.open_cell_and_put_stuff".tr(),
                                     iconSize: 20,
                                   )
                                 : ElevatedIconButton(
@@ -188,7 +189,7 @@ class _SuccessOrderScreenState extends State<SuccessOrderScreen> {
                                       Icons.clear_all_outlined,
                                       size: 24,
                                     ),
-                                    text: "Відчинити комірку та покласти речі",
+                                    text: "acl.open_cell_and_put_stuff".tr(),
                                     onPressed: () {
                                       openCell();
                                     },
@@ -197,7 +198,7 @@ class _SuccessOrderScreenState extends State<SuccessOrderScreen> {
                           if (!_isUseOpenCellButton || !_isOrderStatusChecking)
                             ElevatedIconButton(
                               icon: const Icon(Icons.history),
-                              text: "Перейти до замовлення",
+                              text: "go_to_detail".tr(),
                               onPressed: _isCellOpening
                                   ? null
                                   : () {
@@ -230,9 +231,8 @@ class _SuccessOrderScreenState extends State<SuccessOrderScreen> {
     } catch (e) {
       await showDialog(
           context: context,
-          builder: (ctx) => const SomethingWentWrongDialog(
-                bodyMessage:
-                    "Наразі неможливо відчинити цю комірку. Перейдіть до замовлення та спробуйте ще раз",
+          builder: (ctx) => SomethingWentWrongDialog(
+                bodyMessage: "create_order.cant_open_cell".tr(),
               ));
       setState(() {
         _isCellOpening = false;
@@ -268,20 +268,18 @@ class _SuccessOrderScreenState extends State<SuccessOrderScreen> {
   void showDialogByOpenCellTaskStatus(BuildContext context, int status) async {
     String? message;
     if (status == 1) {
-      message =
-          "Комірка відчинилась. Не забудьте зачинити комірку після її використання, дякуємо!";
+      message = "history.cell_opened_and_dont_forget".tr();
     } else if (status == 2) {
-      message = "На жаль зараз не є можливим відчинити цю комірку.";
+      message = "cell_didnt_open".tr();
     } else if (status == 3) {
-      message =
-          "Не можемо перевірити статус відкриття. Почекайте ще декілька секунд. Якщо комірка не відчиниться - перейдіть до замовлення та спробуйте ще раз";
+      message = "create_order.cant_check_cell_opened__go_to_detail".tr();
     }
     if (message != null) {
       await showDialog(
           context: context,
           builder: (ctx) {
             return InformationDialog(
-              title: "Інформація",
+              title: "information".tr(),
               text: message ?? "unknown",
             );
           });

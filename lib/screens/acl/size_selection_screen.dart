@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:mvk_app/api/http_exceptions.dart';
 import 'package:mvk_app/api/orders.dart';
@@ -32,7 +33,6 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
   String? token;
   late Locker? locker;
   late List<ACLCellType> cellTypes;
-  bool _isOnlyOneCellType = false;
   late Future _getFreeCellsFuture;
   var isInit = false;
 
@@ -56,10 +56,9 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
       if (freeCells.isEmpty) {
         await showDialog(
             context: context,
-            builder: (ctx) => const SomethingWentWrongDialog(
-                  title: "Немає вільних комірок",
-                  bodyMessage:
-                      "Нажаль немає вільних комірок. Спробуйте орендувати комірку пізніше",
+            builder: (ctx) => SomethingWentWrongDialog(
+                  title: "acl.no_free_cells".tr(),
+                  bodyMessage: "acl.no_free_cells_detail".tr(),
                 ));
         Navigator.pushNamedAndRemoveUntil(
             context, MenuScreen.routeName, (route) => false);
@@ -69,10 +68,9 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
     } catch (e) {
       await showDialog(
           context: context,
-          builder: (ctx) => const SomethingWentWrongDialog(
-                title: "Немає вільних комірок",
-                bodyMessage:
-                    "Сталась технічна помилка. Спробуйте орендувати комірку пізніше",
+          builder: (ctx) => SomethingWentWrongDialog(
+                title: "acl.no_free_cells".tr(),
+                bodyMessage: "acl.technical_error".tr(),
               ));
       Navigator.pushNamedAndRemoveUntil(
           context, MenuScreen.routeName, (route) => false);
@@ -104,11 +102,11 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
               return const Center(child: CircularProgressIndicator());
             } else {
               if (dataSnapshot.error != null) {
-                return const Center(
+                return Center(
                   child: Padding(
-                    padding: EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: Text(
-                      "На жаль не можемо відобразити Ваші замовлення через технічні проблеми",
+                      "history.cant_display_orders".tr(),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -123,8 +121,9 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: ScreenTitle(
-                          'Оберіть розмір комірки',
-                          subTitle: 'Послуга "${currentService!.title}"',
+                          'acl.select_size'.tr(),
+                          subTitle: 'acl.service'.tr(
+                              namedArgs: {"service": currentService!.title}),
                         ),
                       ),
                       MainBlock(
@@ -192,10 +191,9 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
         if (res.isEmpty) {
           await showDialog(
               context: context,
-              builder: (ctx) => const SomethingWentWrongDialog(
-                    title: "Немає вільних комірок",
-                    bodyMessage:
-                        "Нажаль немає вільних комірок. Спробуйте орендувати комірку іншого розмірку або типу",
+              builder: (ctx) => SomethingWentWrongDialog(
+                    title: "acl.no_free_cells".tr(),
+                    bodyMessage: "acl.no_free_cells__select_another_size".tr(),
                   ));
           return;
         } else {
@@ -206,9 +204,8 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
           if (e.statusCode == 400) {
             await showDialog(
                 context: context,
-                builder: (ctx) => const SomethingWentWrongDialog(
-                      bodyMessage: "Не можемо зв'язатись з комплексом",
-                    ));
+                builder: (ctx) => SomethingWentWrongDialog(
+                    bodyMessage: "complex_offline".tr()));
             return;
           }
         }
@@ -218,8 +215,8 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
         return;
       }
 
-      var helperText =
-          "Замовлення створено. Вам буде видана комірка #$orderedCell. Оплатіть будь ласка замовлення";
+      var helperText = "create_order.order_created_with_cell_N__pay"
+          .tr(namedArgs: {"cell": orderedCell});
 
       Map<String, Object> extraData = {};
       extraData["type"] = "paid";
@@ -239,7 +236,7 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
       final item = {"cell_type": cellType, "chosen_tariff": chosenTariff};
       try {
         final orderData = await OrderApi.createOrder(
-            lockerId ?? 0, "Оренда комірки", extraData, token,
+            lockerId ?? 0, "acl.service_acl".tr(), extraData, token,
             isTempBook: true);
         Navigator.pushNamedAndRemoveUntil(
             context, PayScreen.routeName, (route) => false,
@@ -268,30 +265,29 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
           List<TextSpan> texts = [];
 
           if (cellType.tariff.isNotEmpty) {
-            texts.add(const TextSpan(
-                text:
-                    'Максимальний час безкоштовного використання комірки становить '));
+            texts.add(TextSpan(text: 'create_order.max_free_time'.tr()));
             texts.add(TextSpan(
                 text: '${cellType.tariff[0].humanEqualHours}. ',
                 style: const TextStyle(fontWeight: FontWeight.bold)));
             texts.add(
-                const TextSpan(text: "Підтвердіть або скасуйте замовлення"));
+                TextSpan(text: "create_order.confirm_or_cancel_order".tr()));
           } else {
-            texts.add(const TextSpan(
-                text:
-                    "Після підтвердження замовлення Вам відкриється комірка. Підтвердіть або скасуйте замовлення"));
+            texts.add(TextSpan(
+                text: "create_order.after_confirmation_open_cell__confirm_it"
+                    .tr()));
           }
           if (cellType.overduePayment != null) {
             texts.add(TextSpan(
-                text:
-                    '\n\nУ разі перевищення цього часу Вам потрібно буде заплатити суму заборгованості. ',
+                text: '\n\n' + 'create_order.debt_information'.tr(),
                 style: TextStyle(
                     fontSize: 14,
                     color: AppColors.mainColor.withOpacity(0.6))));
             texts.add(
               TextSpan(
-                text:
-                    '${cellType.overduePayment!.humanEqualHours} заборгованості - +${cellType.overduePayment!.priceWithCurrency("UAH")}',
+                text: 'create_order.debt_time_price'.tr(namedArgs: {
+                  "time": cellType.overduePayment!.humanEqualHours,
+                  "price": cellType.overduePayment!.priceWithCurrency("UAH")
+                }),
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
@@ -301,7 +297,7 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
           }
 
           return ConfirmDialog(
-            title: "Увага",
+            title: "attention_title".tr(),
             content: RichText(
               textAlign: TextAlign.center,
               text: TextSpan(
@@ -319,10 +315,9 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
         if (res.isEmpty) {
           await showDialog(
               context: context,
-              builder: (ctx) => const SomethingWentWrongDialog(
-                    title: "Немає вільних комірок",
-                    bodyMessage:
-                        "Нажаль немає вільних комірок. Спробуйте орендувати комірку іншого розмірку або типу",
+              builder: (ctx) => SomethingWentWrongDialog(
+                    title: "acl.no_free_cells".tr(),
+                    bodyMessage: "acl.no_free_cells__select_another_size".tr(),
                   ));
           return;
         } else {
@@ -333,8 +328,8 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
           if (e.statusCode == 400) {
             await showDialog(
                 context: context,
-                builder: (ctx) => const SomethingWentWrongDialog(
-                      bodyMessage: "Не можемо зв'язатись з комплексом",
+                builder: (ctx) => SomethingWentWrongDialog(
+                      bodyMessage: "complex_offline".tr(),
                     ));
             return;
           }
@@ -345,17 +340,14 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
         return;
       }
 
-      var helperText =
-          "Замовлення створено. Вам видана комірка #$orderedCell. ";
+      var helperText = "create_order.order_created_with_cell_N"
+          .tr(namedArgs: {"cell": orderedCell});
       if (algorithmType == AlgorithmType.qrReading) {
-        helperText +=
-            "В замовленні буде міститись QR-код, який ви можете використати для відкриття комірки.";
+        helperText += "create_order.contain_qr_code_info";
       } else if (algorithmType == AlgorithmType.enterPinOnComplex) {
-        helperText +=
-            "В замовленні буде міститись ПІН-код, який ви можете використати для відкриття комірки.";
+        helperText += "create_order.contain_pin_code_info".tr();
       } else {
-        helperText +=
-            "В замовленні буде міститись вся потрібна інформація для користування цією коміркою.\nПочекайте декілька секунд поки ми зв’язуємось з комплексом та відчиніть комірку або зробіть це в історії замовлень";
+        helperText += "create_order.contain_all_needed_info".tr();
       }
 
       Map<String, Object> extraData = {};
@@ -375,9 +367,9 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
       }
 
       try {
-        final orderData =
-            await Provider.of<OrdersNotifier>(context, listen: false)
-                .addOrder(lockerId ?? 0, "Оренда комірки", data: extraData);
+        final orderData = await Provider.of<OrdersNotifier>(context,
+                listen: false)
+            .addOrder(lockerId ?? 0, "acl.service_acl".tr(), data: extraData);
         Navigator.pushNamedAndRemoveUntil(
             context, SuccessOrderScreen.routeName, (route) => false,
             arguments: {"order": orderData, "title": helperText});

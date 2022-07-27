@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import '../widgets/qt_overlay.dart';
@@ -34,10 +35,9 @@ class QrScannerScreen extends StatelessWidget {
                 } else {
                   await showDialog(
                       context: context,
-                      builder: (context) => const AlertDialog(
-                            title: Text("Інформація"),
-                            content: Text(
-                                "Не можемо ідентифікувати комплекс. Спробуйте вести Locker ID"),
+                      builder: (context) => AlertDialog(
+                            title: Text("information".tr()),
+                            content: Text("set_locker.cannot_identify".tr()),
                           ));
                   Navigator.of(context).pop();
                 }

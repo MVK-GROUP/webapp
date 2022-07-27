@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:mvk_app/providers/auth.dart';
 import 'package:provider/provider.dart';
@@ -68,38 +69,39 @@ class _DetailOrderNotifierDialogState extends State<DetailOrderNotifierDialog> {
   }
 
   String get orderStatusText {
-    var text = "Статус замовлення: ";
+    var text = "history.order_status_title".tr();
     switch (order.status) {
       case OrderStatus.canceled:
-        text += "скасовано";
+        text += "history.order_status_canceled".tr();
         break;
       case OrderStatus.error:
-        text += "помилка";
+        text += "history.order_status_error".tr();
         break;
       case OrderStatus.expired:
-        text += "вийшов час";
+        text += "history.order_status_expired".tr();
         break;
       case OrderStatus.hold:
-        text += "активний";
+        text += "history.order_status_active".tr();
         break;
       case OrderStatus.active:
-        text += "виконується";
+        text += "history.order_status_executed".tr();
         break;
       case OrderStatus.inProgress:
-        text += "в процесі";
+        text += "history.order_status_in_progress".tr();
         break;
       case OrderStatus.created:
-        text += "в процесі";
+        text += "history.order_status_created".tr();
         break;
       case OrderStatus.completed:
-        text += "виконано";
+        text += "history.order_status_completed".tr();
         break;
       default:
     }
     if ([OrderStatus.created, OrderStatus.inProgress, OrderStatus.hold]
             .contains(order.status) &&
         order.isExpired) {
-      text = "Статус замовлення: час вийшов";
+      text = "history.order_status_title".tr() +
+          "history.order_status_expired".tr();
     }
     return text;
   }
@@ -128,7 +130,7 @@ class _DetailOrderNotifierDialogState extends State<DetailOrderNotifierDialog> {
     return DefaultDialog(
       useProgressBar: _isOrderLoading,
       maxHeight: 600,
-      title: "Замовлення #${order.id}",
+      title: "history.order_number".tr(namedArgs: {"id": order.id.toString()}),
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 18),
@@ -137,7 +139,7 @@ class _DetailOrderNotifierDialogState extends State<DetailOrderNotifierDialog> {
               padding: const EdgeInsets.symmetric(vertical: 5.0),
               child: OrderElementWidget(
                 iconData: Icons.location_on,
-                text: order.place ?? "Невідомо",
+                text: order.place ?? "unknown".tr(),
                 iconSize: 26,
                 textStyle: AppStyles.bodyText2,
               ),
@@ -183,10 +185,10 @@ class _DetailOrderNotifierDialogState extends State<DetailOrderNotifierDialog> {
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: TextButton(
-                  child: const Text(
-                    "Повідомити про проблему",
+                  child: Text(
+                    "report_problem".tr(),
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                         color: AppColors.dangerousColor),
@@ -202,28 +204,12 @@ class _DetailOrderNotifierDialogState extends State<DetailOrderNotifierDialog> {
   }
 
   Future<bool> checkOrder() async {
-    //setState(() {
-    //  isOrderLoading = true;
-    //});
     try {
       var updated = await order.checkOrder(token);
       return updated;
-      //await Provider.of<OrdersNotifier>(context, listen: false)
-      //    .checkOrder(order.id);
-      //if (checkedOrder.status != order.status) {
-      //  setState(() {
-      //    order = checkedOrder;
-      //    //isOrderLoading = false;
-      //  });
-      //  return;
-      //}
     } catch (e) {
       print("error: $e");
       return false;
     }
-
-    //setState(() {
-    //  isOrderLoading = false;
-    //});
   }
 }

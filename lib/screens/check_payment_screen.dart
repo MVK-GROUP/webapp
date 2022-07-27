@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:mvk_app/screens/success_order_screen.dart';
 import 'package:provider/provider.dart';
@@ -62,11 +63,9 @@ class _CheckPaymentScreenState extends State<CheckPaymentScreen> {
         orderData = await OrderApi.checkPaymentByOrderId(widget.orderId, token);
         String? title;
         if (orderData.status == OrderStatus.hold) {
-          title =
-              "Нарешті тепер Ви можете відчинити комірку та покласти свої. Відчинити можете тут, або в історії замовлень";
+          title = "create_order.you_can_open_cell".tr();
         } else {
-          title =
-              "Зачекайте декілька секунд для можливості одразу відчинити комірку або зробіть це в історії замовлень”";
+          title = "create_order.wait_for_able_to_open_cell".tr();
         }
         Navigator.pushNamedAndRemoveUntil(
             context, SuccessOrderScreen.routeName, (route) => false,
@@ -101,7 +100,7 @@ class _CheckPaymentScreenState extends State<CheckPaymentScreen> {
           context,
           MaterialPageRoute(
               builder: (context) => ErrorPaymentScreen(
-                    title: "Ви не оплатили замовлення, або платіж не успішний",
+                    title: "create_order.payment_failed".tr(),
                     nextPage: widget.type == PaymentType.errorPayment
                         ? ErrorNextPage.mainScreen
                         : ErrorNextPage.historyScreen,
@@ -115,31 +114,33 @@ class _CheckPaymentScreenState extends State<CheckPaymentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: FutureBuilder(
-            future: _initFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      CircularProgressIndicator(),
-                      Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 30, vertical: 24),
-                        child: Text(
-                          "Зачекайте, іде перевірка замовленя...",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 24),
-                        ),
-                      ),
-                    ],
+      body: FutureBuilder(
+        future: _initFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const CircularProgressIndicator(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 24),
+                    child: Text(
+                      "create_order.order_creating".tr(),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 24),
+                    ),
                   ),
-                );
-              } else {
-                return const Center();
-              }
-            }));
+                ],
+              ),
+            );
+          } else {
+            return const Center();
+          }
+        },
+      ),
+    );
   }
 }
