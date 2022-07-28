@@ -1,4 +1,5 @@
-import 'package:flutter/cupertino.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
 
 import '../api/orders.dart';
 import 'lockers.dart';
@@ -25,11 +26,11 @@ class TemporaryOrderData {
   String get title {
     switch (type) {
       case ServiceCategory.acl:
-        return "Оренда комірки";
+        return "acl.service_acl".tr();
       case ServiceCategory.laundry:
-        return "Хімчистка";
+        return "laundry.service".tr();
       case ServiceCategory.vendingMachine:
-        return "Торговий автомат";
+        return "vending_machine.service".tr();
       default:
         return "----------";
     }
@@ -165,7 +166,7 @@ class OrderData with ChangeNotifier {
     }
     return OrderData(
       id: json["id"],
-      title: json["title"] ?? "Невідомо",
+      title: json["title"] ?? "unknown".tr(),
       service: service,
       status: OrderStatusExt.fromString(json["status"]),
       priceInCoins: paid,
@@ -197,7 +198,7 @@ class OrderData with ChangeNotifier {
       var endDate = data!["end_date"] as DateTime;
       final duration = endDate.difference(DateTime.now());
       if (duration.inSeconds < 0) {
-        return "Час вийшов";
+        return "history.order_status_expired".tr();
       }
       final diffInDays = duration.inDays;
       var diffInHours = duration.inHours - duration.inDays * 24;
@@ -205,17 +206,20 @@ class OrderData with ChangeNotifier {
 
       String humanDate = "";
       if (diffInDays >= 1) {
-        humanDate += "$diffInDays д. ";
+        humanDate += "datetime.days_short"
+            .tr(namedArgs: {"days": diffInDays.toString()});
       }
       if (diffInHours >= 1) {
-        humanDate += "$diffInHours год. ";
+        humanDate += "datetime.hours_short"
+            .tr(namedArgs: {"hours": diffInHours.toString()});
       }
       if (diffInMinutes >= 1) {
-        humanDate += "$diffInMinutes хв.";
+        humanDate += "datetime.minutes_short"
+            .tr(namedArgs: {"minutes": diffInMinutes.toString()});
       }
       return humanDate;
     } else {
-      return "Невідомо";
+      return "unknown".tr();
     }
   }
 
@@ -224,7 +228,7 @@ class OrderData with ChangeNotifier {
       var endDate = data!["end_date"] as DateTime;
       final duration = DateTime.now().difference(endDate);
       if (duration.inSeconds < 0) {
-        return "невідомо";
+        return "unknown".tr();
       }
       final diffInDays = duration.inDays;
       var diffInHours = duration.inHours - duration.inDays * 24;
@@ -232,17 +236,20 @@ class OrderData with ChangeNotifier {
 
       String humanDate = "";
       if (diffInDays >= 1) {
-        humanDate += "$diffInDays д. ";
+        humanDate += "datetime.days_short"
+            .tr(namedArgs: {"days": diffInDays.toString()});
       }
       if (diffInHours >= 1) {
-        humanDate += "$diffInHours год. ";
+        humanDate += "datetime.hours_short"
+            .tr(namedArgs: {"hours": diffInHours.toString()});
       }
       if (diffInMinutes >= 0) {
-        humanDate += "$diffInMinutes хв.";
+        humanDate += "datetime.minutes_short"
+            .tr(namedArgs: {"minutes": diffInMinutes.toString()});
       }
       return humanDate;
     } else {
-      return "Невідомо";
+      return "unknown".tr();
     }
   }
 

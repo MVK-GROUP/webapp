@@ -97,8 +97,20 @@
         "no_free_cells__select_another_size": "Unfortunately, there are no free cells. Try renting a cell of a different size or type",
         "technical_error": "A technical error occurred. @:acl.try_to_rent_later",
         "select_size": "Select cell size",
-        "service": "Service {service}",
-        "service_acl": "Cell rental"
+        "service": "Service '{service}'",
+        "service_acl": "Cell rental",
+        "service_acl_title": "Luggage storage",
+        "service_acl_action": "Put things",
+        "service_powerbank": "Powerpank",
+        "service_powerbank_action": "Use a Powerbank",
+        "service_phonecharge": "Gadget charging",
+        "service_phonecharge_action": "Charge the gadget"
+    },
+    "laundry": {
+        "service": "Laundry"
+    },
+    "vending_machine": {
+        "service": "Vending machine"
     },
     "set_locker": {
         "cannot_identify": "Cannot identify the complex. Try to keep Locker ID",
@@ -143,5 +155,19 @@
         "after_confirmation_open_cell__confirm_it": "After confirming the order, a cell will open for you. @:create_order.confirm_or_cancel_order",
         "debt_information": "If this time is exceeded, you will need to pay the amount owed.",
         "debt_time_price": "{time} debt - +{price}"
+    },
+    "datetime": {
+        "days_short": "{days} d. ",
+        "hours_short": "{hours} hrs. ",
+        "minutes_short": "{minutes} min. ",
+        "minute": {
+            "zero": "{} minutes",
+            "one": "{} minutes",
+            "other": "{} minutes"
+        },
+        "hour": {
+            "one": "{} hour",
+            "other": "{} hours"
+        }
     }
 }

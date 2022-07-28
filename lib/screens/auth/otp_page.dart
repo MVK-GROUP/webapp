@@ -79,7 +79,6 @@ class _OtpNewPageState extends State<OtpNewPage> {
     );
     return Pinput(
       autofillHints: const [AutofillHints.oneTimeCode],
-      androidSmsAutofillMethod: AndroidSmsAutofillMethod.smsRetrieverApi,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       keyboardType:
           const TextInputType.numberWithOptions(signed: true, decimal: true),

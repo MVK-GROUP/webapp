@@ -98,7 +98,19 @@
         "technical_error": "Сталась технічна помилка. @:acl.try_to_rent_later",
         "select_size": "Оберіть розмір комірки",
         "service": "Послуга {service}",
-        "service_acl": "Оренда комірки"
+        "service_acl": "Оренда комірки",
+        "service_acl_title": "Камера схову",
+        "service_acl_action": "Покласти речі",
+        "service_powerbank": "Повербанк",
+        "service_powerbank_action": "Скористатись повербанком",
+        "service_phonecharge": "Зарядка гаджету",
+        "service_phonecharge_action": "Зарядити гаджет"
+    },
+    "laundry": {
+        "service": "Хімчистка"
+    },
+    "vending_machine": {
+        "service": "Торговий автомат"
     },
     "set_locker": {
         "cannot_identify": "Не можемо ідентифікувати комплекс. Спробуйте вести Locker ID",
@@ -143,5 +155,20 @@
         "after_confirmation_open_cell__confirm_it": "Після підтвердження замовлення Вам відкриється комірка. @:create_order.confirm_or_cancel_order",
         "debt_information": "У разі перевищення цього часу Вам потрібно буде заплатити суму заборгованості. ",
         "debt_time_price": "{time} заборгованості - +{price}"
+    },
+    "datetime": {
+        "days_short": "{days} д. ",
+        "hours_short": "{hours} год. ",
+        "minutes_short": "{minutes} хв. ",
+        "minute": {
+            "zero": "{} хвилин",
+            "one": "{} хвилина",
+            "other": "{} хвилин"
+        },
+        "hour": {
+            "zero": "{} годин",
+            "one": "{} година",
+            "other": "{} годин"
+        }
     }
 }

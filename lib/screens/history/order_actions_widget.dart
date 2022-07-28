@@ -469,6 +469,7 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
           child: Text(
             "history.order_timed_out_N_ago"
                     .tr(namedArgs: {"time": order.humanTimePassed}) +
+                " " +
                 "history.you_need_to_pay_extra_N"
                     .tr(namedArgs: {"amount": order.needToPayExtra}),
             textAlign: TextAlign.center,

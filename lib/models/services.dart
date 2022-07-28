@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import '../style.dart';
@@ -27,27 +28,19 @@ class Tariff {
   }
 
   String get humanHours {
-    var d = Duration(seconds: _time);
-    if (d.inHours < 1) {
-      return "<${d.inMinutes} хвилин";
-    }
-    var ending = "годин";
-    if (d.inHours < 2) {
-      ending = "години";
-    }
-    return "<${d.inHours} $ending";
+    return "<" + humanEqualHours;
   }
 
   String get humanEqualHours {
     var d = Duration(seconds: _time);
     if (d.inHours < 1) {
-      return "${d.inMinutes} хвилин";
+      return "datetime.minute".plural(d.inMinutes);
     }
-    var ending = "годин";
-    if (d.inHours < 2) {
-      ending = "година";
+    var time = "datetime.hour".plural(d.inHours);
+    if (d.inMinutes > 60) {
+      time += " " + "datetime.minute".plural(d.inMinutes - d.inHours * 60);
     }
-    return "${d.inHours} $ending";
+    return time;
   }
 
   String get price {

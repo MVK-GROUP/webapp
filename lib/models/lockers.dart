@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:mvk_app/models/services.dart';
@@ -124,8 +125,8 @@ class Service {
     String action;
     switch (serviceCategory) {
       case ServiceCategory.acl:
-        title = "Камера схову";
-        action = "Покласти речі";
+        title = "acl.service_acl_title".tr();
+        action = "acl.service_acl_action".tr();
 
         data["algorithm"] = AlgorithmTypeExt.fromString(json["algorithm"]);
         data["tariff_selection_type"] =
@@ -140,24 +141,24 @@ class Service {
         data["cell_types"] = cellTypes;
         break;
       case ServiceCategory.laundry:
-        title = "Хімчистка";
-        action = "Хімчистка";
+        title = "laundry.service".tr();
+        action = "laundry.service".tr();
         break;
       case ServiceCategory.phoneCharging:
-        title = "Зарядка гаджету";
-        action = "Зарядити гаджет";
+        title = "acl.service_phonecharge".tr();
+        action = "acl.service_phonecharge_action".tr();
         break;
       case ServiceCategory.powerbank:
-        title = "Повербанк";
-        action = "Скористатись повербанком";
+        title = "acl.service_powerbank".tr();
+        action = "acl.service_powerbank_action".tr();
         break;
       case ServiceCategory.vendingMachine:
-        title = "Торговий автомати";
+        title = "vending_machine.service".tr();
         action = title;
         break;
 
       default:
-        title = "Невідомо";
+        title = "unknown".tr();
         action = title;
     }
     var color = AppColors.mainColor;
