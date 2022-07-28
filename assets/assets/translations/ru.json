@@ -98,7 +98,19 @@
         "technical_error": "Произошла техническая ошибка. @:acl.try_to_rent_later",
         "select_size": "Выберите размер ячейки",
         "service": "Услуга {service}",
-        "service_acl": "Аренда ячейки"
+        "service_acl": "Аренда ячейки",
+        "service_acl_title": "Камера хранения",
+        "service_acl_action": "Положить вещи",
+        "service_powerbank": "Повербанк",
+        "service_powerbank_action": "Воспользоваться повербанком",
+        "service_phonecharge": "Зарядка гаджета",
+        "service_phonecharge_action": "Зарядить гаджет"
+    },
+    "laundry": {
+        "service": "Химчистка"
+    },
+    "vending_machine": {
+        "service": "Торговый автомат"
     },
     "set_locker": {
         "cannot_identify": "Не можем идентифицировать комплекс. Попробуйте вести Locker ID",
@@ -143,5 +155,23 @@
         "after_confirmation_open_cell__confirm_it": "После подтверждения заказа Вам откроется ячейка. @:create_order.confirm_or_cancel_order",
         "debt_information": "В случае превышения этого времени Вам нужно будет заплатить сумму задолженности.",
         "debt_time_price": "{time} задолженности - +{price}"
+    },
+    "datetime": {
+        "days_short": "{days} д. ",
+        "hours_short": "{hours} час. ",
+        "minutes_short": "{minutes} мин. ",
+        "minute": {
+            "zero": "{} минут",
+            "one": "{} минута",
+            "other": "{} минут"
+        },
+        "hour": {
+            "zero": "{} часов",
+            "one": "{} час",
+            "two": "{} часа",
+            "three": "{} часа",
+            "four": "{} часа",
+            "other": "{} часов"
+        }
     }
 }
