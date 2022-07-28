@@ -77,11 +77,10 @@ class _OtpNewPageState extends State<OtpNewPage> {
       border:
           Border.all(color: Theme.of(context).colorScheme.background, width: 2),
     );
+
     return Pinput(
       autofillHints: const [AutofillHints.oneTimeCode],
-      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-      keyboardType:
-          const TextInputType.numberWithOptions(signed: true, decimal: true),
+      keyboardType: TextInputType.text,
       autofocus: true,
       focusNode: _focusNode,
       length: 4,
