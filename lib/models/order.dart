@@ -164,6 +164,7 @@ class OrderData with ChangeNotifier {
         json["last_action_timestamp"] != null) {
       lastActionTimestamp = json["last_action_timestamp"];
     }
+
     return OrderData(
       id: json["id"],
       title: json["title"] ?? "unknown".tr(),

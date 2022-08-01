@@ -108,7 +108,7 @@ class OrderApi {
 
   static Future<OrderData> createOrder(
       int lockerId, String title, Object? data, String? token,
-      {bool isTempBook = false}) async {
+      {bool isTempBook = false, required String lang}) async {
     var apiUrl = isTempBook ? "/orders/create-temp-order/" : "/orders/new/";
     try {
       final rawResponse = await http.post(
@@ -122,6 +122,7 @@ class OrderApi {
           "content-type": "application/json",
           "accept": "application/json",
           "Authorization": "Token $token",
+          "Accept-Language": lang,
         },
       );
       if (rawResponse.statusCode < 400) {
@@ -249,8 +250,8 @@ class OrderApi {
     }
   }
 
-  static Future<Map<String, dynamic>> payDebt(
-      int orderId, String? token) async {
+  static Future<Map<String, dynamic>> payDebt(int orderId, String? token,
+      {required String lang}) async {
     var apiUrl = "/orders/$orderId/pay-debt/";
     try {
       final rawResponse = await http.post(
@@ -259,6 +260,7 @@ class OrderApi {
           "content-type": "application/json",
           "accept": "application/json",
           "Authorization": "Token $token",
+          "Accept-Language": lang,
         },
       );
       if (rawResponse.statusCode < 400) {

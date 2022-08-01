@@ -117,7 +117,7 @@ class Service {
       this.category = ServiceCategory.unknown,
       this.data = const {}});
 
-  factory Service.fromJson(Map<String, dynamic> json) {
+  factory Service.fromJson(Map<String, dynamic> json, {required String lang}) {
     var serviceCategory = ServiceCategoryExt.fromString(json["service"]);
     Map<String, Object> data = {};
 
@@ -135,7 +135,7 @@ class Service {
 
         if (json.containsKey("cell_types")) {
           for (var element in (json["cell_types"] as List<dynamic>)) {
-            cellTypes.add(ACLCellType.fromJson(element));
+            cellTypes.add(ACLCellType.fromJson(element, lang: lang));
           }
         }
         data["cell_types"] = cellTypes;
@@ -275,7 +275,7 @@ class Locker {
     return address ?? name;
   }
 
-  factory Locker.fromJson(Map<String, dynamic> json) {
+  factory Locker.fromJson(Map<String, dynamic> json, {required String lang}) {
     var locker = Locker(
       lockerId: json["lockerID"],
       name: json["name"],
@@ -295,7 +295,7 @@ class Locker {
     if (json.containsKey("services")) {
       var services = json["services"] as List<dynamic>;
       for (Map<String, dynamic> service in services) {
-        locker.addService(Service.fromJson(service));
+        locker.addService(Service.fromJson(service, lang: lang));
       }
     }
 
@@ -306,8 +306,9 @@ class Locker {
 class LockerNotifier with ChangeNotifier {
   Locker? _currenctLocker;
   String? authToken;
+  String lang;
 
-  LockerNotifier(this._currenctLocker, this.authToken);
+  LockerNotifier(this._currenctLocker, this.authToken, {this.lang = "en"});
 
   Locker? get locker {
     return _currenctLocker;
@@ -320,7 +321,8 @@ class LockerNotifier with ChangeNotifier {
       return null;
     } else {
       try {
-        _currenctLocker = await LockerApi.fetchLockerById(id, authToken);
+        _currenctLocker =
+            await LockerApi.fetchLockerById(id, authToken, lang: lang);
         notifyListeners();
         return _currenctLocker;
       } catch (e) {
@@ -333,7 +335,7 @@ class LockerNotifier with ChangeNotifier {
   Future<Locker?> setLockerByOrderId(int orderId) async {
     try {
       _currenctLocker =
-          await LockerApi.fetchLockerByOrderId(orderId, authToken);
+          await LockerApi.fetchLockerByOrderId(orderId, authToken, lang: lang);
       notifyListeners();
       return _currenctLocker;
     } catch (e) {

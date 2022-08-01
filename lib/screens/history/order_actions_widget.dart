@@ -191,7 +191,8 @@ class _OrderActionsWidgetState extends State<OrderActionsWidget> {
             ),
       onPressed: () async {
         try {
-          final res = await OrderApi.payDebt(order.id, token);
+          final res = await OrderApi.payDebt(order.id, token,
+              lang: context.locale.languageCode);
           js.context.callMethod(
               'openLiqpay', [res['data'], res['signature'], kDebugMode]);
         } catch (e) {

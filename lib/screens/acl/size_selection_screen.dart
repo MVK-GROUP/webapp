@@ -237,7 +237,7 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
       try {
         final orderData = await OrderApi.createOrder(
             lockerId ?? 0, "acl.service_acl".tr(), extraData, token,
-            isTempBook: true);
+            isTempBook: true, lang: context.locale.languageCode);
         Navigator.pushNamedAndRemoveUntil(
             context, PayScreen.routeName, (route) => false,
             arguments: {"order": orderData, "title": helperText, "item": item});
@@ -367,9 +367,10 @@ class _SizeSelectionScreenState extends State<SizeSelectionScreen> {
       }
 
       try {
-        final orderData = await Provider.of<OrdersNotifier>(context,
-                listen: false)
-            .addOrder(lockerId ?? 0, "acl.service_acl".tr(), data: extraData);
+        final orderData =
+            await Provider.of<OrdersNotifier>(context, listen: false).addOrder(
+                lockerId ?? 0, "acl.service_acl".tr(),
+                data: extraData, lang: context.locale.languageCode);
         Navigator.pushNamedAndRemoveUntil(
             context, SuccessOrderScreen.routeName, (route) => false,
             arguments: {"order": orderData, "title": helperText});

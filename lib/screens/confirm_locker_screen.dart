@@ -50,7 +50,8 @@ class _ConfirmLockerScreenState extends State<ConfirmLockerScreen> {
       }
     }
     try {
-      locker = await LockerApi.fetchLockerById(widget.lockerId, token);
+      locker = await LockerApi.fetchLockerById(widget.lockerId, token,
+          lang: context.locale.languageCode);
     } catch (e) {
       Navigator.of(context).pushReplacementNamed(EnterLockerIdScreen.routeName);
       return;

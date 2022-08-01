@@ -66,9 +66,13 @@ class ACLCellType {
     this.symbol,
   });
 
-  factory ACLCellType.fromJson(Map<String, dynamic> json) {
-    var cellType =
-        ACLCellType(json["id"], json["title"], symbol: json["symbol"]);
+  factory ACLCellType.fromJson(Map<String, dynamic> json,
+      {required String lang}) {
+    String title = json["title"] ?? "unknown".tr();
+    if (json.containsKey("title_$lang")) {
+      title = json["title_$lang"];
+    }
+    var cellType = ACLCellType(json["id"], title, symbol: json["symbol"]);
     if (json.containsKey("tariffs") && json["tariffs"] != null) {
       for (var element in (json["tariffs"] as List<dynamic>)) {
         cellType.addTariff(Tariff(element["time"], element["price"]));

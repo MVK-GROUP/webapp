@@ -103,11 +103,10 @@ class App extends StatelessWidget {
         providers: [
           ChangeNotifierProvider.value(value: Auth()),
           ChangeNotifierProxyProvider<Auth, LockerNotifier>(
-            create: (context) => LockerNotifier(null, null),
+            create: (context) => LockerNotifier(null, null, lang: 'en'),
             update: (context, auth, previousOrders) => LockerNotifier(
-              previousOrders?.locker,
-              auth.token,
-            ),
+                previousOrders?.locker, auth.token,
+                lang: context.locale.languageCode),
           ),
           ChangeNotifierProvider.value(value: ServiceNotifier()),
           ChangeNotifierProxyProvider<Auth, OrdersNotifier>(

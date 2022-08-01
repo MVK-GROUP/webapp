@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:http/http.dart' as http;
 import 'settings.dart';
 import '../models/lockers.dart';
@@ -8,7 +9,8 @@ import 'http_exceptions.dart';
 class LockerApi {
   static const baseUrl = domain + "/api/v1";
 
-  static Future<Locker> fetchLockerById(String lockerId, String? token) async {
+  static Future<Locker> fetchLockerById(String lockerId, String? token,
+      {String lang = 'en'}) async {
     var apiUrl = "/lockers/$lockerId/";
     try {
       var res = await http.get(
@@ -16,12 +18,14 @@ class LockerApi {
         headers: {
           "content-type": "application/json",
           "accept": "application/json",
+          "Accept-Language": lang,
           "Authorization": "Token $token",
         },
       );
       if (res.statusCode == 200) {
         var locker = Locker.fromJson(
-            json.decode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>);
+            json.decode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>,
+            lang: lang);
         return locker;
       } else {
         throw HttpException(res.reasonPhrase.toString(),
@@ -34,7 +38,8 @@ class LockerApi {
     }
   }
 
-  static Future<Locker> fetchLockerByOrderId(int orderId, String? token) async {
+  static Future<Locker> fetchLockerByOrderId(int orderId, String? token,
+      {lang = 'en'}) async {
     var apiUrl = "/orders/$orderId/get-locker/";
     try {
       var res = await http.get(
@@ -42,12 +47,14 @@ class LockerApi {
         headers: {
           "content-type": "application/json",
           "accept": "application/json",
+          "Accept-Language": lang,
           "Authorization": "Token $token",
         },
       );
       if (res.statusCode == 200) {
         var locker = Locker.fromJson(
-            json.decode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>);
+            json.decode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>,
+            lang: lang);
         return locker;
       } else {
         throw HttpException(res.reasonPhrase.toString(),
@@ -67,7 +74,6 @@ class LockerApi {
     String? token,
   }) async {
     var apiUrl = "/lockers/$lockerId/cells/free/";
-
     try {
       Map<String, Object> bodyData = {};
       if (service != null) {
@@ -97,8 +103,7 @@ class LockerApi {
         }
         return cells;
       } else if (res.body.contains("error")) {
-        throw HttpException("Не можемо зв'язатись з комплексом :(",
-            statusCode: 400);
+        throw HttpException("complex_offline".tr(), statusCode: 400);
       } else {
         throw HttpException(res.reasonPhrase.toString(), statusCode: 500);
       }
